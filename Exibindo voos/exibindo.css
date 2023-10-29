@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Roboto+Condensed:wght@300&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    outline:0;
+}
+
+h1{
+    text-align: center;
+}
+p{
+    text-align: center;
+}
+
+#thRA{
+    text-align: left;
+    width: 20%;
+}
+
+#thNome{
+    text-align: left;
+    width: 80%;
+}
+
+tbody tr:hover{
+    background-color: rgb(120, 172, 250);
+}
+
+.linhaImpar{
+    background-color: #f3f3f3;
+}
+
+.linhaPar{
+    background-color: #c6c6c6;
+}
+
+.header th{
+    color: #151d1d;
+}
+body{
+    background:url(wall2.jpg) 10px center / cover; 
+    background-size: cover;
+    background-position: center; 
+    min-height: 900px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 70px;
+    height: 100%;
+    background: #4c5353;
+    box-shadow: 8px 0 0 #385a5a;
+    overflow: hidden;
+    transition: width 0.5s;
+    z-index: 1;
+}
+
+.menu:hover {
+    width: 300px;
+}
+
+.menu ul {
+    padding: 40px 0 0 0;
+}
+
+.menu ul li {
+    list-style: none;
+}
+
+.menu ul li a {
+    display: flex;
+    text-decoration: none;
+    color: #fafafa;
+    padding-left: 5px;
+}
+
+.menu ul li a .icone {
+    min-width: 60px;
+    height: 60px;
+    text-align: center;
+    line-height: 600px; 
+    font-size: 35px;
+    margin-bottom: 20px; 
+}
+
+.menu ul li a .title {
+    padding-left: 20px;
+    height: 60px;
+    line-height: 590px;
+    white-space: nowrap;
+}
+
+.menu ul li.active {
+    background: #4c5353;
+}
+
+#tblAlunos{
+    width: 60%;
+    margin: 0 auto;
+    margin-top: 20px;
+    position:absolute;
+    z-index:2;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:60%;
+    border-collapse:collapse;
+    border-spacing:0;
+    border-radius:12px 12px 0 0;
+    overflow:hidden;
+    box-shadow:0 4px 12px rgba(32,32,32,.3);
+    background: #fafafa;
+    text-align:center;
+}
+
+main{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+} 
+th{
+    background: #bac8c8;;
+    color:#fafafa;
+    text-transform:uppercase;
+    font-weight: bold;
+    font-family: 'Dela Gothic One';
+    border-bottom: 1px solid black;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+}
+td{
+    font-family:'Roboto Condensed', sans-serif;
+}
+
+tr:nth-child(odd){
+    background-color:#e0e0e0;
+}
+
+.botao{
+    position: absolute;
+    top: 880px;
+}
+
+button{
+    height: 40px;
+    width: 110px;
+}
