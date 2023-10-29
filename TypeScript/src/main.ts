@@ -53,7 +53,6 @@ export function rowsToAeronaves(oracleRows: unknown[] | undefined) : Array<Aeron
         referencia: registro.REFERENCIA,
       } as Aeronave;
 
-      // inserindo o novo Array convertido.
       aeronaves.push(aeronave);
     })
   }
@@ -62,49 +61,50 @@ export function rowsToAeronaves(oracleRows: unknown[] | undefined) : Array<Aeron
 
 function aeronaveValida(aero: Aeronave) {
 
-    let valida = false;
-    let mensagem = "";
-  
-    if(aero.fabricante === undefined){
-      mensagem = "Fabricante não informado";
-    }
-  
-    if(aero.fabricante !== 'Embraer' && aero.fabricante !== 'Airbus' && aero.fabricante !== 'Boeing'){
-      mensagem = "Fabricante deve ser: Embraer, Airbus ou Boeing.";
-    }
-  
-    if(aero.modelo === undefined){
-      mensagem = "Modelo não informado.";
-    }
-  
-    if(aero.totalAssentos === undefined){
-      mensagem = "Total de assentos não informado";
-    }
-  
-    if((aero.totalAssentos !== undefined) && (aero.totalAssentos < 100 || aero.totalAssentos > 1000)){
-      mensagem = "Total de assentos é inválido";
-    }
-  
-    if(aero.anoFabricacao === undefined){
-      mensagem = "Ano de fabricação não informado";
-    }
-  
-    if((aero.anoFabricacao!== undefined) && (aero.anoFabricacao < 1990 || aero.anoFabricacao > 2026)){
-      mensagem = "Ano de fabricação deve ser entre 1990 e 2026";
-    }
-  
-    if(aero.referencia === undefined){
-      mensagem = "Referência da aeronave não fornecida.";
-    }
-  
-    if(mensagem === ""){
-      valida = true;
-    }
-  
-    return [valida, mensagem] as const;
+  let valida = false;
+  let mensagem = "";
+
+  if(aero.fabricante === undefined){
+    mensagem = "Fabricante não informado";
+  }
+
+  if(aero.fabricante !== 'Embraer' && aero.fabricante !== 'Airbus' && aero.fabricante !== 'Boeing'){
+    mensagem = "Fabricante deve ser: Embraer, Airbus ou Boeing.";
+  }
+
+  if(aero.modelo === undefined){
+    mensagem = "Modelo não informado.";
+  }
+
+  if(aero.totalAssentos === undefined){
+    mensagem = "Total de assentos não informado";
+  }
+
+  if((aero.totalAssentos !== undefined) && (aero.totalAssentos < 100 || aero.totalAssentos > 1000)){
+    mensagem = "Total de assentos é inválido";
+  }
+
+  if(aero.anoFabricacao === undefined){
+    mensagem = "Ano de fabricação não informado";
+  }
+
+  if((aero.anoFabricacao!== undefined) && (aero.anoFabricacao < 1990 || aero.anoFabricacao > 2026)){
+    mensagem = "Ano de fabricação deve ser entre 1990 e 2026";
+  }
+
+  if(aero.referencia === undefined){
+    mensagem = "Referência da aeronave não fornecida.";
+  }
+
+  if(mensagem === ""){
+    valida = true;
+  }
+
+  return [valida, mensagem] as const;
 }
 
 app.get("/incluirAeronave", async (req, res) => {
+
   let cr: CustomResponse = {
     status: "ERROR",
     message: "",
@@ -112,13 +112,17 @@ app.get("/incluirAeronave", async (req, res) => {
   };
 
   const aero: Aeronave = req.body as Aeronave;
+
   let error: any;
 
   try {
     let [valida, mensagem] = aeronaveValida(aero);
     if (!valida) {
+
       cr.message = mensagem;
-      return res.send(cr); // Use return para sair da função após o envio da resposta
+
+      return res.send(cr);
+
     } else {
       let connection;
       try {
@@ -158,24 +162,24 @@ app.get("/incluirAeronave", async (req, res) => {
             await connection.close();
           } catch (closeError) {
             console.error("Error closing Oracle connection:", closeError);
-            // Defina a variável error aqui para capturar o erro
             error = closeError;
           }
         }
       }
     }
-  } catch (e) {}
+  } catch(e){}
+  if(error){
 
-  if (error) {
-    // Lida com o erro no fechamento da conexão aqui
     console.error("Outer error:", error);
-  } else {
-    // Se não houver erros no fechamento da conexão
-    return res.send(cr); // Use return para sair da função após o envio da resposta
+  } 
+  else{
+
+    return res.send(cr);
   }
 });
 
 app.get("/listarAeronave", async (req, res) => {
+  
   let cr: CustomResponse = { status: "ERROR", message: "", payload: undefined };
   let connection;
 
