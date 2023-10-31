@@ -17,19 +17,19 @@ app.get("/", async (req, res)=>{
   res.send("Esta funcionando no padrao");
 });
 
-export const oraConnAttribs = async (): Promise<Connection> => {
+const oraConnAttribs = async (): Promise<Connection> => {
   const connection = await oracledb.getConnection({ user: "bd150923124", password: "Gchlp9", connectionString: "BD-ACD" });
   console.log("Successfully connected to Oracle Database");
   return connection;
 };
 
-export type Aeronave = {
-    codigo?: number, 
-    fabricante?: string, 
-    modelo?: string,
-    anoFabricacao?: number, 
-    totalAssentos?: number,
-    referencia?: string
+type Aeronave = {
+  codigo?: number, 
+  fabricante?: string, 
+  modelo?: string,
+  anoFabricacao?: number, 
+  totalAssentos?: number,
+  referencia?: string
 }
 
 export type CustomResponse = {
@@ -38,8 +38,7 @@ export type CustomResponse = {
   payload: any
 };
 
-export function rowsToAeronaves(oracleRows: unknown[] | undefined) : Array<Aeronave> {
-  // conventendo um array do oracle para um array aeronave em js
+function rowsToAeronaves(oracleRows: unknown[] | undefined) : Array<Aeronave> {
   let aeronaves: Array<Aeronave> = [];
   let aeronave;
   if (oracleRows !== undefined){
@@ -140,9 +139,7 @@ app.get("/incluirAeronave", async (req, res) => {
           aero.referencia,
         ];
 
-        const result = await connection.execute(cmdInsertAero, dados, {
-          autoCommit: true,
-        });
+        const result = await connection.execute(cmdInsertAero, dados, {autoCommit: true,});
 
         if (result.rowsAffected === 1) {
           cr.status = "SUCCESS";
