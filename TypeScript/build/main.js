@@ -68,7 +68,6 @@ function rowsToAeronaves(oracleRows) {
                 totalAssentos: registro.TOTAL_ASSENTOS,
                 referencia: registro.REFERENCIA,
             };
-            // inserindo o novo Array convertido.
             aeronaves.push(aeronave);
         });
     }
@@ -119,7 +118,7 @@ app.get("/incluirAeronave", (req, res) => __awaiter(void 0, void 0, void 0, func
         let [valida, mensagem] = aeronaveValida(aero);
         if (!valida) {
             cr.message = mensagem;
-            return res.send(cr); // Use return para sair da função após o envio da resposta
+            return res.send(cr);
         }
         else {
             let connection;
@@ -161,7 +160,6 @@ app.get("/incluirAeronave", (req, res) => __awaiter(void 0, void 0, void 0, func
                     }
                     catch (closeError) {
                         console.error("Error closing Oracle connection:", closeError);
-                        // Defina a variável error aqui para capturar o erro
                         error = closeError;
                     }
                 }
@@ -170,12 +168,10 @@ app.get("/incluirAeronave", (req, res) => __awaiter(void 0, void 0, void 0, func
     }
     catch (e) { }
     if (error) {
-        // Lida com o erro no fechamento da conexão aqui
         console.error("Outer error:", error);
     }
     else {
-        // Se não houver erros no fechamento da conexão
-        return res.send(cr); // Use return para sair da função após o envio da resposta
+        return res.send(cr);
     }
 }));
 app.get("/listarAeronave", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
