@@ -1,6 +1,4 @@
 function codigoValido(){
-    // tanto esse codigo quanto o do excluir estão de maneiras diferente
-    // testar ambos e ver qual está certo para usar
     let resultado = false;
     const strCodigo = document.getElementById("codigo").value;
     const codigo = parseInt(strCodigo);
@@ -21,7 +19,6 @@ function anoValido(){
     return resultado; 
 }
 
-// verifica se o campo total de assentos é numerico e válido
 function totalAssentosValido(){
     let resultado = false;
     const strAssentos = document.getElementById("totalAssentos").value;
@@ -76,7 +73,7 @@ function showStatusMessage(msg, error){
 
 function fetchAlterar(body) {
     const requestOptions = {
-    method: 'GET',
+    method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
 };
@@ -133,15 +130,14 @@ function alterarAeronave(){
         registro: registro,
     })
     .then(resultado => {
-        // obteve resposta, vamos simplesmente exibir como mensagem: 
         if(resultado.status === "SUCCESS"){
-        showStatusMessage("Aeronave alterada. ", false);
-        }else{
-        showStatusMessage("Erro ao alterar aeronave: " + message, true);
-        console.log(resultado.message);
+            showStatusMessage("Aeronave alterada. ", false);
+        } else {
+            showStatusMessage("Erro ao alterar aeronave: " + resultado.message, true);
+            console.log(resultado.message);
         }
     })
-    .catch(()=>{
+    .catch(() => {
         showStatusMessage("Erro técnico ao alterar... Contate o suporte.", true);
         console.log("Falha grave ao alterar.")
     });

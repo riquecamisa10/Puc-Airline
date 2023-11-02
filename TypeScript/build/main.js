@@ -22,20 +22,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.rowsToAeronaves = exports.oraConnAttribs = void 0;
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
@@ -45,17 +35,15 @@ const port = 3000;
 app.use((0, cors_1.default)());
 dotenv_1.default.config();
 app.use(express_1.default.json());
-app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get("/", async (req, res) => {
     res.send("Esta funcionando no padrao");
-}));
-const oraConnAttribs = () => __awaiter(void 0, void 0, void 0, function* () {
-    const connection = yield oracledb.getConnection({ user: "bd150923124", password: "Gchlp9", connectionString: "BD-ACD" });
+});
+const oraConnAttribs = async () => {
+    const connection = await oracledb.getConnection({ user: "bd150923124", password: "Gchlp9", connectionString: "172.16.12.14/xe" });
     console.log("Successfully connected to Oracle Database");
     return connection;
-});
-exports.oraConnAttribs = oraConnAttribs;
+};
 function rowsToAeronaves(oracleRows) {
-    // conventendo um array do oracle para um array aeronave em js
     let aeronaves = [];
     let aeronave;
     if (oracleRows !== undefined) {
@@ -73,7 +61,7 @@ function rowsToAeronaves(oracleRows) {
     }
     return aeronaves;
 }
-exports.rowsToAeronaves = rowsToAeronaves;
+;
 function aeronaveValida(aero) {
     let valida = false;
     let mensagem = "";
@@ -106,7 +94,12 @@ function aeronaveValida(aero) {
     }
     return [valida, mensagem];
 }
-app.get("/incluirAeronave", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+;
+app.get("/teste", async (_req, res) => {
+    console.log(`Estou funcionando no teste em ${port}`);
+    res.send("Teste realizado com sucesso");
+});
+app.post("/incluirAeronave", async (req, res) => {
     let cr = {
         status: "ERROR",
         message: "",
@@ -123,7 +116,7 @@ app.get("/incluirAeronave", (req, res) => __awaiter(void 0, void 0, void 0, func
         else {
             let connection;
             try {
-                connection = yield (0, exports.oraConnAttribs)();
+                connection = await oraConnAttribs();
                 const cmdInsertAero = `INSERT INTO AERONAVES 
         (CODIGO, FABRICANTE, MODELO, ANO_FABRICACAO, TOTAL_ASSENTOS, REFERENCIA)
         VALUES
@@ -135,9 +128,7 @@ app.get("/incluirAeronave", (req, res) => __awaiter(void 0, void 0, void 0, func
                     aero.totalAssentos,
                     aero.referencia,
                 ];
-                const result = yield connection.execute(cmdInsertAero, dados, {
-                    autoCommit: true,
-                });
+                const result = await connection.execute(cmdInsertAero, dados, { autoCommit: true, });
                 if (result.rowsAffected === 1) {
                     cr.status = "SUCCESS";
                     cr.message = "Aeronave inserida.";
@@ -156,7 +147,7 @@ app.get("/incluirAeronave", (req, res) => __awaiter(void 0, void 0, void 0, func
             finally {
                 if (connection) {
                     try {
-                        yield connection.close();
+                        await connection.close();
                     }
                     catch (closeError) {
                         console.error("Error closing Oracle connection:", closeError);
@@ -173,13 +164,13 @@ app.get("/incluirAeronave", (req, res) => __awaiter(void 0, void 0, void 0, func
     else {
         return res.send(cr);
     }
-}));
-app.get("/listarAeronave", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+});
+app.get("/listarAeronave", async (req, res) => {
     let cr = { status: "ERROR", message: "", payload: undefined };
     let connection;
     try {
-        connection = yield (0, exports.oraConnAttribs)();
-        let resultadoConsulta = yield connection.execute(`SELECT * FROM AERONAVES`, [], {
+        connection = await oraConnAttribs();
+        let resultadoConsulta = await connection.execute(`SELECT * FROM AERONAVES`, [], {
             outFormat: oracledb.OUT_FORMAT_OBJECT
         });
         cr.status = "SUCCESS";
@@ -195,7 +186,7 @@ app.get("/listarAeronave", (req, res) => __awaiter(void 0, void 0, void 0, funct
     finally {
         if (connection) {
             try {
-                yield connection.close();
+                await connection.close();
             }
             catch (err) {
                 console.error("Error closing Oracle connection:", err);
@@ -203,8 +194,8 @@ app.get("/listarAeronave", (req, res) => __awaiter(void 0, void 0, void 0, funct
         }
         res.send(cr);
     }
-}));
-app.get("/alterarAeronave", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+});
+app.post("/alterarAeronave", async (req, res) => {
     let cr = {
         status: "ERROR",
         message: "",
@@ -219,7 +210,7 @@ app.get("/alterarAeronave", (req, res) => __awaiter(void 0, void 0, void 0, func
     else {
         let connection;
         try {
-            connection = yield (0, exports.oraConnAttribs)();
+            connection = await oraConnAttribs();
             const cmdUpdateAero = `UPDATE AERONAVES
       SET FABRICANTE = :1, MODELO = :2, ANO_FABRICACAO = :3, TOTAL_ASSENTOS = :4, REFERENCIA = :5
       WHERE CODIGO = :6`;
@@ -231,7 +222,7 @@ app.get("/alterarAeronave", (req, res) => __awaiter(void 0, void 0, void 0, func
                 aero.referencia,
                 aero.codigo,
             ];
-            const result = yield connection.execute(cmdUpdateAero, dados, {
+            const result = await connection.execute(cmdUpdateAero, dados, {
                 autoCommit: true,
             });
             if (result.rowsAffected === 1) {
@@ -251,7 +242,7 @@ app.get("/alterarAeronave", (req, res) => __awaiter(void 0, void 0, void 0, func
         finally {
             if (connection) {
                 try {
-                    yield connection.close();
+                    await connection.close();
                 }
                 catch (e) {
                     console.error("Error closing Oracle connection:", e);
@@ -260,8 +251,8 @@ app.get("/alterarAeronave", (req, res) => __awaiter(void 0, void 0, void 0, func
             res.send(cr);
         }
     }
-}));
-app.delete("/excluirAeronave", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+});
+app.delete("/excluirAeronave", async (req, res) => {
     const codigo = req.body.codigo;
     let cr = {
         status: "ERROR",
@@ -270,10 +261,10 @@ app.delete("/excluirAeronave", (req, res) => __awaiter(void 0, void 0, void 0, f
     };
     let connection;
     try {
-        connection = yield (0, exports.oraConnAttribs)();
+        connection = await oraConnAttribs();
         const cmdDeleteAero = `DELETE FROM AERONAVES WHERE CODIGO = :1`;
         const dados = [codigo];
-        const result = yield connection.execute(cmdDeleteAero, dados, {
+        const result = await connection.execute(cmdDeleteAero, dados, {
             autoCommit: true,
         });
         if (result.rowsAffected === 1) {
@@ -296,7 +287,7 @@ app.delete("/excluirAeronave", (req, res) => __awaiter(void 0, void 0, void 0, f
     finally {
         if (connection) {
             try {
-                yield connection.close();
+                await connection.close();
             }
             catch (e) {
                 console.error("Error closing Oracle connection:", e);
@@ -304,7 +295,7 @@ app.delete("/excluirAeronave", (req, res) => __awaiter(void 0, void 0, void 0, f
         }
         res.send(cr);
     }
-}));
+});
 app.listen(port, () => {
     console.log(`Http funcionando em ${port}`);
 });

@@ -18,7 +18,7 @@ app.get("/", async (req, res)=>{
 });
 
 const oraConnAttribs = async (): Promise<Connection> => {
-  const connection = await oracledb.getConnection({ user: "bd150923124", password: "Gchlp9", connectionString: "BD-ACD" });
+  const connection = await oracledb.getConnection({ user: "bd150923124", password: "Gchlp9", connectionString: "172.16.12.14/xe" });
   console.log("Successfully connected to Oracle Database");
   return connection;
 };
@@ -56,7 +56,7 @@ function rowsToAeronaves(oracleRows: unknown[] | undefined) : Array<Aeronave> {
     })
   }
   return aeronaves;
-}
+};
 
 function aeronaveValida(aero: Aeronave) {
 
@@ -100,9 +100,14 @@ function aeronaveValida(aero: Aeronave) {
   }
 
   return [valida, mensagem] as const;
-}
+};
 
-app.get("/incluirAeronave", async (req, res) => {
+app.get("/teste", async (_req: any, res: any) => {
+  console.log(`Estou funcionando no teste em ${port}`);
+  res.send("Teste realizado com sucesso");
+});
+
+app.post("/incluirAeronave", async (req, res) => {
 
   let cr: CustomResponse = {
     status: "ERROR",
@@ -207,7 +212,7 @@ app.get("/listarAeronave", async (req, res) => {
   }
 });
 
-app.get("/alterarAeronave", async (req, res) => {
+app.post("/alterarAeronave", async (req, res) => {
   let cr: CustomResponse = {
     status: "ERROR",
     message: "",
