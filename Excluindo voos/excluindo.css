@@ -113,7 +113,13 @@ main{
 }
 
 .statusError{
-    margin-top: 20px;
+    margin-top: 25px;
     color: red;
-    font-size: 20px;
+    font-size: 25px;
+}
+
+.statusSuccess{
+    margin-top: 25px;
+    color: greenyellow;
+    font-size: 25px;
 }

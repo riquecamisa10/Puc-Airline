@@ -1,38 +1,44 @@
-function listarBanco(){
-   
-    return voos;
+document.addEventListener("DOMContentLoaded", function () {
+    // Adicione um ouvinte de evento de clique ao botão "Carregar Dados"
+    const btnCarregarDados = document.getElementById("btnCarregarDados");
+    btnCarregarDados.addEventListener("click", fetchListar);
+
+    console.log('exibindo.js foi carregado');
+});
+
+function fetchListar() {
+    return fetch('http://localhost:3000/listarAeronave')
+        .then(response => response.json())
+        .then(data => {
+            console.log(data); // Verifique se os dados foram recebidos corretamente
+            preencherTabela(data.payload);
+        })
+        .catch(error => {
+            console.error('Erro ao buscar dados:', error);
+        });
 }
 
-function fetchListar(body) {
-    const requestOptions = {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-};
-
-return fetch('http://localhost:3000/listarAeronave', requestOptions)
-.then(T => T.json())
-}
-
-function preencherTabela(){
+function preencherTabela(voos) {
     console.log('Função preencherTabela() foi chamada');
-    const voos = listarBanco();
-    let tbody = document.getElementById("tblAlunosDados");
+    console.log(voos)
+    const tbody = document.getElementById("tblAlunosDados");
     let count = 0;
 
     tbody.innerHTML = '';
 
-    voos.forEach((voos) => {
-        let estilo = (count % 2 === 0) ? "linhaPar" : "linhaImpar";
-        let linha = `
-            <tr class="${estilo}">
-                <td>${voos.codigo}</td>
-                <td>${voos.origem}</td>
-                <td>${voos.destino}</td>
-                <td>${voos.horario}</td>
-                <td>${voos.assentos}</td>
-            </tr>`;
-        tbody.innerHTML += linha;
-        count++;
-    });
+    if (voos) {
+        voos.forEach((voo) => {
+            let estilo = (count % 2 === 0) ? "linhaPar" : "linhaImpar";
+            let linha = `
+                <tr class="${estilo}">
+                <td>${voo.codigo}</td>
+                <td>${voo.fabricante}</td>
+                <td>${voo.modelo}</td>
+                <td>${voo.anoFabricacao}</td>
+                <td>${voo.totalAssentos}</td>
+                </tr>`;
+            tbody.innerHTML += linha;
+            count++;
+        });
+    }
 }

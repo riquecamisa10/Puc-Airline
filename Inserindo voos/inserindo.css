@@ -6,12 +6,12 @@
 
 .statusError{
     color:red;
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .statusSuccess{
-   color:blue;
-   font-size: 20px;
+   color: greenyellow;
+   font-size: 25px;
 }
 
 .geral{

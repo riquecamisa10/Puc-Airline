@@ -5,13 +5,15 @@
 }
 
 .statusError{
+    margin-top: 25px;
     color:red;
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .statusSuccess{
-   color:blue;
-   font-size: 20px;
+   color: greenyellow;
+   font-size: 25px;
+   margin-top: 25px;
 }
 
 .geral{
@@ -86,8 +88,8 @@ body{
 
 main{
     display: flex;
-    justify-content: center; /* Horizontally center the content */
-    align-items: center; /* Vertically center the content */
+    justify-content: center;
+    align-items: center; 
     height: 100vh; 
 }
 
