@@ -50,10 +50,10 @@ function preencheuModelo(){
     return resultado;
 }
 
-function preencheuRegistro(){
+function preencheuReferencia(){
     let resultado = false;
-    const registroReferencia = document.getElementById("referencia").value;
-    if(registroReferencia.length > 0){
+    const referenciaReferencia = document.getElementById("referencia").value;
+    if(referenciaReferencia.length > 0){
         resultado = true;
     }
     return resultado;
@@ -99,8 +99,8 @@ function alterarAeronave(){
         return;
     }
 
-    if(!preencheuRegistro()){
-        showStatusMessage("Preencha o registro da aeronave", true);
+    if(!preencheuReferencia()){
+        showStatusMessage("Preencha o registro de referencia da aeronave", true);
         return;
     }
 
@@ -118,7 +118,7 @@ function alterarAeronave(){
     const fabricante = document.getElementById("comboFabricantes").value;
     const modelo = document.getElementById("modelo").value;
     const anoFab = document.getElementById("anoFab").value;
-    const registro = document.getElementById("referencia").value;
+    const referencia = document.getElementById("referencia").value;
     const totalAssentos = document.getElementById("totalAssentos").value;
 
     fetchAlterar({
@@ -127,7 +127,7 @@ function alterarAeronave(){
         modelo: modelo, 
         anoFab: anoFab,
         qtdeAssentos: totalAssentos,
-        registro: registro,
+        referencia: referencia,
     })
     .then(resultado => {
         if(resultado.status === "SUCCESS"){
