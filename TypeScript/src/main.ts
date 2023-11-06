@@ -13,10 +13,6 @@ dotenv.config();
 
 app.use(express.json());
 
-app.get("/", async (req, res)=>{
-  res.send("Esta funcionando no padrao");
-});
-
 const oraConnAttribs = async (): Promise<Connection> => {
   const connection = await oracledb.getConnection({ user: "bd150923124", password: "Gchlp9", connectionString: "172.16.12.14/xe" });
   console.log("Successfully connected to Oracle Database");
