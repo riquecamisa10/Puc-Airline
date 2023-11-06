@@ -1,0 +1,13 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+
+.pagamento{
+    border: 2px solid black;
+    width: 60%;
+    height: 500px;
+
+    display: flex;
+    align-items: center;
+}
