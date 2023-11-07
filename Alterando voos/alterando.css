@@ -116,7 +116,7 @@ main{
 }
 
 .conteudo select{
-    width: 83%;
+    width: 220px;
     height: 30px;
     font-size: 17px;
 }
@@ -126,7 +126,7 @@ main{
 }
 
 .conteudo input{
-    width: 50%;
+    width: 150px;
     padding: 8px;
 }
 

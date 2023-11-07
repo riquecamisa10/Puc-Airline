@@ -55,48 +55,55 @@ function rowsToAeronaves(oracleRows: unknown[] | undefined) : Array<Aeronave> {
 };
 
 function aeronaveValida(aero: Aeronave) {
-
   let valida = false;
   let mensagem = "";
 
-  if(aero.fabricante === undefined){
+  if (aero.fabricante === undefined) {
     mensagem = "Fabricante não informado";
   }
 
-  if(aero.fabricante !== 'Embraer' && aero.fabricante !== 'Airbus' && aero.fabricante !== 'Boeing'){
+  if (aero.fabricante !== 'Embraer' && aero.fabricante !== 'Airbus' && aero.fabricante !== 'Boeing') {
     mensagem = "Fabricante deve ser: Embraer, Airbus ou Boeing.";
   }
 
-  if(aero.modelo === undefined){
+  if (aero.modelo === undefined) {
     mensagem = "Modelo não informado.";
   }
 
-  if(aero.totalAssentos === undefined){
+  if (aero.totalAssentos === undefined) {
     mensagem = "Total de assentos não informado";
   }
 
-  if((aero.totalAssentos !== undefined) && (aero.totalAssentos < 100 || aero.totalAssentos > 1000)){
+  if ((aero.totalAssentos !== undefined) && (aero.totalAssentos < 100 || aero.totalAssentos > 1000)) {
     mensagem = "Total de assentos é inválido";
   }
 
-  if(aero.anoFabricacao === undefined){
+  if (aero.anoFabricacao === undefined) {
     mensagem = "Ano de fabricação não informado";
   }
 
-  if((aero.anoFabricacao!== undefined) && (aero.anoFabricacao < 1990 || aero.anoFabricacao > 2026)){
+  if ((aero.anoFabricacao !== undefined) && (aero.anoFabricacao < 1990 || aero.anoFabricacao > 2026)) {
     mensagem = "Ano de fabricação deve ser entre 1990 e 2026";
   }
 
-  if(aero.referencia === undefined){
+  if (aero.referencia === undefined) {
     mensagem = "Referência da aeronave não fornecida.";
   }
 
-  if(mensagem === ""){
+  console.log("Validação de aeronave - Fabricante:", aero.fabricante);
+  console.log("Validação de aeronave - Modelo:", aero.modelo);
+  console.log("Validação de aeronave - Assentos:", aero.totalAssentos);
+  console.log("Validação de aeronave - Ano de Fabricação:", aero.anoFabricacao);
+  console.log("Validação de aeronave - Referência:", aero.referencia);
+
+  if (mensagem === "") {
     valida = true;
+  } else {
+    console.log("Erro de validação:", mensagem);
   }
 
   return [valida, mensagem] as const;
-};
+}
 
 app.get("/teste", async (_req: any, res: any) => {
   console.log(`Estou funcionando no teste em ${port}`);

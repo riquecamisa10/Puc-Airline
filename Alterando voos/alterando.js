@@ -8,15 +8,21 @@ function codigoValido(){
     return resultado; 
 }
 
-function anoValido(){
+function anoValido() {
     let resultado = false;
-    var strAno = document.getElementById("anoFab").value;
-    const ano = parseInt(strAno);
-    console.log("Ano aeronave: " + ano.toString());
-    if (ano >= 1990 && ano <= 2026){
-      resultado = true;
+    var strAno = document.getElementById("anoFab");
+    //const strAno = parseInt(strstrAno);
+    
+    console.log("Valor de strstrAno: " + strAno);
+    console.log("Valor de strAno: " + strAno);
+
+    if (!isNaN(strAno) && strAno >= 1990 && strAno <= 2026) {
+        resultado = true;
+    } else {
+        showStatusMessage("strAno de fabricação não informado", true);
     }
-    return resultado; 
+
+    return resultado;
 }
 
 function totalAssentosValido(){
@@ -31,7 +37,7 @@ function totalAssentosValido(){
 
 function selecionouFabricante(){
     let resultado = false; 
-    var listaFabricantes = document.getElementById("comboFabricantes");
+    var listaFabricantes = document.getElementById("comboFabricantes").value;
     var valorSelecionado = listaFabricantes.value;
     // se quiséssemos obter o TEXTO selecionado. 
     // var text = listaFabricantes.options[listaFabricantes.selectedIndex].text;
@@ -104,8 +110,8 @@ function alterarAeronave(){
         return;
     }
 
-    if(!anoValido()){
-        showStatusMessage("Ano deve de 1990 até 2026", true);
+    if(!strAnoValido()){
+        showStatusMessage("strAno deve de 1990 até 2026", true);
         return;
     }
 
@@ -117,28 +123,30 @@ function alterarAeronave(){
     const codigo = document.getElementById("codigo").value;
     const fabricante = document.getElementById("comboFabricantes").value;
     const modelo = document.getElementById("modelo").value;
-    const anoFab = document.getElementById("anoFab").value;
+    const strAnoFab = document.getElementById("strAnoFab").value;
     const referencia = document.getElementById("referencia").value;
     const totalAssentos = document.getElementById("totalAssentos").value;
 
+    // Aqui você deve validar os valores dos campos antes de fazer a requisição
+    // Certifique-se de que todos os campos estão corretamente preenchidos
+
+    // Em seguida, faça a requisição para alterar a aeronave
     fetchAlterar({
         codigo: codigo,
-        marca: fabricante, 
-        modelo: modelo, 
-        anoFab: anoFab,
+        marca: fabricante,
+        modelo: modelo,
+        strAnoFab: strAnoFab,
         qtdeAssentos: totalAssentos,
         referencia: referencia,
     })
     .then(resultado => {
         if(resultado.status === "SUCCESS"){
             showStatusMessage("Aeronave alterada. ", false);
+            // Após a atualização bem-sucedida, buscar os dados atualizados
+            fetchListar();
         } else {
             showStatusMessage("Erro ao alterar aeronave: " + resultado.message, true);
             console.log(resultado.message);
         }
     })
-    .catch(() => {
-        showStatusMessage("Erro técnico ao alterar... Contate o suporte.", true);
-        console.log("Falha grave ao alterar.")
-    });
-}
+}    

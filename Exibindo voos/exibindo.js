@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function fetchListar() {
-    return fetch('http://localhost:3000/listarAeronave')
+    return fetch('http://localhost:3000/listarAeronave', { cache: 'no-store' })
         .then(response => response.json())
         .then(data => {
             console.log(data); // Verifique se os dados foram recebidos corretamente

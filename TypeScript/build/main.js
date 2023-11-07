@@ -35,9 +35,6 @@ const port = 3000;
 app.use((0, cors_1.default)());
 dotenv_1.default.config();
 app.use(express_1.default.json());
-app.get("/", async (req, res) => {
-    res.send("Esta funcionando no padrao");
-});
 const oraConnAttribs = async () => {
     const connection = await oracledb.getConnection({ user: "bd150923124", password: "Gchlp9", connectionString: "172.16.12.14/xe" });
     console.log("Successfully connected to Oracle Database");
@@ -89,12 +86,19 @@ function aeronaveValida(aero) {
     if (aero.referencia === undefined) {
         mensagem = "Referência da aeronave não fornecida.";
     }
+    console.log("Validação de aeronave - Fabricante:", aero.fabricante);
+    console.log("Validação de aeronave - Modelo:", aero.modelo);
+    console.log("Validação de aeronave - Assentos:", aero.totalAssentos);
+    console.log("Validação de aeronave - Ano de Fabricação:", aero.anoFabricacao);
+    console.log("Validação de aeronave - Referência:", aero.referencia);
     if (mensagem === "") {
         valida = true;
     }
+    else {
+        console.log("Erro de validação:", mensagem);
+    }
     return [valida, mensagem];
 }
-;
 app.get("/teste", async (_req, res) => {
     console.log(`Estou funcionando no teste em ${port}`);
     res.send("Teste realizado com sucesso");
