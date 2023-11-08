@@ -101,10 +101,10 @@ function inserirAeronave() {
     const totalAssentos = document.getElementById("totalAssentos").value;
 
     fetchInserir({
-        fabricante: fabricante, 
+        marca: fabricante, 
         modelo: modelo,
-        anoFabricacao: anoFab,
-        totalAssentos: totalAssentos,
+        strAnoFab: anoFab,
+        qtdeAssentos: totalAssentos,
         referencia: registro,
     })
     .then(resultado => {

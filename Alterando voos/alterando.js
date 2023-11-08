@@ -10,16 +10,16 @@ function codigoValido(){
 
 function anoValido() {
     let resultado = false;
-    var strAno = document.getElementById("anoFab");
-    //const strAno = parseInt(strstrAno);
+    const strAno = document.getElementById("anoFab").value; // Retrieve the value from the input field
+    const anoValue = parseInt(strAno); // Parse the value to an integer
     
-    console.log("Valor de strstrAno: " + strAno);
-    console.log("Valor de strAno: " + strAno);
+    console.log("Valor de strAno: " + strAno); // Use the correct variable name
+    console.log("Valor de anoValue: " + anoValue); // Use the correct variable name
 
-    if (!isNaN(strAno) && strAno >= 1990 && strAno <= 2026) {
+    if (!isNaN(anoValue) && anoValue >= 1990 && anoValue <= 2026) {
         resultado = true;
     } else {
-        showStatusMessage("strAno de fabricação não informado", true);
+        showStatusMessage("Ano de fabricação não informado ou fora do intervalo válido (1990-2026)", true);
     }
 
     return resultado;
@@ -76,19 +76,30 @@ function showStatusMessage(msg, error){
     pStatus.textContent = msg;
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+
+    var elemento = document.getElementById("strAnoFab");
+    if (elemento) {
+        var valor = elemento.value;
+        // seu código aqui...
+    
+    } else {
+        console.log("Elemento não encontrado");
+    } 
+});
 
 function fetchAlterar(body) {
     const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
+    }
+
+    return fetch('http://localhost:3000/alterarAeronave', requestOptions)
+    .then(T => T.json())
 };
 
-return fetch('http://localhost:3000/alterarAeronave', requestOptions)
-.then(T => T.json())
-}
-
-function alterarAeronave(){
+window.Aeronave = function(){
 
     if(!codigoValido()){
         showStatusMessage("Codigo inexistente", true);
@@ -110,10 +121,10 @@ function alterarAeronave(){
         return;
     }
 
-    if(!strAnoValido()){
-        showStatusMessage("strAno deve de 1990 até 2026", true);
+    if (!anoValido()) {
+        showStatusMessage("Ano de fabricação deve estar entre 1990 e 2026", true);
         return;
-    }
+    }    
 
     if(!totalAssentosValido()){
         showStatusMessage("Preencha corretamente o total de assentos", true);
@@ -123,7 +134,7 @@ function alterarAeronave(){
     const codigo = document.getElementById("codigo").value;
     const fabricante = document.getElementById("comboFabricantes").value;
     const modelo = document.getElementById("modelo").value;
-    const strAnoFab = document.getElementById("strAnoFab").value;
+    const strAnoFab = document.getElementById("anoFab").value;
     const referencia = document.getElementById("referencia").value;
     const totalAssentos = document.getElementById("totalAssentos").value;
 
@@ -149,4 +160,4 @@ function alterarAeronave(){
             console.log(resultado.message);
         }
     })
-}    
+}  

@@ -21,10 +21,10 @@ const oraConnAttribs = async (): Promise<Connection> => {
 
 type Aeronave = {
   codigo?: number, 
-  fabricante?: string, 
+  marca?: string, 
   modelo?: string,
-  anoFabricacao?: number, 
-  totalAssentos?: number,
+  strAnoFab?: number, 
+  qtdeAssentos?: number,
   referencia?: string
 }
 
@@ -58,11 +58,11 @@ function aeronaveValida(aero: Aeronave) {
   let valida = false;
   let mensagem = "";
 
-  if (aero.fabricante === undefined) {
+  if (aero.marca === undefined) {
     mensagem = "Fabricante não informado";
   }
 
-  if (aero.fabricante !== 'Embraer' && aero.fabricante !== 'Airbus' && aero.fabricante !== 'Boeing') {
+  if (aero.marca !== 'Embraer' && aero.marca !== 'Airbus' && aero.marca !== 'Boeing') {
     mensagem = "Fabricante deve ser: Embraer, Airbus ou Boeing.";
   }
 
@@ -70,19 +70,19 @@ function aeronaveValida(aero: Aeronave) {
     mensagem = "Modelo não informado.";
   }
 
-  if (aero.totalAssentos === undefined) {
+  if (aero.qtdeAssentos === undefined) {
     mensagem = "Total de assentos não informado";
   }
 
-  if ((aero.totalAssentos !== undefined) && (aero.totalAssentos < 100 || aero.totalAssentos > 1000)) {
+  if ((aero.qtdeAssentos !== undefined) && (aero.qtdeAssentos < 100 || aero.qtdeAssentos > 1000)) {
     mensagem = "Total de assentos é inválido";
   }
 
-  if (aero.anoFabricacao === undefined) {
+  if (aero.strAnoFab === undefined) {
     mensagem = "Ano de fabricação não informado";
   }
 
-  if ((aero.anoFabricacao !== undefined) && (aero.anoFabricacao < 1990 || aero.anoFabricacao > 2026)) {
+  if ((aero.strAnoFab !== undefined) && (aero.strAnoFab < 1990 || aero.strAnoFab > 2026)) {
     mensagem = "Ano de fabricação deve ser entre 1990 e 2026";
   }
 
@@ -90,10 +90,10 @@ function aeronaveValida(aero: Aeronave) {
     mensagem = "Referência da aeronave não fornecida.";
   }
 
-  console.log("Validação de aeronave - Fabricante:", aero.fabricante);
+  console.log("Validação de aeronave - Fabricante:", aero.marca);
   console.log("Validação de aeronave - Modelo:", aero.modelo);
-  console.log("Validação de aeronave - Assentos:", aero.totalAssentos);
-  console.log("Validação de aeronave - Ano de Fabricação:", aero.anoFabricacao);
+  console.log("Validação de aeronave - Assentos:", aero.qtdeAssentos);
+  console.log("Validação de aeronave - Ano de Fabricação:", aero.strAnoFab);
   console.log("Validação de aeronave - Referência:", aero.referencia);
 
   if (mensagem === "") {
@@ -140,10 +140,10 @@ app.post("/incluirAeronave", async (req, res) => {
         VALUES
         (SEQ_AERONAVES.NEXTVAL, :1, :2, :3, :4, :5)`;
         const dados = [
-          aero.fabricante,
+          aero.marca,
           aero.modelo,
-          aero.anoFabricacao,
-          aero.totalAssentos,
+          aero.strAnoFab,
+          aero.qtdeAssentos,
           aero.referencia,
         ];
 
@@ -216,6 +216,7 @@ app.get("/listarAeronave", async (req, res) => {
 });
 
 app.post("/alterarAeronave", async (req, res) => {
+  
   let cr: CustomResponse = {
     status: "ERROR",
     message: "",
@@ -238,10 +239,10 @@ app.post("/alterarAeronave", async (req, res) => {
       WHERE CODIGO = :6`;
 
       const dados = [
-        aero.fabricante,
+        aero.marca,
         aero.modelo,
-        aero.anoFabricacao,
-        aero.totalAssentos,
+        aero.strAnoFab,
+        aero.qtdeAssentos,
         aero.referencia,
         aero.codigo,
       ];
