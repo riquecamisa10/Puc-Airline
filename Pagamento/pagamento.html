@@ -1,20 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Pagamento</title>
-    <link rel="stylesheet" type="text/css" href="pagamento.css">
+    <link rel="stylesheet" href="pagamento.css">
 </head>
 <body>
     <main>
+        <h1>Pagamento</h1>
 
-        <div class="pagamento">
+        <div class="conteudo">
 
+            <form>
+
+                <div class="email">
+                    <label for="exampleInputEmail">Email:</label>
+                    <input type="email" id="exampleInputEmail">
+                </div>
+                <div class="selecionarMetodo">
+                    <label for="exampleInputEmail">Metodo de Pagamento:</label>
+                    <select id="metodoPagamento" onchange="mostrarFormulario()">
+                        <option value="1"></option>
+                        <option value="2">Pix</option>
+                        <option value="3">Cartão de Crédito</option>
+                        <option value="4">Boleto</option>
+                    </select>
+                </div>
+
+                <div id="cartaoForm" class="hidden cartao">
+
+                    <hr>
+
+                    <div>
+                        <label for="cartao">Selecione o Cartão:</label>
+                        <select id="cartao" aria-label="Selecione o Cartão">
+                            <option selected>Selecione o Cartão</option>
+                            <option value="1">Visa</option>
+                            <option value="2">MasterCard</option>
+                            <option value="3">Elo</option>
+                            <option value="4">American Express</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="nome">Nome:</label>
+                        <input type="text" id="nome" placeholder="Correspondente ao Cartão" aria-label="Nome">
+                    </div>
+
+                    <div>
+                        <label for="sobrenome">Sobrenome:</label>
+                        <input type="text" id="sobrenome" placeholder="Correspondente ao Cartão" aria-label="Sobrenome">
+                    </div>
+
+                    <div>
+                        <label for="exampleInputNumero">Número:</label>
+                        <input type="text" id="exampleInputNumero" placeholder="Sem Espaços" aria-describedby="numeroHelp" oninput="limitarNumero(this)">
+                    </div>
+
+                    <div>
+                        <label for="exampleInputCVC">CVC:</label>
+                        <input type="text" id="exampleInputCVC" aria-describedby="CVCHelp">
+                    </div>
+
+                    <div>
+                        <label for="exampleInputValidade">Data de Validade:</label>
+                        <input type="month" class="data" id="exampleInputData" aria-describedby="dataHelp" min="2023-11" max="2030-12">
+                    </div>
+                    
+                    <div class="botaoCartao">
+                        <button type="submit">Confirmar</button>
+                    </div>
+                </div>
+
+                <div id="pixForm" class="hidden">
+                    <!-- Seu formulário para Pix -->
+                    <!-- ... -->
+                </div>
+
+                <div id="boletoForm" class="hidden">
+                    <!-- Seu formulário para Boleto -->
+                    <!-- ... -->
+                </div>
+
+                <div class="botaoVoltar">
+                    <button type="submit">Voltar</button>
+                </div>
+            </form>
         </div>
-
     </main>
-</body>
 
-<script src="pagamento.js"></script>
+    <script src="pagamento.js"></script>
+</body>
 </html>

@@ -1,13 +1,137 @@
 *{
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.pagamento{
-    border: 2px solid black;
-    width: 60%;
-    height: 500px;
+.hidden{
+    display: none;
+}
 
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: solid black 2px;
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
+}
+
+.conteudo{
+    padding: 10px;
+    margin: 10px;
+}
+
+.email{
+    font-size: 28px;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
 }
+
+.email input{
+    padding: 8px;
+    height: 30px;
+    width: 345px;
+    margin-left: 10px;
+}
+
+.selecionarMetodo{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.selecionarMetodo label{
+    font-size: 28px;
+}
+
+.selecionarMetodo select{
+    font-size: 17px;
+    width: 160px;
+    height: 32px;
+    margin-top: 5px;
+    margin-left: 10px;
+}
+
+h1{
+    display: block;
+    margin-top: 30px;
+    font-size: 50px;
+}
+
+.botaoVoltar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.botaoVoltar button{
+    margin-top: 30px;
+    height: 30px;
+    width: auto;
+    font-size: 15px;
+    padding: 5px;
+}
+
+hr{
+    margin: 20px 0px 20px 0px;
+    border: none;
+    height: 2px; 
+    background-color: black; 
+}
+
+/* Estilo Cartão de Credito */
+
+.cartao label{
+    font-size: 25px;
+    margin: 10px 0px 10px 0px;
+}
+
+.cartao input{
+    height: 28px;
+    margin: 10px 0px 10px 10px;
+    width: 100%;
+    padding: 5px;
+}
+
+.cartao select{
+    font-size: 17px;
+    height: 32px;
+    margin: 10px 0px 10px 10px;
+    width: 225px;
+}
+
+.cartao div{
+    display: flex;
+}
+
+.data{
+    width: 244px !important;
+}
+
+.botaoCartao{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.botaoCartao button{
+    margin-top: 30px;
+    height: 30px;
+    width: auto;
+    font-size: 15px;
+    padding: 5px;
+}
+
+/* Estilo Pix */
