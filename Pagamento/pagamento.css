@@ -92,6 +92,16 @@ hr{
     width: 100%;
 }
 
+.statusError{
+    color:red;
+    font-size: 25px;
+}
+
+.statusSuccess{
+   color: greenyellow;
+   font-size: 25px;
+}
+
 /* Estilo Cartão de Credito */
 
 .cartao label{
@@ -115,6 +125,7 @@ hr{
 
 .cartao div{
     display: flex;
+    justify-content: center;
 }
 
 .data{
@@ -133,6 +144,11 @@ hr{
     width: auto;
     font-size: 15px;
     padding: 5px;
+}
+
+.cartao div p{
+    margin-top: 25px;
+    font-size: 22px;
 }
 
 /* Estilo Pix */

@@ -16,7 +16,7 @@
 
                 <div class="email">
                     <label for="exampleInputEmail">Email:</label>
-                    <input type="email" id="exampleInputEmail">
+                    <input type="email" id="email">
                 </div>
                 <div class="selecionarMetodo">
                     <label for="exampleInputEmail">Metodo de Pagamento:</label>
@@ -56,21 +56,25 @@
 
                     <div>
                         <label for="exampleInputNumero">Número:</label>
-                        <input type="text" id="exampleInputNumero" placeholder="Sem Espaços" aria-describedby="numeroHelp" oninput="limitarNumero(this)">
+                        <input type="text" id="numero" placeholder="Sem Espaços" aria-describedby="numeroHelp" oninput="limitarNumero(this)">
                     </div>
 
                     <div>
                         <label for="exampleInputCVC">CVC:</label>
-                        <input type="text" id="exampleInputCVC" aria-describedby="CVCHelp">
+                        <input type="text" id="CVC" aria-describedby="CVCHelp">
                     </div>
 
                     <div>
                         <label for="exampleInputValidade">Data de Validade:</label>
                         <input type="month" class="data" id="exampleInputData" aria-describedby="dataHelp" min="2023-11" max="2030-12">
                     </div>
+
+                    <div>
+                        <p id="status" class="statusError"></p>
+                    </div>
                     
                     <div class="botaoCartao">
-                        <button type="submit">Confirmar</button>
+                        <button type="button" onclick="verificar()">Confirmar</button>
                     </div>
                 </div>
 
