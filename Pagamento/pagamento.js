@@ -2,19 +2,21 @@ function mostrarFormulario() {
     var metodoPagamento = document.getElementById("metodoPagamento").value;
     
     // Oculta todos os formulários
-    document.getElementById("cartaoForm").classList.add("hidden");
-    document.getElementById("pixForm").classList.add("hidden");
-    document.getElementById("boletoForm").classList.add("hidden");
+    document.getElementById("cartaoForm").style.display = 'none';
+    document.getElementById("pixForm").style.display = 'none';
+    document.getElementById("boletoForm").style.display = 'none';
 
-    // Mostra o formulário correspondente ao método de pagamento selecionado
-    if (metodoPagamento === "3") {
-        document.getElementById("cartaoForm").classList.remove("hidden");
-    } else if (metodoPagamento === "2") {
-        document.getElementById("pixForm").classList.remove("hidden");
-    } else if (metodoPagamento === "4") {
-        document.getElementById("boletoForm").classList.remove("hidden");
+    // Mostra o formulário correspondente
+    if (metodoPagamento == '2') {
+        document.getElementById("pixForm").style.display = 'block';
+    } else if (metodoPagamento == '3') {
+        document.getElementById("cartaoForm").style.display = 'block';
+    } else if (metodoPagamento == '4') {
+        document.getElementById("boletoForm").style.display = 'block';
     }
 }
+
+
 
 function limitarNumero(exampleInputNumero) {
     // Remova caracteres não numéricos

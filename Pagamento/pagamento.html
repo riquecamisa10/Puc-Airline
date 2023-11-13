@@ -21,11 +21,12 @@
                 <div class="selecionarMetodo">
                     <label for="exampleInputEmail">Metodo de Pagamento:</label>
                     <select id="metodoPagamento" onchange="mostrarFormulario()">
-                        <option value="1"></option>
+                        <option value="1" selected="selected"></option>
                         <option value="2">Pix</option>
                         <option value="3">Cartão de Crédito</option>
                         <option value="4">Boleto</option>
                     </select>
+                    
                 </div>
 
                 <div id="cartaoForm" class="hidden cartao">
@@ -73,14 +74,33 @@
                     </div>
                 </div>
 
-                <div id="pixForm" class="hidden">
-                    <!-- Seu formulário para Pix -->
-                    <!-- ... -->
+                <div id="pixForm" class="hidden pix">
+
+                    <div>
+
+                        <hr>
+                        
+                        <p>Escaneie o QrCode abaixo para efetuar o pagamento</p>
+
+                        <img src="./qrcode.png">
+
+                        
+                        <a href="./wall2.jpg" download="Comprovante de Pagamento">Baixar Comprovante</a>
+
+                    </div>
+
                 </div>
 
-                <div id="boletoForm" class="hidden">
-                    <!-- Seu formulário para Boleto -->
-                    <!-- ... -->
+                <div id="boletoForm" class="hidden boleto">
+
+                    <div>
+                    
+                        <hr>
+
+                        <a href="./wall2.jpg" download="Boleto">Baixar Boleto</a>
+
+                    </div>
+
                 </div>
 
                 <div class="botaoVoltar">
