@@ -65,6 +65,60 @@ function preencheuReferencia(){
     return resultado;
 }
 
+function preencheuCidadeOrigem(){
+    let resultado = false;
+    const cidadeOrigem = document.getElementById("cidadeOrigem").value;
+    if(cidadeOrigem.trim().length > 3){
+        resultado = true;
+    }
+    return resultado;
+}
+
+function preencheuDataSaida(){
+    let resultado = false;
+    const dataSaida = document.getElementById("dataSaida").value;
+    if(dataSaida.trim().length != 0){
+        resultado = true;
+    }
+    return resultado;
+}
+
+function preencheuHoraSaida(){
+    let resultado = false;
+    const horaSaida = document.getElementById("horaSaida").value;
+    if(horaSaida.trim().length != 0){
+        resultado = true;
+    }
+    return resultado;
+}
+
+function preencheuCidadeDestino(){
+    let resultado = false;
+    const cidadeDestino = document.getElementById("cidadeDestino").value;
+    if(cidadeDestino.trim().length > 3){
+        resultado = true;
+    }
+    return resultado;
+}
+
+function preencheuDataChegada(){
+    let resultado = false;
+    const dataChegada = document.getElementById("dataChegada").value;
+    if(dadaChegada.trim().length != 0){
+        resultado = true;
+    }
+    return resultado;
+}
+
+function preencheuHoraChegada(){
+    let resultado = false;
+    const horaChegada = document.getElementById("horaChegada").value;
+    if(horaChegada.trim().length != 0){
+        resultado = true;
+    }
+    return resultado;
+}
+
 function showStatusMessage(msg, error){
     var pStatus = document.getElementById("status");
 
@@ -81,7 +135,6 @@ document.addEventListener("DOMContentLoaded", function() {
     var elemento = document.getElementById("strAnoFab");
     if (elemento) {
         var valor = elemento.value;
-        // seu código aqui...
     
     } else {
         console.log("Elemento não encontrado");
@@ -131,17 +184,48 @@ window.Aeronave = function(){
         return;
     }
 
-    const codigo = document.getElementById("codigo").value;
+    if(!preencheuCidadeOrigem()){
+        showStatusMessage("Preencha corretamente a cidade de origem do voo", true);
+        return;
+    }
+
+    if(!preencheuDataSaida()){
+        showStatusMessage("Preencha corretamente a data de saida do voo", true);
+        return;
+    }
+
+    if(!(preencheuHoraSaida)){
+        showStatusMessage("Preencha corretamente a hora de saida do voo", true);
+        return;
+    }
+
+    if(!(preencheuCidadeDestino)){
+        showStatusMessage("Preencha corretamente a cidade de destino do voo", true);
+        return;
+    }
+
+    if(!(preencheuDataChegada)){
+        showStatusMessage("Preencha corretamente a data de chegada do voo", true);
+        return;
+    }
+
+    if(!(preencheuHoraChegada)){
+        showStatusMessage("Preencha corretamente a hora de chegada do voo", true);
+        return;
+    }
+
     const fabricante = document.getElementById("comboFabricantes").value;
     const modelo = document.getElementById("modelo").value;
     const strAnoFab = document.getElementById("anoFab").value;
     const referencia = document.getElementById("referencia").value;
     const totalAssentos = document.getElementById("totalAssentos").value;
+    const cidadeOrigem = document.getElementById("cidadeOrigem").value;
+    const dataSaida = document.getElementById("dataSaida").value;
+    const horaSaida = document.getElementById("horaSaida").value;
+    const cidadeDestino = document.getElementById("cidadeDestino").value;
+    const dataChegada = document.getElementById("dataChegada").value;
+    const horaChegada = document.getElementById("horaChegada").value;
 
-    // Aqui você deve validar os valores dos campos antes de fazer a requisição
-    // Certifique-se de que todos os campos estão corretamente preenchidos
-
-    // Em seguida, faça a requisição para alterar a aeronave
     fetchAlterar({
         codigo: codigo,
         marca: fabricante,
@@ -149,6 +233,12 @@ window.Aeronave = function(){
         strAnoFab: strAnoFab,
         qtdeAssentos: totalAssentos,
         referencia: referencia,
+        cidadeOrigem: cidadeOrigem,
+        dataSaida: dataSaida,
+        horaSaida: horaSaida,
+        cidadeDestino: cidadeDestino,
+        dataChegada: dataChegada,
+        horaChegada: horaChegada,
     })
     .then(resultado => {
         if(resultado.status === "SUCCESS"){

@@ -1,17 +1,23 @@
-*{
+* {
     padding: 0px;
     margin: 0px;
     text-decoration: none;
 }
 
-.statusError{
-    color:red;
+.statusError {
+    color: red;
     font-size: 25px;
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
 }
 
 .statusSuccess{
    color: greenyellow;
    font-size: 25px;
+   margin-top: 30px;
+   display: flex;
+   justify-content: center;
 }
 
 .geral{
@@ -100,67 +106,95 @@
     background: #4c5353;
 }
 
-body{
+body {
     background:url(wall2.jpg) 10px center; 
     background-size: cover;
     background-position: center; 
 }
 
-main{
+main {
     display: flex;
-    justify-content: center; 
-    align-items: center;
+    justify-content: center;
+    align-items: center; /* Adiciona alinhamento vertical */
+    height: 98vh; /* Faz com que a main ocupe 100% da altura da viewport */
 }
 
-.conteudo{
+.conteudo {
     display: flex;
     align-content: center;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center; /* Adiciona alinhamento horizontal */
     flex-wrap: wrap;
-
     border: 2px solid black;
     width: 700px;
-
     position: relative;
-
     padding: 30px 0px 30px 0px;
-
-    backdrop-filter: blur(15px);
-
-    margin-top: 20px;
+    backdrop-filter: blur(18px);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Adiciona uma sombra para destacar o conteúdo */
 }
 
-.conteudo h1{
-    font-size: 50px;
-}
-
-.conteudo select{
-    width: 66%;
+.conteudo select {
+    width: 290px;
     height: 30px;
     font-size: 17px;
+    align-self: flex-end; 
+    margin-left: 10px;
 }
 
-.conteudo label{
+.conteudo label {
     font-size: 25px;
+    text-align: right;
+    width: 33%;
+    white-space: nowrap; 
 }
 
-.conteudo input{
+.conteudo input {
     width: 50%;
     padding: 8px;
 }
 
-.conteudo button{
+.form-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.form-group label {
+    text-align: left; 
+    width: 45%; 
+}
+
+.conteudo input {
+    width: 50%;
+    padding: 8px;
+}
+
+.conteudo button {
     height: 35px;
     width: 32%;
 }
 
-form p{
+form h1{
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 40px;
+    font-size: 50px;
+}
+
+form p {
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between; 
     align-items: center;
     flex-wrap: wrap;
     margin-top: 20px;
+}
+
+.data{
+    width: 124px !important;
+    font-size: 16px;
 }
 
 .botao{
@@ -171,6 +205,8 @@ form p{
 
 button{
     margin: 10px;
+    border-radius: 8px;
+    font-size: 17px;
 }
 
 @media screen and (max-width: 1366px) {

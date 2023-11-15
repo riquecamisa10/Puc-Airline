@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Roboto+Condensed:wght@300&display=swap');
-
 *{
     margin:0;
     padding:0;
@@ -15,13 +13,11 @@ body {
     background: url('wall2.jpg') center center/cover no-repeat;
     display: flex;
     justify-content: center;
-    align-items: center;
-    overflow: hidden; /* Evita a barra de rolagem horizontal */
+    align-items: center; /* Evita a barra de rolagem horizontal */
 }
 
 main {
-    width: 100%;
-    max-width: 1200px; /* Defina um valor adequado conforme necessário */
+    width: 100%; /* Defina um valor adequado conforme necessário */
 }
 
 h1{
@@ -64,24 +60,31 @@ tbody tr:hover{
     z-index: 2;
     border-collapse: collapse;
     border-spacing: 0;
-    border-radius: 12px 12px 0 0;
-    overflow: hidden;
+    border-radius: 12px 12px 14px 14px;
     box-shadow: 0 4px 12px rgba(32, 32, 32, .3);
     background: #fafafa;
     text-align: center;
     max-height: 70vh;
-    overflow-y: auto;
 }
 
-
 th{
-    background: #bac8c8;;
+    background: #a4b4b4;;
     color:#fafafa;
     text-transform:uppercase;
     font-weight: bold;
     font-family: 'Dela Gothic One';
+    font-size: 18px;
     border-bottom: 1px solid black;
-    padding: 10px 30px 10px 30px;
+    padding: 10px 20px 10px 20px;
+    min-width: 100px;
+}
+
+.canto1{
+    border-radius: 15px 0px 0px 0px;
+}
+
+.canto2{
+    border-radius: 0px 15px 0px 0px;
 }
 
 td{
@@ -93,6 +96,7 @@ tr:nth-child(odd){
 }
 
 .botao {
+    text-align: center;
     position: absolute;
     bottom: 10px;
     left: 50%;
@@ -100,14 +104,28 @@ tr:nth-child(odd){
     z-index: 3;
 }
 
+
 button {
-    height: 40px;
-    width: 110px;
+    height: 50px;
+    width: 120px;
+    font-size: 15px;
+    border-radius: 7px;
 }
 
-/* Adicione um espaçamento abaixo da tabela para garantir que o botão esteja sempre visível */
 #tblAlunos + .botao {
     margin-top: 10px;
+}
+
+.geral{
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+}
+
+.header th{
+    color: #151d1d;
 }
 
 .menu {

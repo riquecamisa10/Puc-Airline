@@ -235,8 +235,8 @@ app.post("/alterarAeronave", async (req, res) => {
       connection = await oraConnAttribs();
 
       const cmdUpdateAero = `UPDATE AERONAVES
-      SET FABRICANTE = :1, MODELO = :2, ANO_FABRICACAO = :3, TOTAL_ASSENTOS = :4, REFERENCIA = :5
-      WHERE CODIGO = :6`;
+      SET FABRICANTE = :1, MODELO = :2, ANO_FABRICACAO = :3, TOTAL_ASSENTOS = :4, REFERENCIA = :5, 
+      WHERE CODIGO = :12`;
 
       const dados = [
         aero.marca,
@@ -244,6 +244,12 @@ app.post("/alterarAeronave", async (req, res) => {
         aero.strAnoFab,
         aero.qtdeAssentos,
         aero.referencia,
+        aero.cidadeOrigem,
+        aero.dataSaida,
+        aero.horaSaida,
+        aero.cidadeDestino,
+        aero.dataChegada,
+        aero.horaChegada,
         aero.codigo,
       ];
 
