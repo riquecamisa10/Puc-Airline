@@ -1,0 +1,181 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#cartaoForm, #pixForm, #boletoForm {
+    display: none;
+}
+
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+main{
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: solid black 2px;
+    max-width: 1100px;
+    padding: 20px;
+    margin: 30px 0px 30px 0px;
+}
+
+.conteudo{
+    padding: 10px;
+    margin: 10px;
+}
+
+.email{
+    font-size: 28px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.email input{
+    padding: 8px;
+    height: 30px;
+    width: 345px;
+    margin-left: 10px;
+}
+
+.selecionarMetodo{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.selecionarMetodo label{
+    font-size: 28px;
+}
+
+.selecionarMetodo select{
+    font-size: 17px;
+    width: 160px;
+    height: 32px;
+    margin-top: 5px;
+    margin-left: 10px;
+}
+
+h1{
+    display: block;
+    margin-top: 30px;
+    font-size: 50px;
+}
+
+.botaoVoltar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.botaoVoltar button{
+    margin-top: 30px;
+    height: 30px;
+    width: auto;
+    font-size: 15px;
+    padding: 5px;
+}
+
+hr{
+    margin: 20px 0px 20px 0px;
+    border: none;
+    height: 2px; 
+    background-color: black; 
+    width: 100%;
+}
+
+.statusError{
+    color:red;
+    font-size: 25px;
+}
+
+.statusSuccess{
+   color: greenyellow;
+   font-size: 25px;
+}
+
+/* Estilo Cartão de Credito */
+
+.cartao label{
+    font-size: 25px;
+    margin: 10px 0px 10px 0px;
+}
+
+.cartao input{
+    height: 28px;
+    margin: 10px 0px 10px 10px;
+    width: 100%;
+    padding: 5px;
+}
+
+.cartao select{
+    font-size: 17px;
+    height: 32px;
+    margin: 10px 0px 10px 10px;
+    width: 225px;
+}
+
+.cartao div{
+    display: flex;
+    justify-content: center;
+}
+
+.data{
+    width: 244px !important;
+}
+
+.botaoCartao{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.botaoCartao button{
+    margin-top: 30px;
+    height: 30px;
+    width: auto;
+    font-size: 15px;
+    padding: 5px;
+}
+
+.cartao div p{
+    margin-top: 25px;
+    font-size: 22px;
+}
+
+/* Estilo Pix */
+
+.pix div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pix p{
+    font-size: 21px;
+    margin: 20px 0px 30px 0px;
+}
+
+.pix a{
+    margin-top: 30px;
+}
+
+/* Estilo Boleto */
+
+.boleto div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.boleto a{
+    margin-top: 10px;
+}

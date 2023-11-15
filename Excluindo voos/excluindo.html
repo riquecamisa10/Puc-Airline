@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excluindo aeronave</title>
+    <link rel="stylesheet" type="text/css" href="excluindo.css">
+</head>
+<body>
+
+    <div class="menu">
+        <ul>
+            <li class="list">
+                <a href="../index.html">
+                    <span class="icone"><ion-icon name="home-outline"></ion-icon></span>
+                    <span class="title">Home</span>
+                </a>
+            </li>
+            <li class="list">
+                <a href="../Inserindo voos/inserindo.html">
+                    <span class="icone"><ion-icon name="airplane-outline"></ion-icon></span>
+                    <span class="title">Inserir Voo</span>
+                </a>
+            </li>
+            <li class="list">
+                <a href="../Exibindo voos/exibindo.html">
+                    <span class="icone"><ion-icon name="newspaper-outline"></ion-icon></span>
+                    <span class="title">Listar Voos</span>
+                </a>
+            </li>
+            <li class="list">
+                <a href="../Alterando voos/alterando.html">
+                    <span class="icone"><ion-icon name="repeat-outline"></ion-icon></span>
+                    <span class="title">Alterar Voo</span>
+                </a>
+            </li>
+            <li class="list">
+                <a href="../Excluindo voos/excluindo.html">
+                    <span class="icone"><ion-icon name="trash-outline"></ion-icon></span>
+                    <span class="title">Excluir Voo</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <main>
+
+        <div class="conteudo">
+            <h1>Excluir Aeronave</h1>
+            <p>
+                <label for="codigo">Codigo da Aeronave:</label><br/>
+                <input type="text" id="codigo" name="codigo"/>
+            </p>
+            <p>
+                <button
+                    type="button" 
+                    onclick="excluirAeronave();"
+                    id="btnExcluir"
+                    name="btnExcluir">Excluir
+                </button>
+            </p>
+            <p id="status" class="statusError"></p>
+        </div>
+
+    </main>
+
+    <script src="excluindo.js"></script>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Roboto+Condensed:wght@300&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    outline:0;
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    background: url('wall2.jpg') center center/cover no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Evita a barra de rolagem horizontal */
+}
+
+main {
+    width: 100%;
+    max-width: 1200px; /* Defina um valor adequado conforme necessário */
+}
+
+h1{
+    text-align: center;
+}
+
+p{
+    text-align: center;
+}
+
+#thRA {
+    text-align: left;
+    width: 20%;
+}
+
+#thNome {
+    text-align: left;
+    width: 80%;
+}
+
+tbody tr:hover{
+    background-color: rgb(120, 172, 250);
+}
+
+.linhaImpar{
+    background-color: #f3f3f3;
+}
+
+.linhaPar{
+    background-color: #c6c6c6;
+}
+
+.header th{
+    color: #151d1d;
+}
+
+#tblAlunos {
+    width: 60%;
+    margin: 20px auto;
+    z-index: 2;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-radius: 12px 12px 0 0;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(32, 32, 32, .3);
+    background: #fafafa;
+    text-align: center;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+
+th{
+    background: #bac8c8;;
+    color:#fafafa;
+    text-transform:uppercase;
+    font-weight: bold;
+    font-family: 'Dela Gothic One';
+    border-bottom: 1px solid black;
+    padding: 10px 30px 10px 30px;
+}
+
+td{
+    font-family:'Roboto Condensed', sans-serif;
+}
+
+tr:nth-child(odd){
+    background-color:#e0e0e0;
+}
+
+.botao {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+}
+
+button {
+    height: 40px;
+    width: 110px;
+}
+
+/* Adicione um espaçamento abaixo da tabela para garantir que o botão esteja sempre visível */
+#tblAlunos + .botao {
+    margin-top: 10px;
+}
+
+.menu {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 70px;
+    background: #4c5353;
+    box-shadow: 8px 0 0 #385a5a;
+    overflow: hidden;
+    transition: width 0.5s;
+    z-index: 1;
+} 
+
+.menu:hover {
+    width: 220px;
+}
+
+.menu ul {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+.menu ul li {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.menu ul li a {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    text-decoration: none;
+    color: #fafafa;
+    width: 100%;
+    padding: 10px 0;
+}
+
+.menu ul li a .icone {
+    min-width: 60px;
+    height: 60px;
+    text-align: center;
+    line-height: 60px; 
+    font-size: 35px;
+    margin-left: 6px;
+}
+
+.menu ul li a .title {
+    display: none;
+    padding-left: 20px;
+    height: 60px;
+    line-height: 60px;
+    white-space: nowrap;
+}
+
+.menu:hover ul li a .title {
+    display: block;
+}
+
+.menu ul li.active {
+    background: #4c5353;
+}
