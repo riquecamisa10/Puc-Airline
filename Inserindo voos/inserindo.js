@@ -58,7 +58,7 @@ function preencheuCidadeOrigem(){
 function preencheuDataSaida(){
     let resultado = false;
     const dataSaida = document.getElementById("dataSaida").value;
-    if(dataSaida.trim().length != 0){
+    if(dataSaida.length > 0){
         resultado = true;
     }
     return resultado;
@@ -67,7 +67,7 @@ function preencheuDataSaida(){
 function preencheuHoraSaida(){
     let resultado = false;
     const horaSaida = document.getElementById("horaSaida").value;
-    if(horaSaida.trim().length != 0){
+    if(horaSaida.length > 0){
         resultado = true;
     }
     return resultado;
@@ -85,7 +85,7 @@ function preencheuCidadeDestino(){
 function preencheuDataChegada(){
     let resultado = false;
     const dataChegada = document.getElementById("dataChegada").value;
-    if(dadaChegada.trim().length != 0){
+    if(dataChegada.trim().length != 0){
         resultado = true;
     }
     return resultado;
@@ -158,22 +158,22 @@ function inserirAeronave() {
         return;
     }
 
-    if(!(preencheuHoraSaida)){
+    if(!preencheuHoraSaida()){
         showStatusMessage("Preencha corretamente a hora de saida do voo", true);
         return;
     }
 
-    if(!(preencheuCidadeDestino)){
+    if(!preencheuCidadeDestino()){
         showStatusMessage("Preencha corretamente a cidade de destino do voo", true);
         return;
     }
 
-    if(!(preencheuDataChegada)){
+    if(!preencheuDataChegada()){
         showStatusMessage("Preencha corretamente a data de chegada do voo", true);
         return;
     }
 
-    if(!(preencheuHoraChegada)){
+    if(!preencheuHoraChegada()){
         showStatusMessage("Preencha corretamente a hora de chegada do voo", true);
         return;
     }
@@ -191,7 +191,7 @@ function inserirAeronave() {
     const horaChegada = document.getElementById("horaChegada").value;
 
     fetchInserir({
-        marca: fabricante, 
+        marca: fabricante,
         modelo: modelo,
         strAnoFab: anoFab,
         qtdeAssentos: totalAssentos,
