@@ -1,0 +1,147 @@
+*{
+    padding: 0px;
+    margin: 0px;
+    text-decoration: none;
+}
+
+.geral{
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+}
+
+.header th{
+    color: #151d1d;
+}
+
+.menu {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 70px;
+    background: #4c5353;
+    box-shadow: 8px 0 0 #385a5a;
+    overflow: hidden;
+    transition: width 0.5s;
+    z-index: 1;
+} 
+
+.menu:hover {
+    width: 220px;
+}
+
+.menu ul {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+.menu ul li {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.menu ul li a {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    text-decoration: none;
+    color: #fafafa;
+    width: 100%;
+    padding: 10px 0;
+}
+
+.menu ul li a .icone {
+    min-width: 60px;
+    height: 60px;
+    text-align: center;
+    line-height: 60px; 
+    font-size: 35px;
+    margin-left: 6px;
+}
+
+.menu ul li a .title {
+    display: none;
+    padding-left: 20px;
+    height: 60px;
+    line-height: 60px;
+    white-space: nowrap;
+}
+
+.menu:hover ul li a .title {
+    display: block;
+}
+
+.menu ul li.active {
+    background: #4c5353;
+}
+
+body{
+    background:url(wall2.jpg) 10px center / cover; 
+    background-size: cover;
+    background-position: center; 
+}
+
+main{
+    display: flex;
+    justify-content: center; /* Horizontally center the content */
+    align-items: center; /* Vertically center the content */
+    height: 100vh; 
+}
+
+.conteudo{
+    border: 2px solid black;
+    width: 400px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 30px 0px 30px 0px;
+    backdrop-filter: blur(15px);
+}
+
+.conteudo h1{
+    padding: 20px;
+}
+
+.conteudo label{
+    font-size: 22px;
+}
+
+.conteudo input{
+    margin-top: 10px;
+    padding: 7px;
+}
+
+.conteudo button{
+    margin-top: 20px;
+    height: 40px;
+    width: 90px;
+}
+
+.statusError{
+    margin-top: 25px;
+    color: red;
+    font-size: 25px;
+}
+
+.statusSuccess{
+    margin-top: 25px;
+    color: greenyellow;
+    font-size: 25px;
+}
