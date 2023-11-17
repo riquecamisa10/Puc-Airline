@@ -28,16 +28,6 @@ p{
     text-align: center;
 }
 
-#thRA {
-    text-align: left;
-    width: 20%;
-}
-
-#thNome {
-    text-align: left;
-    width: 80%;
-}
-
 tbody tr:hover{
     background-color: rgb(120, 172, 250);
 }

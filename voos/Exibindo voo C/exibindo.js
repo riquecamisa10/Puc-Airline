@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function fetchListar() {
-    return fetch('http://localhost:3000/listarAeronave', { cache: 'no-store' })
+    return fetch('http://localhost:3000/listarVoo', { cache: 'no-store' })
         .then(response => response.json())
         .then(data => {
             console.log(data); 
@@ -32,14 +32,13 @@ function preencherTabela(voos) {
             let linha = `
                 <tr class="${estilo}">
                 <td>${voo.codigo}</td>
-                <td>${voo.fabricante}</td>
-                <td>${voo.modelo}</td>
-                <td>${voo.anoFabricacao}</td>
-                <td>${voo.totalAssentos}</td>
-                <td>${voo.cidadeOrigem}</td>
+                <td>${voo.aeronave}</td>
+                <td>${voo.aeroportoSaida}</td>
+                <td>${voo.aeroportoDestino}</td>
+                <td>${voo.escalas}</td>
+                <td>${voo.valor}</td>
                 <td>${voo.dataSaida}</td>
                 <td>${voo.horaSaida}</td>
-                <td>${voo.cidadeDestino}</td>
                 <td>${voo.dataChegada}</td>
                 <td>${voo.horaChegada}</td>
                 </tr>`;

@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function fetchListar() {
-    return fetch('http://localhost:3000/listarAeronave', { cache: 'no-store' })
+    return fetch('http://localhost:3000/listarTrecho', { cache: 'no-store' })
         .then(response => response.json())
         .then(data => {
             console.log(data); 
@@ -18,30 +18,24 @@ function fetchListar() {
         });
 }
 
-function preencherTabela(voos) {
+function preencherTabela(trecho) {
     console.log('Função preencherTabela() foi chamada');
-    console.log(voos)
+    console.log(trecho)
     const tbody = document.getElementById("tblAlunosDados");
     let count = 0;
 
     tbody.innerHTML = '';
 
-    if (voos) {
-        voos.forEach((voo) => {
+    if (trecho) {
+        trecho.forEach((trecho) => {
             let estilo = (count % 2 === 0) ? "linhaPar" : "linhaImpar";
             let linha = `
                 <tr class="${estilo}">
-                <td>${voo.codigo}</td>
-                <td>${voo.fabricante}</td>
-                <td>${voo.modelo}</td>
-                <td>${voo.anoFabricacao}</td>
-                <td>${voo.totalAssentos}</td>
-                <td>${voo.cidadeOrigem}</td>
-                <td>${voo.dataSaida}</td>
-                <td>${voo.horaSaida}</td>
-                <td>${voo.cidadeDestino}</td>
-                <td>${voo.dataChegada}</td>
-                <td>${voo.horaChegada}</td>
+                <td>${trecho.codigo}</td>
+                <td>${trecho.nome}</td>
+                <td>${trecho.sigla}</td>
+                <td>${trecho.cidade}</td>
+                <td>${trecho.pais}</td>sss
                 </tr>`;
             tbody.innerHTML += linha;
             count++;

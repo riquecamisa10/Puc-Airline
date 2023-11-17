@@ -13,11 +13,11 @@ body {
     background: url('wall2.jpg') center center/cover no-repeat;
     display: flex;
     justify-content: center;
-    align-items: center; /* Evita a barra de rolagem horizontal */
+    align-items: center; 
 }
 
 main {
-    width: 100%; /* Defina um valor adequado conforme necessário */
+    width: 100%; 
 }
 
 h1{
@@ -26,16 +26,6 @@ h1{
 
 p{
     text-align: center;
-}
-
-#thRA {
-    text-align: left;
-    width: 20%;
-}
-
-#thNome {
-    text-align: left;
-    width: 80%;
 }
 
 tbody tr:hover{
