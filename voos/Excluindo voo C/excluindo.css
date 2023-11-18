@@ -120,7 +120,9 @@ main{
 }
 
 .conteudo label{
+    display: flex;
     font-size: 22px;
+    justify-content: center;
 }
 
 .conteudo input{

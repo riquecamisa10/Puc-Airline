@@ -13,11 +13,25 @@ body {
     background: url('wall2.jpg') center center/cover no-repeat;
     display: flex;
     justify-content: center;
-    align-items: center; /* Evita a barra de rolagem horizontal */
+    align-items: center; 
 }
 
 main {
-    width: 100%; /* Defina um valor adequado conforme necessário */
+    width: 100%; 
+}
+
+#thNome {
+    width: 550px; 
+}
+
+td {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 19px;
+    padding: 5px;
+    max-width: 100px; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 h1{
@@ -75,12 +89,6 @@ th{
 
 .canto2{
     border-radius: 0px 15px 0px 0px;
-}
-
-td{
-    font-family:'Roboto Condensed', sans-serif;
-    font-size: 19px;
-    padding: 5px;
 }
 
 tr:nth-child(odd){

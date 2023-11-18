@@ -1,12 +1,3 @@
-function selecionouCodigo() {
-    let resultado = false;
-    const codigo = document.getElementById("codigo").value;
-    if (codigo !== "0") {
-        resultado = true;
-    }
-    return resultado;
-}
-
 function preencheuAeronave() {
     let resultado = false;
     const aeronave = document.getElementById("aeronave").value;
@@ -37,7 +28,7 @@ function preencheuAeroportoDestino() {
 function preencheuEscalas() {
     let resultado = false;
     const escalas = document.getElementById("escalas").value;
-    if (escalas.trim().length > 0) {
+    if (escalas.trim().length > -1) {
         resultado = true;
     }
     return resultado;
@@ -112,27 +103,22 @@ function fetchInserir(body) {
 
 function inserirVoo() {
 
-    if (!selecionouCodigo()) {
-        showStatusMessage("Selecione o codigo", true);  
-        return;
-    }
-
     if (!preencheuAeronave()) {
-        showStatusMessage("Preencha a aeronave", true);
+        showStatusMessage("Preencha corretamente a aeronave", true);
         return;
     }
 
     if (!preencheuAeroportoPartida()) {
-        showStatusMessage("Preencha o aeroporto de partida", true);
+        showStatusMessage("Preencha corretamente o aeroporto de partida", true);
         return;
     }
 
     if (!preencheuAeroportoDestino()) {
-        showStatusMessage("Preencha o aeroporto de destino", true);
+        showStatusMessage("Preencha corretamente o aeroporto de destino", true);
         return;
     }
 
-    if (!escalas()) {
+    if (!preencheuEscalas()) {
         showStatusMessage("Preencha corretamente o total de escalas", true);
         return;
     }
@@ -162,7 +148,6 @@ function inserirVoo() {
         return;
     }
 
-    const codigo = document.getElementById("codigo").value;
     const aeronave = document.getElementById("aeronave").value;
     const aeroportoPartida = document.getElementById("aeroportoPartida").value;
     const aeroportoDestino = document.getElementById("aeroportoDestino").value;
@@ -172,19 +157,21 @@ function inserirVoo() {
     const horaSaida = document.getElementById("horaSaida").value;
     const dataChegada = document.getElementById("dataChegada").value;
     const horaChegada = document.getElementById("horaChegada").value;
+  
+    const voo = {
+      aeronave,
+      aeroportoPartida,
+      aeroportoDestino,
+      escalas,
+      valor,
+      dataSaida,
+      horaSaida,
+      dataChegada,
+      horaChegada,
+    };
+    console.log("Voo object:", voo);
 
-    fetchInserir({
-        codigo: codigo,
-        aeronave: aeronave,
-        aeroportoPartida: aeroportoPartida,
-        aeroportoDestino: aeroportoDestino,
-        escalas: escalas,
-        valor: valor,
-        dataSaida: dataSaida,
-        horaSaida: horaSaida,
-        dataChegada: dataChegada,
-        horaChegada: horaChegada,
-    })
+    fetchInserir(voo)
     .then(resultado => {
         if (resultado.status === "SUCCESS") {
             showStatusMessage("Voo cadastrado...", false);

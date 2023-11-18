@@ -33,7 +33,7 @@ function preencherTabela(voos) {
                 <tr class="${estilo}">
                 <td>${voo.codigo}</td>
                 <td>${voo.aeronave}</td>
-                <td>${voo.aeroportoSaida}</td>
+                <td>${voo.aeroportoPartida}</td>
                 <td>${voo.aeroportoDestino}</td>
                 <td>${voo.escalas}</td>
                 <td>${voo.valor}</td>

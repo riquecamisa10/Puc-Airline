@@ -8,67 +8,46 @@ function codigoValido(){
     return resultado; 
 }
 
-function anoValido() {
+function preencheuAeronave() {
     let resultado = false;
-    const strAno = document.getElementById("anoFab").value; // Retrieve the value from the input field
-    const anoValue = parseInt(strAno); // Parse the value to an integer
-    
-    console.log("Valor de strAno: " + strAno); // Use the correct variable name
-    console.log("Valor de anoValue: " + anoValue); // Use the correct variable name
-
-    if (!isNaN(anoValue) && anoValue >= 1990 && anoValue <= 2026) {
-        resultado = true;
-    } else {
-        showStatusMessage("Ano de fabricação não informado ou fora do intervalo válido (1990-2026)", true);
-    }
-
-    return resultado;
-}
-
-function totalAssentosValido(){
-    let resultado = false;
-    const strAssentos = document.getElementById("totalAssentos").value;
-    const assentos = parseInt(strAssentos);
-    if (assentos > 0){
-    resultado = true;
-    }
-    return resultado; 
-}
-
-function selecionouFabricante(){
-    let resultado = false; 
-    var listaFabricantes = document.getElementById("comboFabricantes").value;
-    var valorSelecionado = listaFabricantes.value;
-    // se quiséssemos obter o TEXTO selecionado. 
-    // var text = listaFabricantes.options[listaFabricantes.selectedIndex].text;
-    if (valorSelecionado !== "0"){
+    const aeronave = document.getElementById("aeronave").value;
+    if (aeronave.trim().length > 0) {
         resultado = true;
     }
     return resultado;
 }
 
-function preencheuModelo(){
+function preencheuAeroportoPartida() {
     let resultado = false;
-    const modeloInformado = document.getElementById("modelo").value;
-    if(modeloInformado.length > 0){
+    const aeroportoPartida = document.getElementById("aeroportoPartida").value;
+    if (aeroportoPartida.trim().length > 0) {
         resultado = true;
     }
     return resultado;
 }
 
-function preencheuReferencia(){
+function preencheuAeroportoDestino() {
     let resultado = false;
-    const referenciaReferencia = document.getElementById("referencia").value;
-    if(referenciaReferencia.length > 0){
+    const aeroportoDestino = document.getElementById("aeroportoDestino").value;
+    if (aeroportoDestino.trim().length > 0) {
         resultado = true;
     }
     return resultado;
 }
 
-function preencheuCidadeOrigem(){
+function preencheuEscalas() {
     let resultado = false;
-    const cidadeOrigem = document.getElementById("cidadeOrigem").value;
-    if(cidadeOrigem.trim().length > 3){
+    const escalas = document.getElementById("escalas").value;
+    if (escalas.trim().length > -1) {
+        resultado = true;
+    }
+    return resultado;
+}
+
+function preencheuValorPassagem(){
+    let resultado = false;
+    const valor = document.getElementById("valor").value;
+    if(valor.trim().length > 0){
         resultado = true;
     }
     return resultado;
@@ -92,19 +71,10 @@ function preencheuHoraSaida(){
     return resultado;
 }
 
-function preencheuCidadeDestino(){
-    let resultado = false;
-    const cidadeDestino = document.getElementById("cidadeDestino").value;
-    if(cidadeDestino.trim().length > 3){
-        resultado = true;
-    }
-    return resultado;
-}
-
 function preencheuDataChegada(){
     let resultado = false;
     const dataChegada = document.getElementById("dataChegada").value;
-    if(dataChegada.length > 0){
+    if(dataChegada.trim().length != 0){
         resultado = true;
     }
     return resultado;
@@ -113,16 +83,20 @@ function preencheuDataChegada(){
 function preencheuHoraChegada(){
     let resultado = false;
     const horaChegada = document.getElementById("horaChegada").value;
-    if(horaChegada.length > 0){
+    if(horaChegada.trim().length != 0){
         resultado = true;
     }
     return resultado;
 }
 
-function showStatusMessage(msg, error){
+function showStatusMessage(msg, error) {
     var pStatus = document.getElementById("status");
-
-    pStatus.className = error ? "statusError" : "statusSuccess";
+    
+    if (error === true) {
+        pStatus.className = "statusError";
+    } else {
+        pStatus.className = "statusSuccess";
+    }
     pStatus.textContent = msg;
 }
 
@@ -133,7 +107,7 @@ function fetchAlterar(body) {
         body: JSON.stringify(body)
     };
 
-    return fetch('http://localhost:3000/alterarAeronave', requestOptions)
+    return fetch('http://localhost:3000/alterarVoo', requestOptions)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -146,40 +120,35 @@ function fetchAlterar(body) {
         });
 }
 
-window.Aeronave = function(){
+window.Alterar = function(){
 
     if(!codigoValido()){
         showStatusMessage("Codigo inexistente", true);
         return;
     }
 
-    if(!selecionouFabricante()){
-        showStatusMessage("Selecione o fabricante", true);  
+    if (!preencheuAeronave()) {
+        showStatusMessage("Preencha corretamente a aeronave", true);
         return;
     }
 
-    if(!preencheuModelo()){
-        showStatusMessage("Preencha o modelo", true);
+    if (!preencheuAeroportoPartida()) {
+        showStatusMessage("Preencha corretamente o aeroporto de partida", true);
         return;
     }
 
-    if(!preencheuReferencia()){
-        showStatusMessage("Preencha o registro de referencia da aeronave", true);
+    if (!preencheuAeroportoDestino()) {
+        showStatusMessage("Preencha corretamente o aeroporto de destino", true);
         return;
     }
 
-    if (!anoValido()) {
-        showStatusMessage("Ano de fabricação deve estar entre 1990 e 2026", true);
-        return;
-    }    
-
-    if(!totalAssentosValido()){
-        showStatusMessage("Preencha corretamente o total de assentos", true);
+    if (!preencheuEscalas()) {
+        showStatusMessage("Preencha corretamente o total de escalas", true);
         return;
     }
 
-    if(!preencheuCidadeOrigem()){
-        showStatusMessage("Preencha corretamente a cidade de origem do voo", true);
+    if(!preencheuValorPassagem()){
+        showStatusMessage("Preencha corretamente o valor da passagem", true);
         return;
     }
 
@@ -190,11 +159,6 @@ window.Aeronave = function(){
 
     if(!preencheuHoraSaida()){
         showStatusMessage("Preencha corretamente a hora de saida do voo", true);
-        return;
-    }
-
-    if(!preencheuCidadeDestino()){
-        showStatusMessage("Preencha corretamente a cidade de destino do voo", true);
         return;
     }
 
@@ -209,44 +173,38 @@ window.Aeronave = function(){
     }
 
     const codigo = document.getElementById("codigo").value;
-    const fabricante = document.getElementById("comboFabricantes").value;
-    const modelo = document.getElementById("modelo").value;
-    const anoFab = document.getElementById("anoFab").value;
-    const registro = document.getElementById("referencia").value;
-    const totalAssentos = document.getElementById("totalAssentos").value;
-    const cidadeOrigem = document.getElementById("cidadeOrigem").value;
+    const aeronave = document.getElementById("aeronave").value;
+    const aeroportoPartida = document.getElementById("aeroportoPartida").value;
+    const aeroportoDestino = document.getElementById("aeroportoDestino").value;
+    const escalas = document.getElementById("escalas").value;
+    const valor = document.getElementById("valor").value;
     const dataSaida = document.getElementById("dataSaida").value;
     const horaSaida = document.getElementById("horaSaida").value;
-    const cidadeDestino = document.getElementById("cidadeDestino").value;
     const dataChegada = document.getElementById("dataChegada").value;
     const horaChegada = document.getElementById("horaChegada").value;
 
     console.log(JSON.stringify({
         codigo: codigo,
-        marca: fabricante,
-        modelo: modelo,
-        strAnoFab: anoFab,
-        qtdeAssentos: totalAssentos,
-        referencia: registro,
-        cidadeOrigem: cidadeOrigem,
+        aeronave: aeronave,
+        aeroportoPartida: aeroportoPartida,
+        aeroportoDestino: aeroportoDestino,
+        escalas: escalas,
+        valor: valor,
         dataSaida: dataSaida,
         horaSaida: horaSaida,
-        cidadeDestino: cidadeDestino,
         dataChegada: dataChegada,
         horaChegada: horaChegada,
     }));    
 
     fetchAlterar({
         codigo: codigo,
-        marca: fabricante,
-        modelo: modelo,
-        strAnoFab: anoFab,
-        qtdeAssentos: totalAssentos,
-        referencia: registro,
-        cidadeOrigem: cidadeOrigem,
+        aeronave: aeronave,
+        aeroportoPartida: aeroportoPartida,
+        aeroportoDestino: aeroportoDestino,
+        escalas: escalas,
+        valor: valor,
         dataSaida: dataSaida,
         horaSaida: horaSaida,
-        cidadeDestino: cidadeDestino,
         dataChegada: dataChegada,
         horaChegada: horaChegada,
     })

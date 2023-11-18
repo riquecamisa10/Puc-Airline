@@ -52,12 +52,6 @@ function rowsToAeronaves(oracleRows) {
                 anoFabricacao: registro.ANO_FABRICACAO,
                 totalAssentos: registro.TOTAL_ASSENTOS,
                 referencia: registro.REFERENCIA,
-                //cidadeOrigem: registro.CIDADE_ORIGEM,
-                //dataSaida: registro.DATA_SAIDA,
-                //horaSaida: registro.HORA_SAIDA,
-                //cidadeDestino: registro.CIDADE_DESTINO,
-                //dataChegada: registro.DATA_CHEGADA,
-                //horaChegada: registro.HORA_CHEGADA,
             };
             aeronaves.push(aeronave);
         });
@@ -73,14 +67,12 @@ function rowsToVoos(oracleRows) {
             voo = {
                 codigo: registro.CODIGO,
                 aeronave: registro.AERONAVE,
-                aeroportoPartida: registro.AEROPORTOPARTIDA,
-                aeroportoDestino: registro.AEROPORTODESTINO,
+                aeroportoPartida: registro.AEROPORTO_SAIDA,
+                aeroportoDestino: registro.AEROPORTO_DESTINO,
                 escalas: registro.ESCALAS,
-                valorPassagem: registro.VALORPASSAGEM,
-                cidadeOrigem: registro.CIDADE_ORIGEM,
+                valor: registro.VALOR_PASSAGEM,
                 dataSaida: registro.DATA_SAIDA,
                 horaSaida: registro.HORA_SAIDA,
-                cidadeDestino: registro.CIDADE_DESTINO,
                 dataChegada: registro.DATA_CHEGADA,
                 horaChegada: registro.HORA_CHEGADA,
             };
@@ -151,25 +143,22 @@ function aeronaveValida(aero) {
 function trechoValido(trecho) {
     let valida = false;
     let mensagem = "";
-    if (trecho.codigo === undefined) {
-        mensagem = "Fabricante não informado";
-    }
     if (trecho.nome === undefined) {
-        mensagem = "Fabricante não informado";
+        mensagem = "Nome não informado";
     }
     if (trecho.origem === undefined) {
-        mensagem = "Modelo não informado.";
+        mensagem = "Origem não informada.";
     }
     if (trecho.destino === undefined) {
-        mensagem = "Modelo não informado.";
+        mensagem = "Destino não informado.";
     }
     if (trecho.aeronave === undefined) {
-        mensagem = "Total de assentos não informado.";
+        mensagem = "Aeronave não informada.";
     }
-    console.log("Validação de aeronave - Fabricante:", trecho.nome);
-    console.log("Validação de aeronave - Modelo:", trecho.origem);
-    console.log("Validação de aeronave - Ano de Fabricação:", trecho.destino);
-    console.log("Validação de aeronave - Referência:", trecho.aeronave);
+    console.log("Validação de trecho - Nome:", trecho.nome);
+    console.log("Validação de trecho - Origem:", trecho.origem);
+    console.log("Validação de trecho - Destino:", trecho.destino);
+    console.log("Validação de trecho - Aeronave:", trecho.aeronave);
     if (mensagem === "") {
         valida = true;
     }
@@ -179,53 +168,57 @@ function trechoValido(trecho) {
     return [valida, mensagem];
 }
 function vooValido(voo) {
-    let valida = false;
-    let mensagem = "";
-    if (voo.codigo === undefined) {
-        mensagem = "Fabricante não informado";
+    let valida = true;
+    let mensagens = [];
+    if (voo.aeronave === undefined) {
+        mensagens.push("Aeronave não informada.");
+        valida = false;
     }
-    if (voo.dataSaida === undefined) {
-        mensagem = "Fabricante não informado";
-    }
-    if (voo.horaSaida === undefined) {
-        mensagem = "Modelo não informado.";
-    }
-    if (voo.dataChegada === undefined) {
-        mensagem = "Total de assentos não informado.";
-    }
-    if (voo.horaChegada !== undefined) {
-        mensagem = "Total de assentos é inválido.";
-    }
-    if (voo.valorPassagem === undefined) {
-        mensagem = "Ano de fabricação não informado.";
-    }
-    if (voo.escalas !== undefined) {
-        mensagem = "Ano de fabricação deve ser entre 1990 e 2026.";
-    }
-    if (voo.aeroportoSaida === undefined) {
-        mensagem = "Referência da aeronave não fornecida.";
-    }
-    if (voo.aeroportoSaida === undefined) {
-        mensagem = "Cidade de origem não fornecida.";
+    if (voo.aeroportoPartida === undefined) {
+        mensagens.push("Aeroporto de saída não fornecido.");
+        valida = false;
     }
     if (voo.aeroportoDestino === undefined) {
-        mensagem = "Data de saida não fornecida.";
+        mensagens.push("Aeroporto de destino não fornecido.");
+        valida = false;
     }
-    console.log("Validação de aeronave - Fabricante:", voo.dataSaida);
-    console.log("Validação de aeronave - Modelo:", voo.horaSaida);
-    console.log("Validação de aeronave - Ano de Fabricação:", voo.dataChegada);
-    console.log("Validação de aeronave - Referência:", voo.valorPassagem);
-    console.log("Validação de aeronave - Assentos:", voo.escalas);
-    console.log("Validação de aeronave - Cidade de Origem:", voo.aeroportoSaida);
-    console.log("Validação de aeronave - Data de Saida:", voo.aeroportoSaida);
-    console.log("Validação de aeronave - Hora de Saida:", voo.aeroportoDestino);
-    if (mensagem === "") {
-        valida = true;
+    if (voo.escalas === undefined) {
+        mensagens.push("Número de escalas não fornecido.");
+        valida = false;
     }
-    else {
-        console.log("Erro de validação:", mensagem);
+    if (voo.valor === undefined) {
+        mensagens.push("Valor da passagem não informado.");
+        valida = false;
     }
-    return [valida, mensagem];
+    if (voo.dataSaida === undefined) {
+        mensagens.push("Data de saída não informada.");
+        valida = false;
+    }
+    if (voo.horaSaida === undefined) {
+        mensagens.push("Hora de saída não informada.");
+        valida = false;
+    }
+    if (voo.dataChegada === undefined) {
+        mensagens.push("Data de chegada não informada.");
+        valida = false;
+    }
+    if (voo.horaChegada === undefined) {
+        mensagens.push("Hora de chegada não informada.");
+        valida = false;
+    }
+    console.log("Validação de voo - Aeronave:", voo.aeronave);
+    console.log("Validação de voo - Aeroporto de Saida:", voo.aeroportoPartida);
+    console.log("Validação de voo - Aeroporto de Destino:", voo.aeroportoDestino);
+    console.log("Validação de voo - Escalas:", voo.escalas);
+    console.log("Validação de voo - Valor da Passagem:", voo.valor);
+    console.log("Validação de voo - Data de Saida:", voo.dataSaida);
+    console.log("Validação de voo - Hora de Saida:", voo.horaSaida);
+    console.log("Validação de voo - Data de Chegada:", voo.dataChegada);
+    console.log("Validação de voo - Hora de Chegada:", voo.horaChegada);
+    if (mensagens.length > 0) {
+        console.log("Erro de validação:", mensagens);
+    }
+    return [valida, mensagens.join(" ")];
 }
 app.post("/incluirAeronave", async (req, res) => {
     let cr = {
@@ -248,7 +241,7 @@ app.post("/incluirAeronave", async (req, res) => {
                 const cmdInsertAero = `INSERT INTO AERONAVES 
         (CODIGO, FABRICANTE, MODELO, ANO_FABRICACAO, TOTAL_ASSENTOS, REFERENCIA)
         VALUES
-        (SEQ_AERONAVES.NEXTVAL, :1, :2, :3, :4, :5)`;
+        (AERONAVES_SEQ.NEXTVAL, :1, :2, :3, :4, :5)`;
                 const dados = [
                     aero.marca,
                     aero.modelo,
@@ -312,9 +305,9 @@ app.post("/incluirTrecho", async (req, res) => {
             try {
                 connection = await oraConnAttribs();
                 const cmdInsertAero = `INSERT INTO TRECHOS
-        (NOME, ORIGEM, DESTINO, AERONAVE)
+        (CODIGO, NOME, ORIGEM, DESTINO, AERONAVE)
         VALUES
-        (:1, :2, :3, :4)`;
+        (TRECHOS_SEQ.NEXTVAL, :1, :2, :3, :4)`;
                 const dados = [
                     trecho.nome,
                     trecho.origem,
@@ -365,8 +358,8 @@ app.post("/incluirVoo", async (req, res) => {
         payload: undefined,
     };
     const voo = req.body;
-    let error;
     try {
+        console.log("Received Voo:", voo); // Log received data
         let [valida, mensagem] = vooValido(voo);
         if (!valida) {
             cr.message = mensagem;
@@ -376,36 +369,30 @@ app.post("/incluirVoo", async (req, res) => {
             let connection;
             try {
                 connection = await oraConnAttribs();
-                const cmdInsertAero = `INSERT INTO VOOS
-        (DATA_SAIDA, HORA_SAIDA, DATA_CHEGADA, HORA_CHEGADA, VALOR_PASSAGEM, ESCALAS, AEROPORTO_SAIDA, AEROPORTO_DESTINO, AERONAVE)
-        VALUES
-        (:1, :2, :3, :4, :5, :6, :7, :8, :9)`;
+                const cmdInsertVoo = `INSERT INTO VOOS
+          (CODIGO, AERONAVE, AEROPORTO_SAIDA, AEROPORTO_DESTINO, ESCALAS, VALOR_PASSAGEM, DATA_SAIDA, HORA_SAIDA, DATA_CHEGADA, HORA_CHEGADA)
+          VALUES
+          (VOOS_SEQ.NEXTVAL, :1, :2, :3, :4, :5, :6, :7, :8, :9)`;
                 const dados = [
+                    voo.aeronave,
+                    voo.aeroportoPartida,
+                    voo.aeroportoDestino,
+                    voo.escalas,
+                    voo.valor,
                     voo.dataSaida,
                     voo.horaSaida,
                     voo.dataChegada,
                     voo.horaChegada,
-                    voo.valorPassagem,
-                    voo.escalas,
-                    voo.aeroportoSaida,
-                    voo.aeroportoDestino,
-                    voo.aeronave,
                 ];
-                const result = await connection.execute(cmdInsertAero, dados, { autoCommit: true, });
+                const result = await connection.execute(cmdInsertVoo, dados, { autoCommit: true });
                 if (result.rowsAffected === 1) {
                     cr.status = "SUCCESS";
                     cr.message = "Voo inserido.";
                 }
             }
-            catch (e) {
-                if (e instanceof Error) {
-                    cr.message = e.message;
-                    console.log(e.message);
-                }
-                else {
-                    cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
-                }
-                error = e;
+            catch (e) { // Add ': any' to specify that 'e' can be of any type
+                console.error("Error during database operation:", e);
+                cr.message = "Erro ao conectar ao Oracle. Detalhes: " + (e.message || e.toString());
             }
             finally {
                 if (connection) {
@@ -414,19 +401,15 @@ app.post("/incluirVoo", async (req, res) => {
                     }
                     catch (closeError) {
                         console.error("Error closing Oracle connection:", closeError);
-                        error = closeError;
                     }
                 }
             }
         }
     }
-    catch (e) { }
-    if (error) {
-        console.error("Outer error:", error);
+    catch (e) {
+        console.error("Outer error:", e);
     }
-    else {
-        return res.send(cr);
-    }
+    return res.send(cr);
 });
 app.get("/listarAeronave", async (req, res) => {
     let cr = { status: "ERROR", message: "", payload: undefined };
@@ -468,7 +451,7 @@ app.get("/listarVoo", async (req, res) => {
         });
         cr.status = "SUCCESS";
         cr.message = "Dados obtidos";
-        cr.payload = rowsToAeronaves(resultadoConsulta.rows);
+        cr.payload = rowsToVoos(resultadoConsulta.rows);
     }
     catch (e) {
         if (e instanceof Error) {
@@ -498,7 +481,7 @@ app.get("/listarTrecho", async (req, res) => {
         });
         cr.status = "SUCCESS";
         cr.message = "Dados obtidos";
-        cr.payload = rowsToAeronaves(resultadoConsulta.rows);
+        cr.payload = rowsToTrechos(resultadoConsulta.rows);
     }
     catch (e) {
         if (e instanceof Error) {
@@ -534,12 +517,12 @@ app.post("/alterarAeronave", async (req, res) => {
     try {
         connection = await oraConnAttribs();
         const cmdUpdateAero = `UPDATE AERONAVES
-      SET FABRICANTE = :fabricante,
-          MODELO = :modelo,
-          ANO_FABRICACAO = :ano_fabricacao,
-          TOTAL_ASSENTOS = :total_assentos,
-          REFERENCIA = :referencia,
-      WHERE CODIGO = :codigo`;
+    SET FABRICANTE = :fabricante,
+        MODELO = :modelo,
+        ANO_FABRICACAO = :ano_fabricacao,
+        TOTAL_ASSENTOS = :total_assentos,
+        REFERENCIA = :referencia
+    WHERE CODIGO = :codigo`;
         const dados = {
             fabricante: aero.marca,
             modelo: aero.modelo,
@@ -646,25 +629,26 @@ app.post("/alterarVoo", async (req, res) => {
     try {
         connection = await oraConnAttribs();
         const cmdUpdateVoo = `UPDATE VOOS
-    SET DATA_SAIDA = :data_saida,
+    SET AERONAVE = :aeronave,
+        AEROPORTO_SAIDA = :aeroporto_saida,
+        AEROPORTO_DESTINO = :aeroporto_destino,
+        ESCALAS = :escalas,
+        VALOR_PASSAGEM = :valor_passagem,
+        DATA_SAIDA = :data_saida,
         HORA_SAIDA = :hora_saida,
         DATA_CHEGADA = :data_chegada,
-        HORA_CHEGADA = :hora_chegada,
-        VALOR_PASSAGEM = :valor_passagem,
-        ESCALAS = :escalas,
-        AEROPORTO_SAIDA = :aeroporto_saida,
-        AEROPORTO_DESTINO = :aeroporto_destino
+        HORA_CHEGADA = :hora_chegada
     WHERE CODIGO = :codigo`;
         const dados = {
+            aeronave: voo.aeronave,
+            aeroporto_saida: voo.aeroportoPartida,
+            aeroporto_destino: voo.aeroportoDestino,
+            escalas: voo.escalas,
+            valor_passagem: voo.valor,
             data_saida: voo.dataSaida,
             hora_saida: voo.horaSaida,
             data_chegada: voo.dataChegada,
             hora_chegada: voo.horaChegada,
-            valor_passagem: voo.valorPassagem,
-            escalas: voo.escalas,
-            aeroporto_saida: voo.aeroportoSaida,
-            aeroporto_destino: voo.aeroportoDestino,
-            aeronave: voo.aeronave,
             codigo: voo.codigo,
         };
         const result = await connection.execute(cmdUpdateVoo, dados, { autoCommit: true });

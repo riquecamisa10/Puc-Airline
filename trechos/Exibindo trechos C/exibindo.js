@@ -31,6 +31,7 @@ function preencherTabela(trecho) {
             let estilo = (count % 2 === 0) ? "linhaPar" : "linhaImpar";
             let linha = `
                 <tr class="${estilo}">
+                <td>${trecho.codigo}</td>
                 <td>${trecho.nome}</td>
                 <td>${trecho.origem}</td>
                 <td>${trecho.destino}</td>
