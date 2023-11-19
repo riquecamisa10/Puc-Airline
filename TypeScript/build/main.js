@@ -100,6 +100,24 @@ function rowsToTrechos(oracleRows) {
     return trechos;
 }
 ;
+function rowsToAeroportos(oracleRows) {
+    let aeroportos = [];
+    let aeroporto;
+    if (oracleRows !== undefined) {
+        oracleRows.forEach((registro) => {
+            aeroporto = {
+                codigo: registro.CODIGO,
+                nome: registro.NOME,
+                sigla: registro.SIGLA,
+                cidade: registro.CIDADE,
+                pais: registro.PAIS,
+            };
+            aeroportos.push(aeroporto);
+        });
+    }
+    return aeroportos;
+}
+;
 function aeronaveValida(aero) {
     let valida = false;
     let mensagem = "";
@@ -219,6 +237,33 @@ function vooValido(voo) {
         console.log("Erro de validação:", mensagens);
     }
     return [valida, mensagens.join(" ")];
+}
+function aeroportoValido(aeroporto) {
+    let valida = false;
+    let mensagem = "";
+    if (aeroporto.nome === undefined) {
+        mensagem = "Nome não informado";
+    }
+    if (aeroporto.sigla === undefined) {
+        mensagem = "Sigla não informada.";
+    }
+    if (aeroporto.cidade === undefined) {
+        mensagem = "Cidade não informada.";
+    }
+    if (aeroporto.pais === undefined) {
+        mensagem = "Pais não informado.";
+    }
+    console.log("Validação de aeroporto - Nome:", aeroporto.nome);
+    console.log("Validação de aeroporto - Sigla:", aeroporto.sigla);
+    console.log("Validação de aeroporto - Cidade:", aeroporto.cidade);
+    console.log("Validação de aeroporto - Pais:", aeroporto.pais);
+    if (mensagem === "") {
+        valida = true;
+    }
+    else {
+        console.log("Erro de validação:", mensagem);
+    }
+    return [valida, mensagem];
 }
 app.post("/incluirAeronave", async (req, res) => {
     let cr = {
@@ -411,6 +456,71 @@ app.post("/incluirVoo", async (req, res) => {
     }
     return res.send(cr);
 });
+app.post("/incluirAeroporto", async (req, res) => {
+    let cr = {
+        status: "ERROR",
+        message: "",
+        payload: undefined,
+    };
+    const aeroporto = req.body;
+    let error;
+    try {
+        let [valida, mensagem] = aeroportoValido(aeroporto);
+        if (!valida) {
+            cr.message = mensagem;
+            return res.send(cr);
+        }
+        else {
+            let connection;
+            try {
+                connection = await oraConnAttribs();
+                const cmdInsertAeroportos = `INSERT INTO AEROPORTOS
+        (CODIGO, NOME, SIGLA, CIDADE, PAIS)
+        VALUES
+        (AEROPORTOS_SEQ.NEXTVAL, :1, :2, :3, :4)`;
+                const dados = [
+                    aeroporto.nome,
+                    aeroporto.sigla,
+                    aeroporto.cidade,
+                    aeroporto.pais,
+                ];
+                const result = await connection.execute(cmdInsertAeroportos, dados, { autoCommit: true, });
+                if (result.rowsAffected === 1) {
+                    cr.status = "SUCCESS";
+                    cr.message = "Aeroporto inserido.";
+                }
+            }
+            catch (e) {
+                if (e instanceof Error) {
+                    cr.message = e.message;
+                    console.log(e.message);
+                }
+                else {
+                    cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
+                }
+                error = e;
+            }
+            finally {
+                if (connection) {
+                    try {
+                        await connection.close();
+                    }
+                    catch (closeError) {
+                        console.error("Error closing Oracle connection:", closeError);
+                        error = closeError;
+                    }
+                }
+            }
+        }
+    }
+    catch (e) { }
+    if (error) {
+        console.error("Outer error:", error);
+    }
+    else {
+        return res.send(cr);
+    }
+});
 app.get("/listarAeronave", async (req, res) => {
     let cr = { status: "ERROR", message: "", payload: undefined };
     let connection;
@@ -482,6 +592,36 @@ app.get("/listarTrecho", async (req, res) => {
         cr.status = "SUCCESS";
         cr.message = "Dados obtidos";
         cr.payload = rowsToTrechos(resultadoConsulta.rows);
+    }
+    catch (e) {
+        if (e instanceof Error) {
+            cr.message = e.message;
+            console.log(e.message);
+        }
+    }
+    finally {
+        if (connection) {
+            try {
+                await connection.close();
+            }
+            catch (err) {
+                console.error("Error closing Oracle connection:", err);
+            }
+        }
+        res.send(cr);
+    }
+});
+app.get("/listarAeroporto", async (req, res) => {
+    let cr = { status: "ERROR", message: "", payload: undefined };
+    let connection;
+    try {
+        connection = await oraConnAttribs();
+        let resultadoConsulta = await connection.execute(`SELECT * FROM AEROPORTOS`, [], {
+            outFormat: oracledb.OUT_FORMAT_OBJECT
+        });
+        cr.status = "SUCCESS";
+        cr.message = "Dados obtidos";
+        cr.payload = rowsToAeroportos(resultadoConsulta.rows);
     }
     catch (e) {
         if (e instanceof Error) {
@@ -678,6 +818,61 @@ app.post("/alterarVoo", async (req, res) => {
         }
     }
 });
+app.post("/alterarAeroporto", async (req, res) => {
+    let cr = {
+        status: "ERROR",
+        message: "",
+        payload: undefined,
+    };
+    const aeroporto = req.body;
+    let [valida, mensagem] = aeroportoValido(aeroporto);
+    if (!valida) {
+        cr.message = mensagem;
+        return res.status(400).send(cr); // Return a 400 Bad Request status for validation errors
+    }
+    let connection;
+    try {
+        connection = await oraConnAttribs();
+        const cmdUpdateAeroporto = `UPDATE AEROPORTOS
+      SET NOME = :nome,
+          SIGLA = :sigla,
+          CIDADE = :cidade,
+          PAIS = :pais
+      WHERE CODIGO = :codigo`;
+        const dados = {
+            nome: aeroporto.nome,
+            sigla: aeroporto.sigla,
+            cidade: aeroporto.cidade,
+            pais: aeroporto.pais,
+            codigo: aeroporto.codigo,
+        };
+        const result = await connection.execute(cmdUpdateAeroporto, dados, { autoCommit: true });
+        if (result.rowsAffected === 1) {
+            cr.status = "SUCCESS";
+            cr.message = "Aeroporto alterado.";
+            return res.send(cr);
+        }
+        else {
+            cr.message = "Nenhum aeroporto foi alterada. Verifique o código fornecido.";
+            return res.status(404).send(cr); // Return a 404 Not Found status if no rows were affected
+        }
+    }
+    catch (e) {
+        cr.message = `Erro ao alterar aeroporto: ${e.message}`;
+        console.error(`Erro ao alterar aeroporto: ${e.message}`);
+        return res.status(500).send(cr); // Return a 500 Internal Server Error status for other errors
+    }
+    finally {
+        if (connection) {
+            try {
+                await connection.close();
+            }
+            catch (closeError) {
+                console.error("Erro ao fechar a conexão:", closeError);
+            }
+        }
+    }
+});
 app.delete("/excluirAeronave", async (req, res) => {
     const codigo = req.body.codigo;
     let cr = {
@@ -787,6 +982,50 @@ app.delete("/excluirVoo", async (req, res) => {
         }
         else {
             cr.message = "Voo não excluída. Verifique se o código informado está correto.";
+        }
+    }
+    catch (e) {
+        if (e instanceof Error) {
+            cr.message = e.message;
+            console.log(e.message);
+        }
+        else {
+            cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
+        }
+    }
+    finally {
+        if (connection) {
+            try {
+                await connection.close();
+            }
+            catch (e) {
+                console.error("Error closing Oracle connection:", e);
+            }
+        }
+        res.send(cr);
+    }
+});
+app.delete("/excluirAeroporto", async (req, res) => {
+    const codigo = req.body.codigo;
+    let cr = {
+        status: "ERROR",
+        message: "",
+        payload: undefined,
+    };
+    let connection;
+    try {
+        connection = await oraConnAttribs();
+        const cmdDeleteAero = `DELETE FROM AEROPORTOS WHERE CODIGO = :1`;
+        const dados = [codigo];
+        const result = await connection.execute(cmdDeleteAero, dados, {
+            autoCommit: true,
+        });
+        if (result.rowsAffected === 1) {
+            cr.status = "SUCCESS";
+            cr.message = "Trecho excluída.";
+        }
+        else {
+            cr.message = "Trecho não excluída. Verifique se o código informado está correto.";
         }
     }
     catch (e) {

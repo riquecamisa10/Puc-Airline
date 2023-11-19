@@ -6,39 +6,48 @@
     </head>
     <body>
 
-        <div class="menu">
-            <ul>
-                <li class="list">
-                    <a href="../index.html">
-                        <span class="icone"><ion-icon name="home-outline"></ion-icon></span>
-                        <span class="title">Home</span>
-                    </a>
-                </li>
-                <li class="list">
-                    <a href="../Inserindo voos/inserindo.html">
-                        <span class="icone"><ion-icon name="airplane-outline"></ion-icon></span>
-                        <span class="title">Inserir Voo</span>
-                    </a>
-                </li>
-                <li class="list">
-                    <a href="../Exibindo voos/exibindo.html">
-                        <span class="icone"><ion-icon name="newspaper-outline"></ion-icon></span>
-                        <span class="title">Listar Voos</span>
-                    </a>
-                </li>
-                <li class="list">
-                    <a href="../Alterando voos/alterando.html">
-                        <span class="icone"><ion-icon name="repeat-outline"></ion-icon></span>
-                        <span class="title">Alterar Voo</span>
-                    </a>
-                </li>
-                <li class="list">
-                    <a href="../Excluindo voos/excluindo.html">
-                        <span class="icone"><ion-icon name="trash-outline"></ion-icon></span>
-                        <span class="title">Excluir Voo</span>
-                    </a>
-                </li>
-            </ul>
+        <div class="menu" id="menu">
+            <div class="list-item parent" data-href="home.html">Home</div>
+            
+            <div class="list-item parent">
+                Aeronaves
+                <div class="submenu">
+                  <div class="sub-item" data-href="../Inserindo aeronave C/inserindo.html"><span class="icone"><ion-icon name="airplane-outline"></ion-icon></span>Inserir Aeronave</div>
+                  <div class="sub-item" data-href="../Exibindo aeronave C/exibindo.html"><span class="icone"><ion-icon name="newspaper-outline"></ion-icon></span>Listar Aeronave</div>
+                  <div class="sub-item" data-href="../Alterando aeronave C/alterando.html"><span class="icone"><ion-icon name="repeat-outline"></ion-icon></span>Alterar Aeronave</div>
+                  <div class="sub-item" data-href="../Excluindo aeronave C/excluindo.html"><span class="icone"><ion-icon name="trash-outline"></ion-icon></span>Excluir Aeronave</div>
+                </div>
+            </div>
+        
+            <div class="list-item parent">
+              Trechos
+              <div class="submenu">
+                <div class="sub-item" data-href="../Inserindo trechos C/inserindo.html"><span class="icone"><ion-icon name="airplane-outline"></ion-icon></span>Inserir Trechos</div>
+                <div class="sub-item" data-href="../Exibindo trechos C/exibindo.html"><span class="icone"><ion-icon name="newspaper-outline"></ion-icon></span>Listar Trechos</div>
+                <div class="sub-item" data-href="../Alterando trechos C/alterando.html"><span class="icone"><ion-icon name="repeat-outline"></ion-icon></span>Alterar Trechos</div>
+                <div class="sub-item" data-href="../Excluindo trechos C/excluindo.html"><span class="icone"><ion-icon name="trash-outline"></ion-icon></span>Excluir Trechos</div>
+              </div>
+            </div>
+        
+            <div class="list-item parent">
+              Aeroportos
+              <div class="submenu">
+                <div class="sub-item" data-href="../Inserindo aeroporto C/inserindo.html"><span class="icone"><ion-icon name="airplane-outline"></ion-icon></span>Inserir Aeroporto</div>
+                <div class="sub-item" data-href="../Exibindo aeroporto C/exibindo.html"><span class="icone"><ion-icon name="newspaper-outline"></ion-icon></span>Listar Aeroporto</div>
+                <div class="sub-item" data-href="../Alterando aeroporto C/alterando.html"><span class="icone"><ion-icon name="repeat-outline"></ion-icon></span>Alterar Aeroporto</div>
+                <div class="sub-item" data-href="../Excluindo aeroporto C/excluindo.html"><span class="icone"><ion-icon name="trash-outline"></ion-icon></span>Excluir Aeroporto</div>
+              </div>
+            </div>
+        
+            <div class="list-item parent">
+              Voos
+              <div class="submenu">
+                <div class="sub-item" data-href="../Inserindo voo C/inserindo.html"><span class="icone"><ion-icon name="airplane-outline"></ion-icon></span>Inserir Voo</div>
+                <div class="sub-item" data-href="../Exibindo voo C/exibindo.html"><span class="icone"><ion-icon name="newspaper-outline"></ion-icon></span>Listar Voos</div>
+                <div class="sub-item" data-href="../Alterando voo C/alterando.html"><span class="icone"><ion-icon name="repeat-outline"></ion-icon></span>Alterar Voo</div>
+                <div class="sub-item" data-href="../Excluindo voo C/excluindo.html"><span class="icone"><ion-icon name="trash-outline"></ion-icon></span>Excluir Voo</div>
+              </div>
+            </div>
         </div>
 
         <main>
@@ -48,11 +57,6 @@
                 <form>
 
                     <h1>Inserir Aeroporto</h1>
-                    
-                    <p>
-                        <label for="codigo">Codigo:</label><br/>
-                        <input type="text" id="codigo" name="codigo"/>
-                    </p>
 
                     <p>
                         <label for="nome">Nome:</label><br/>

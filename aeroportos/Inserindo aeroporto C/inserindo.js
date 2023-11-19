@@ -1,12 +1,3 @@
-function selecionouCodigo() {
-    let resultado = false;
-    const codigo = document.getElementById("codigo").value;
-    if (codigo !== "0") {
-        resultado = true;
-    }
-    return resultado;
-}
-
 function preencheuNome() {
     let resultado = false;
     const nome = document.getElementById("nome").value;
@@ -25,7 +16,7 @@ function preencheuSigla() {
     return resultado;
 }
 
-function cidade() {
+function preencheuCidade() {
     let resultado = false;
     const cidade = document.getElementById("cidade").value;
     if (cidade.trim().length > 0) {
@@ -66,10 +57,6 @@ function fetchInserir(body) {
 }
 
 function inserirAeroporto() {
-    if (!selecionouCodigo()) {
-        showStatusMessage("Selecione o codigo", true);  
-        return;
-    }
 
     if (!preencheuNome()) {
         showStatusMessage("Preencha o nome", true);
@@ -86,7 +73,7 @@ function inserirAeroporto() {
         return;
     }
 
-    if (!cidade()) {
+    if (!preencheuCidade()) {
         showStatusMessage("Preencha a cidade", true);
         return;
     }
@@ -96,14 +83,12 @@ function inserirAeroporto() {
         return;
     }
 
-    const codigo = document.getElementById("codigo").value;
     const nome = document.getElementById("nome").value;
     const sigla = document.getElementById("sigla").value;
     const cidade = document.getElementById("cidade").value;
     const pais = document.getElementById("pais").value;
 
     fetchInserir({
-        codigo: codigo,
         nome: nome,
         sigla: sigla,
         cidade: cidade,
@@ -122,3 +107,36 @@ function inserirAeroporto() {
         console.log("Falha grave ao cadastrar.");
     });
 }
+
+var menuItems = document.querySelectorAll('.menu .list-item.parent');
+
+menuItems.forEach(function(menuItem) {
+    menuItem.addEventListener('click', function() {
+        
+        var allSubmenus = document.querySelectorAll('.menu .list-item .submenu');
+        allSubmenus.forEach(function(submenu) {
+            if (submenu !== this.querySelector('.submenu')) {
+                submenu.style.display = 'none';
+            }
+        }, this);
+
+        var submenu = this.querySelector('.submenu');
+        if (submenu) {
+            submenu.style.display = (submenu.style.display === 'block') ? 'none' : 'block';
+        }
+    });
+});
+
+var menu = document.querySelector('.menu');
+
+menu.addEventListener('mouseout', function(e) {
+    
+    var isOverSubmenu = e.relatedTarget && (e.relatedTarget.className === 'submenu' || e.relatedTarget.className === 'sub-item');
+
+    if (!isOverSubmenu) {
+        var allSubmenus = document.querySelectorAll('.menu .list-item .submenu');
+        allSubmenus.forEach(function(submenu) {
+            submenu.style.display = 'none';
+        });
+    }
+});
