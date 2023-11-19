@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excluindo aeronave</title>
+    <link rel="stylesheet" type="text/css" href="excluindo.css">
+</head>
+<body>
+
+  <div class="menu" id="menu">
+    <div class="list-item parent" data-href="home.html">Home</div>
+    
+    <div class="list-item parent">
+        Aeronaves
+        <div class="submenu">
+          <div class="sub-item" data-href="../../aeronaves/Inserindo aeronave/inserindo.html"><span class="icone"><ion-icon name="airplane-outline"></ion-icon></span>Inserir Aeronave</div>
+          <div class="sub-item" data-href="../../aeronaves/Exibindo aeronave/exibindo.html"><span class="icone"><ion-icon name="newspaper-outline"></ion-icon></span>Listar Aeronave</div>
+          <div class="sub-item" data-href="../../aeronaves/Alterando aeronave/alterando.html"><span class="icone"><ion-icon name="repeat-outline"></ion-icon></span>Alterar Aeronave</div>
+          <div class="sub-item" data-href="../../aeronaves/Excluindo aeronave/excluindo.html"><span class="icone"><ion-icon name="trash-outline"></ion-icon></span>Excluir Aeronave</div>
+        </div>
+    </div>
+
+    <div class="list-item parent">
+      Trechos
+      <div class="submenu">
+        <div class="sub-item" data-href="../../trechos/Inserindo trechos/inserindo.html"><span class="icone"><ion-icon name="airplane-outline"></ion-icon></span>Inserir Trechos</div>
+        <div class="sub-item" data-href="../../trechos/Exibindo trechos/exibindo.html"><span class="icone"><ion-icon name="newspaper-outline"></ion-icon></span>Listar Trechos</div>
+        <div class="sub-item" data-href="../../trechos/Alterando trechos/alterando.html"><span class="icone"><ion-icon name="repeat-outline"></ion-icon></span>Alterar Trechos</div>
+        <div class="sub-item" data-href="../../trechos/Excluindo trechos/excluindo.html"><span class="icone"><ion-icon name="trash-outline"></ion-icon></span>Excluir Trechos</div>
+      </div>
+    </div>
+
+    <div class="list-item parent">
+      Aeroportos
+      <div class="submenu">
+        <div class="sub-item" data-href="../../aeroportos/Inserindo aeroporto/inserindo.html"><span class="icone"><ion-icon name="airplane-outline"></ion-icon></span>Inserir Aeroporto</div>
+        <div class="sub-item" data-href="../../aeroportos/Exibindo aeroporto/exibindo.html"><span class="icone"><ion-icon name="newspaper-outline"></ion-icon></span>Listar Aeroporto</div>
+        <div class="sub-item" data-href="../../aeroportos/Alterando aeroporto/alterando.html"><span class="icone"><ion-icon name="repeat-outline"></ion-icon></span>Alterar Aeroporto</div>
+        <div class="sub-item" data-href="../../aeroportos/Excluindo aeroporto/excluindo.html"><span class="icone"><ion-icon name="trash-outline"></ion-icon></span>Excluir Aeroporto</div>
+      </div>
+    </div>
+
+    <div class="list-item parent">
+      Voos
+      <div class="submenu">
+        <div class="sub-item" data-href="../../voos/Inserindo voo/inserindo.html"><span class="icone"><ion-icon name="airplane-outline"></ion-icon></span>Inserir Voo</div>
+        <div class="sub-item" data-href="../../voos/Exibindo voo/exibindo.html"><span class="icone"><ion-icon name="newspaper-outline"></ion-icon></span>Listar Voos</div>
+        <div class="sub-item" data-href="../../voos/Alterando voo/alterando.html"><span class="icone"><ion-icon name="repeat-outline"></ion-icon></span>Alterar Voo</div>
+        <div class="sub-item" data-href="../../voos/Excluindo voo/excluindo.html"><span class="icone"><ion-icon name="trash-outline"></ion-icon></span>Excluir Voo</div>
+      </div>
+    </div>
+  </div>
+
+    <main>
+
+        <div class="conteudo">
+            <h1>Excluir Voo</h1>
+            <p>
+                <label for="codigo">Codigo da Voo:</label><br/>
+                <input type="text" id="codigo" name="codigo"/>
+            </p>
+
+            <p id="status" class="statusError"></p>
+            
+            <p>
+                <button
+                    type="button" 
+                    onclick="excluirVoo();"
+                    id="btnExcluir"
+                    name="btnExcluir">Excluir
+                </button>
+            </p>
+        </div>
+
+    </main>
+
+    <script src="excluindo.js"></script>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+</body>
+</html>
