@@ -1,0 +1,67 @@
+/* Estilo geral para o corpo da página */
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #493f3f;
+}
+/* Estilo para o contêiner que representa o ambiente do avião */
+.airplane-container {
+    background-color: #000;
+    padding: 80px;
+    border-radius: 20px 300px 300px 20px; /* Ajustando o border-radius para dar a forma de avião */
+    position: relative;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+
+    /* Ajuste o tamanho conforme necessário */
+    width: 60%; /* Ajuste conforme necessário */
+    height: 35%; /* Ajuste conforme necessário */
+}
+
+/* Estilo para a representação visual dos assentos no avião */
+.airplane {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    perspective: 1000px;
+}
+
+/* Estilo para cada assento no avião */
+.seat {
+    width: 30px;
+    height: 30px;
+    margin: 5px;
+    text-align: center;
+    line-height: 30px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    color: #c2bdbd;
+    cursor: pointer;
+    transition: transform 0.3s, background-color 0.3s, color 0.3s;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Adicionando espaço entre as seções */
+.espaco {
+    height: 50px; /* Ajuste a largura conforme necessário */
+}
+
+/* Estilo para assentos ocupados */
+.seat.occupied {
+    background-color: #ff6161;
+    cursor: not-allowed;
+    pointer-events: none; 
+    transition: none; 
+}
+
+/* Estilo para assentos selecionados */
+.seat.selected {
+    background-color: #5cb85c;
+    color: white;
+}
+
+/* Efeito de hover para assentos */
