@@ -63,6 +63,10 @@ type Aeroporto = {
   pais?: number,
 }
 
+type Assento = {
+  numero?: number,
+}
+
 function rowsToAeronaves(oracleRows: unknown[] | undefined) : Array<Aeronave> {
   let aeronaves: Array<Aeronave> = [];
   let aeronave;
@@ -143,6 +147,25 @@ function rowsToAeroportos(oracleRows: unknown[] | undefined) : Array<Aeroporto> 
     })
   }
   return aeroportos;
+};
+
+function rowsToAssentos(oracleRows: unknown[] | undefined) : Array<Assento> {
+  let assentos: Array<Assento> = [];
+  let assento;
+  if (oracleRows !== undefined){
+    oracleRows.forEach((registro: any) => {
+      assento = {
+        codigo: registro.CODIGO,
+        nome: registro.NOME,
+        sigla: registro.SIGLA,
+        cidade: registro.CIDADE,
+        pais: registro.PAIS,
+      } as Assento;
+
+      assentos.push(assento);
+    })
+  }
+  return assentos;
 };
 
 function aeronaveValida(aero: Aeronave) {
@@ -328,6 +351,94 @@ function aeroportoValido(aeroporto: Aeroporto) {
   }
 
   return [valida, mensagem] as const;
+}
+
+function assentoValido(assento: Assento) {
+  let valida = false;
+  let mensagem = "";
+
+  if (assento.numero === undefined) {
+    mensagem = "Assento não informado";
+  }
+
+  console.log("Validação de aeroporto - Nome:", assento.numero);
+
+  if (mensagem === "") {
+    valida = true;
+  } else {
+    console.log("Erro de validação:", mensagem);
+  }
+
+  return [valida, mensagem] as const;
+}
+
+app.post("/alocarAssento"), async (req, res) => { // Lógica a ser feita
+
+  let cr: CustomResponse = {
+    status: "ERROR",
+    message: "",
+    payload: undefined,
+  };
+
+  const numero: Assento = req.body as Assento;
+
+  let error: any;
+
+  try {
+    let [valida, mensagem] = assentoValido(numero);
+    if (!valida) {
+
+      cr.message = mensagem;
+
+      return res.send(cr);
+
+    } else {
+      let connection;
+      try {
+        connection = await oraConnAttribs();
+
+        const cmdInsertAero = `INSERT INTO ASSENTOS 
+        (CODIGO, FABRICANTE, MODELO, ANO_FABRICACAO, TOTAL_ASSENTOS, REFERENCIA)
+        VALUES
+        (AERONAVES_SEQ.NEXTVAL, :1, :2, :3, :4, :5)`;
+        const dados = [
+          assento.numero,
+        ];
+
+        const result = await connection.execute(cmdInsertAero, dados, {autoCommit: true,});
+
+        if (result.rowsAffected === 1) {
+          cr.status = "SUCCESS";
+          cr.message = "Aeronave inserida.";
+        }
+      } catch (e) {
+        if (e instanceof Error) {
+          cr.message = e.message;
+          console.log(e.message);
+        } else {
+          cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
+        }
+        error = e;
+      } finally {
+        if (connection) {
+          try {
+            await connection.close();
+          } catch (closeError) {
+            console.error("Error closing Oracle connection:", closeError);
+            error = closeError;
+          }
+        }
+      }
+    }
+  } catch(e){}
+  if(error){
+
+    console.error("Outer error:", error);
+  } 
+  else{
+
+    return res.send(cr);
+  }
 }
 
 app.post("/incluirAeronave", async (req, res) => {

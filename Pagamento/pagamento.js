@@ -90,6 +90,26 @@ function preencheuCVC(){
     return resultado;
 }
 
+function alocarAssento(body){
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    };
+
+    return fetch('https://localhost:3000/alocarAssento')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .catch(error => {
+            console.error("Erro durante a chamada da API:", error);
+            throw error;
+        });
+}
+
 function verificar(){
 
     if(!preencheuEmail()){
@@ -129,6 +149,7 @@ function verificar(){
     .then((resultado) => {
         if(resultado.status === "SUCCESS") {
             showStatusMessage("Pagamento Concluido com Sucesso", false);
+            alocarAssento();
         } else {
             showStatusMessage("Erro ao realizar pagamento: " + resultado.message, true);
             console.log(resultado.message);
