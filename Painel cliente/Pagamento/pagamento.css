@@ -84,13 +84,6 @@ h1{
     padding: 5px;
 }
 
-hr{
-    margin: 20px 0px 20px 0px;
-    border: none;
-    height: 2px; 
-    background-color: black; 
-    width: 100%;
-}
 
 .statusError{
     color:red;
@@ -98,10 +91,17 @@ hr{
 }
 
 .statusSuccess{
-   color: greenyellow;
-   font-size: 25px;
+    color: greenyellow;
+    font-size: 25px;
 }
 
+hr{
+    margin: 20px 0px 20px 0px;
+    border: none;
+    height: 2px; 
+    background-color: black; 
+    width: 100%;
+}
 /* Estilo Cartão de Credito */
 
 .cartao label{

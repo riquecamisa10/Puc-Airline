@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="menu.css">
+    <title>Menu de Busca</title>
+</head>
+<body>
+
+    <main>
+        <div class="conteudo">
+            <form>
+                <div>
+                    <label for="tipoPassagem">Tipo da Passagem:</label>
+                    <input type="radio" id="idaRadio" name="tipoPassagem" onclick="mostrarVolta()" checked>Somente Ida</input>
+                    <input type="radio" id="voltaRadio" name="tipoPassagem" onclick="mostrarVolta()">Ida e Volta</input>
+                </div>
+    
+                <div>
+                    <label for="ida">Dia de Ida:</label>
+                    <input type="date" class="data" id="ida" min="2023-11-22" max="2030-12-31">
+                </div>
+                
+                <div id="voltaDiv" style="display: none;">
+                    <div class="volta">
+                        <label for="volta">Dia de Volta:</label>
+                        <input type="date" class="data" id="volta" min="2023-11-22" max="2030-12-31">
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="Destino">Destino do Voo:</label>
+                    <input class="input" type="text" id="destino">
+                </div>
+
+                <div>
+                    <p id="status" class="statusError"></p>
+                </div>
+                
+                <p class="botao">
+                    <button type="button" onclick="comprarAssento();" id="btnBuscar" name="btnBuscar">Buscar Voos</button>
+                    <button type="reset" onclick="mostrarVolta();">Limpar</button>
+                </p>
+            </form>
+
+            <div class="cabecalho">
+
+                <table id="tblAlunos" cellpadding="5" cellspacing="5">
+
+                    <thead>
+
+                        <tr>
+                            <th id="thVoo" class="canto1">Voo</th>
+                            <th id="thEscalas">Escalas</th>
+                            <th id="thCidadePartida" style="min-width: 200px;">Cidade de Partida</th>
+                            <th id="thHoraPartida" style="min-width: 140px;">Hora de Partida</th>
+                            <th id="thDataPartida">Data de Partida</th>
+                            <th id="thCidadeDestino" style="min-width: 200px;">Cidade de Destino</th>
+                            <th id="thHoraChegada" style="min-width: 140px;">Hora de Chegada</th>
+                            <th id="thDataChegada">Data de Chegada</th>
+                            <th id="thValor" class="canto2">Valor</th>
+                        </tr>
+
+                    </thead>
+
+                  <tbody id="tblAlunosDados"></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer>
+
+    </footer>
+
+    <script src="menu.js"></script>
+</body>
+</html>

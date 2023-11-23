@@ -1,3 +1,11 @@
+document.addEventListener("DOMContentLoaded", function () {
+    
+    const btnCarregarDados = document.getElementById("btnCarregarDados");
+    btnCarregarDados.addEventListener("click", fetchListar);
+
+    console.log('exibindo.js foi carregado');
+});
+
 function fetchListar() {
     return fetch('http://localhost:3000/listarAeroporto', { cache: 'no-store' })
         .then(response => response.json())

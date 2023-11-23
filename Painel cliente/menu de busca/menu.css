@@ -1,0 +1,169 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+main{
+    display: flex;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    border: 2px solid black;
+    padding: 40px;
+    align-items: center;
+}
+
+.conteudo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.conteudo div{
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+}
+
+.volta{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.conteudo input{
+    font-size: 17px;
+    margin: 15px 15px 15px 5px;
+}
+
+.data{
+    width: 150px;
+    height: 40px;
+    padding: 8px;
+}
+
+.input{
+    width: 230px;
+    padding: 5px;
+}
+
+.conteudo label{
+    font-size: 25px;
+    margin: 15px 5px 15px 15px;
+}
+
+.conteudo label:not(.input),
+.conteudo input[type="radio"],
+.conteudo input[type="checkbox"] {
+    align-self: center;
+}
+
+.conteudo input[type="radio"],
+.conteudo input[type="checkbox"] {
+    transform: scale(1.5);
+    margin-right: 8px;
+    margin-left: 8px;
+}
+
+.conteudo button{
+    font-size: 15px;
+}
+
+.botao{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 15px;
+}
+
+.botao button{
+    margin-top: 30px;
+    height: 30px;
+    width: auto;
+    font-size: 15px;
+    padding: 5px;
+}
+
+.statusError{
+    color:red;
+    font-size: 25px;
+    margin-top: 15px;
+}
+
+.statusSuccess{
+    color: greenyellow;
+    font-size: 25px;
+    margin-top: 15px;
+}
+
+/* ESTILO DA TABELA */
+
+
+tbody tr:hover{
+    background-color: rgb(120, 172, 250);
+}
+
+.linhaImpar{
+    background-color: #f3f3f3;
+}
+
+.linhaPar{
+    background-color: #c6c6c6;
+}
+
+.header th{
+    color: #151d1d;
+}
+
+#tblAlunos {
+    width: 60%;
+    margin: 20px auto;
+    z-index: 2;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-radius: 12px 12px 14px 14px;
+    box-shadow: 0 4px 12px rgba(32, 32, 32, .3);
+    background: #fafafa;
+    text-align: center;
+    max-height: 70vh;
+}
+
+th{
+    background: #a4b4b4;;
+    color:#fafafa;
+    text-transform:uppercase;
+    font-weight: bold;
+    font-family: 'Dela Gothic One';
+    font-size: 18px;
+    border-bottom: 1px solid black;
+    padding: 10px 20px 10px 20px;
+    min-width: 100px;
+}
+
+.canto1{
+    border-radius: 15px 0px 0px 0px;
+}
+
+.canto2{
+    border-radius: 0px 15px 0px 0px;
+}
+
+td{
+    font-family:'Roboto Condensed', sans-serif;
+    font-size: 19px;
+    padding: 5px;
+}
+
+tr:nth-child(odd){
+    background-color:#e0e0e0;
+}

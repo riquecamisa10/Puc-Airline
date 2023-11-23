@@ -64,7 +64,8 @@ type Aeroporto = {
 }
 
 type Assento = {
-  numero?: number,
+  ida?: string,
+  destino?: string,
 }
 
 function rowsToAeronaves(oracleRows: unknown[] | undefined) : Array<Aeronave> {
@@ -155,11 +156,18 @@ function rowsToAssentos(oracleRows: unknown[] | undefined) : Array<Assento> {
   if (oracleRows !== undefined){
     oracleRows.forEach((registro: any) => {
       assento = {
-        codigo: registro.CODIGO,
-        nome: registro.NOME,
-        sigla: registro.SIGLA,
-        cidade: registro.CIDADE,
-        pais: registro.PAIS,
+        ida: registro.DATA_IDA,
+        destino: registro.CIDADE_DESTINO,
+        //codigo: registro.CODIGO,
+        //escalas: registro.ESCALAS,
+        //origem: registro.ORIGEM,
+        //horaPartida: registro.HORA_PARTIDA,
+        //dataPartida: registro.DATA_PARTIDA,
+        //destino: registro.DESTINO,
+        //horaChegada: registro.HORA_CHEGADA,
+        //dataChegada: registro.DATA_CHEGADA,
+        //valor: registro.VALOR,
+        //assento: registro.ASSENTO,
       } as Assento;
 
       assentos.push(assento);
@@ -353,93 +361,83 @@ function aeroportoValido(aeroporto: Aeroporto) {
   return [valida, mensagem] as const;
 }
 
-function assentoValido(assento: Assento) {
-  let valida = false;
-  let mensagem = "";
-
-  if (assento.numero === undefined) {
-    mensagem = "Assento não informado";
-  }
-
-  console.log("Validação de aeroporto - Nome:", assento.numero);
-
-  if (mensagem === "") {
-    valida = true;
-  } else {
-    console.log("Erro de validação:", mensagem);
-  }
-
-  return [valida, mensagem] as const;
-}
-
-app.post("/alocarAssento"), async (req, res) => { // Lógica a ser feita
-
+app.post("/buscarVoo", async (req, res) => {
   let cr: CustomResponse = {
     status: "ERROR",
     message: "",
     payload: undefined,
   };
 
-  const numero: Assento = req.body as Assento;
+  const assento: Assento = req.body as Assento;
 
   let error: any;
 
   try {
-    let [valida, mensagem] = assentoValido(numero);
-    if (!valida) {
+    let connection;
+    try {
+      connection = await oraConnAttribs();
 
-      cr.message = mensagem;
+      const cmdBuscarVoo = `
+      SELECT
+          V.CODIGO AS Codigo_Voo,
+          V.ESCALAS,
+          SAIDA.NOME AS Aeroporto_Saida,
+          V.HORA_SAIDA,
+          V.DATA_SAIDA,
+          DESTINO.NOME AS Aeroporto_Destino,
+          V.HORA_CHEGADA,
+          V.DATA_CHEGADA,
+          V.VALOR_PASSAGEM
+        FROM
+            VOOS V
+        JOIN
+            AEROPORTOS SAIDA ON V.AEROPORTO_SAIDA = SAIDA.CODIGO
+        JOIN
+            AEROPORTOS DESTINO ON V.AEROPORTO_DESTINO = DESTINO.CODIGO
+        WHERE
+            DESTINO.CIDADE = :1
+            AND V.DATA_SAIDA = :2`;
+    
+      const dados = [
+          assento.destino,
+          assento.ida,
+      ];
 
-      return res.send(cr);
+      const result = (await connection.execute(cmdBuscarVoo, dados, { outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: true })) as oracledb.Result<any>;
 
-    } else {
-      let connection;
-      try {
-        connection = await oraConnAttribs();
-
-        const cmdInsertAero = `INSERT INTO ASSENTOS 
-        (CODIGO, FABRICANTE, MODELO, ANO_FABRICACAO, TOTAL_ASSENTOS, REFERENCIA)
-        VALUES
-        (AERONAVES_SEQ.NEXTVAL, :1, :2, :3, :4, :5)`;
-        const dados = [
-          assento.numero,
-        ];
-
-        const result = await connection.execute(cmdInsertAero, dados, {autoCommit: true,});
-
-        if (result.rowsAffected === 1) {
+      if (result.rows && result.rows.length > 0) {
           cr.status = "SUCCESS";
-          cr.message = "Aeronave inserida.";
-        }
-      } catch (e) {
-        if (e instanceof Error) {
+          cr.message = "Voos encontrados.";
+          cr.payload = result.rows;
+      } else {
+          cr.message = "Nenhum voo encontrado para a cidade de destino e data de saída fornecidas.";
+      }      
+    } catch (e) {
+      if (e instanceof Error) {
           cr.message = e.message;
           console.log(e.message);
-        } else {
+      } else {
           cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
-        }
-        error = e;
-      } finally {
-        if (connection) {
-          try {
-            await connection.close();
-          } catch (closeError) {
-            console.error("Error closing Oracle connection:", closeError);
-            error = closeError;
-          }
+      }
+      error = e;
+    } finally {
+      if (connection) {
+        try {
+          await connection.close();
+        } catch (closeError) {
+          console.error("Error closing Oracle connection:", closeError);
+          error = closeError;
         }
       }
     }
-  } catch(e){}
-  if(error){
-
+  } catch (e) {}
+  if (error) {
     console.error("Outer error:", error);
-  } 
-  else{
-
+    cr.message = "Erro ao processar a solicitação.";
+  } else {
     return res.send(cr);
   }
-}
+});
 
 app.post("/incluirAeronave", async (req, res) => {
 

@@ -7,7 +7,7 @@
     <body>
 
       <div class="menu" id="menu">
-        <div class="list-item parent" data-href="home.html">Home</div>
+        <div class="list-item parent" data-href="../../../Painel cliente/menu de busca/menu.html">Home</div>
         
         <div class="list-item parent">
             Aeronaves
@@ -50,56 +50,55 @@
         </div>
       </div>
 
-        <main>
+      <main>
 
-            <div class="conteudo">
+        <div class="conteudo">
 
-                <form>
+          <form>
 
-                    <h1>Inserir Aeroporto</h1>
+            <h1>Inserir Aeroporto</h1>
 
-                    <p>
-                        <label for="nome">Nome:</label><br/>
-                        <input type="text" id="nome" name="nome"/>
-                    </p>
+            <p>
+              <label for="nome">Nome:</label><br/>
+              <input type="text" id="nome" name="nome"/>
+            </p>
 
-                    <p>
-                        <label for="sigla">Sigla:</label><br/>
-                        <input type="text" id="sigla" name="sigla"/>
-                    </p>
+            <p>
+              <label for="sigla">Sigla:</label><br/>
+              <input type="text" id="sigla" name="sigla"/>
+            </p>
 
-                    <p>
-                        <label for="cidade">Cidade:</label><br/>
-                        <input type="text" id="cidade" name="cidade"/>
-                    </p>
+            <p>
+              <label for="cidade">Cidade:</label><br/>
+              <input type="text" id="cidade" name="cidade"/>
+            </p>
 
-                    <p>
-                        <label for="pais">País:</label><br/>
-                        <input type="text" id="pais" name="pais">
-                    </p>
- 
-                    <p id="status" class="statusError"></p>
+            <p>
+              <label for="pais">País:</label><br/>
+              <input type="text" id="pais" name="pais">
+            </p>
 
-                    <p class="botao">
-                        <button 
-                            type="button" 
-                            onclick="inserirAeroporto();"
-                            id="btnCadastrar"
-                            name="btnCadastrar">Cadastrar</button>
-                        <button type="reset">Limpar</button>
-                        <a href="../index.html"></a>
-                    </p>
-                    
-                </form>
+            <p id="status" class="statusError"></p>
 
-            </div>
+            <p class="botao">
+              <button 
+                  type="button" 
+                  onclick="inserirAeroporto();"
+                  id="btnCadastrar"
+                  name="btnCadastrar">Cadastrar</button>
+              <button type="reset">Limpar</button>
+              <a href="../index.html"></a>
+            </p>
+              
+          </form>
 
-        </main>
+        </div>
 
-        <script src="inserindo.js"></script>
+      </main>
 
-        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+      <script src="inserindo.js"></script>
+      <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+      <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
-    </body>
+    </body>
 </html>

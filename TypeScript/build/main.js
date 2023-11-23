@@ -118,6 +118,31 @@ function rowsToAeroportos(oracleRows) {
     return aeroportos;
 }
 ;
+function rowsToAssentos(oracleRows) {
+    let assentos = [];
+    let assento;
+    if (oracleRows !== undefined) {
+        oracleRows.forEach((registro) => {
+            assento = {
+                ida: registro.DATA_IDA,
+                destino: registro.CIDADE_DESTINO,
+                //codigo: registro.CODIGO,
+                //escalas: registro.ESCALAS,
+                //origem: registro.ORIGEM,
+                //horaPartida: registro.HORA_PARTIDA,
+                //dataPartida: registro.DATA_PARTIDA,
+                //destino: registro.DESTINO,
+                //horaChegada: registro.HORA_CHEGADA,
+                //dataChegada: registro.DATA_CHEGADA,
+                //valor: registro.VALOR,
+                //assento: registro.ASSENTO,
+            };
+            assentos.push(assento);
+        });
+    }
+    return assentos;
+}
+;
 function aeronaveValida(aero) {
     let valida = false;
     let mensagem = "";
@@ -265,6 +290,83 @@ function aeroportoValido(aeroporto) {
     }
     return [valida, mensagem];
 }
+app.post("/buscarVoo", async (req, res) => {
+    let cr = {
+        status: "ERROR",
+        message: "",
+        payload: undefined,
+    };
+    const assento = req.body;
+    let error;
+    try {
+        let connection;
+        try {
+            connection = await oraConnAttribs();
+            const cmdBuscarVoo = `
+      SELECT
+          V.CODIGO AS Codigo_Voo,
+          V.ESCALAS,
+          SAIDA.NOME AS Aeroporto_Saida,
+          V.HORA_SAIDA,
+          V.DATA_SAIDA,
+          DESTINO.NOME AS Aeroporto_Destino,
+          V.HORA_CHEGADA,
+          V.DATA_CHEGADA,
+          V.VALOR_PASSAGEM
+        FROM
+            VOOS V
+        JOIN
+            AEROPORTOS SAIDA ON V.AEROPORTO_SAIDA = SAIDA.CODIGO
+        JOIN
+            AEROPORTOS DESTINO ON V.AEROPORTO_DESTINO = DESTINO.CODIGO
+        WHERE
+            DESTINO.CIDADE = :1
+            AND V.DATA_SAIDA = :2`;
+            const dados = [
+                assento.destino,
+                assento.ida,
+            ];
+            const result = (await connection.execute(cmdBuscarVoo, dados, { outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: true }));
+            if (result.rows && result.rows.length > 0) {
+                cr.status = "SUCCESS";
+                cr.message = "Voos encontrados.";
+                cr.payload = result.rows;
+            }
+            else {
+                cr.message = "Nenhum voo encontrado para a cidade de destino e data de saída fornecidas.";
+            }
+        }
+        catch (e) {
+            if (e instanceof Error) {
+                cr.message = e.message;
+                console.log(e.message);
+            }
+            else {
+                cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
+            }
+            error = e;
+        }
+        finally {
+            if (connection) {
+                try {
+                    await connection.close();
+                }
+                catch (closeError) {
+                    console.error("Error closing Oracle connection:", closeError);
+                    error = closeError;
+                }
+            }
+        }
+    }
+    catch (e) { }
+    if (error) {
+        console.error("Outer error:", error);
+        cr.message = "Erro ao processar a solicitação.";
+    }
+    else {
+        return res.send(cr);
+    }
+});
 app.post("/incluirAeronave", async (req, res) => {
     let cr = {
         status: "ERROR",
