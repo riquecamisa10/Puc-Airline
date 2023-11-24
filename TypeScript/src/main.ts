@@ -40,6 +40,7 @@ type Trecho = {
   origem?: string,
   destino?: string,
   aeronave?: number,
+  estilo_voo?: string,
 }
 
 type Voo = {
@@ -123,6 +124,7 @@ function rowsToTrechos(oracleRows: unknown[] | undefined) : Array<Trecho> {
         origem: registro.ORIGEM,
         destino: registro.DESTINO,
         aeronave: registro.AERONAVE,
+        estilo_voo: registro.ESTILO_VOO,
       } as Trecho;
 
       trechos.push(trecho);
@@ -237,10 +239,15 @@ function trechoValido(trecho: Trecho) {
     mensagem = "Aeronave não informada.";
   }
 
+  if (trecho.estilo_voo === undefined) {
+    mensagem = "Aeronave não informada.";
+  }
+
   console.log("Validação de trecho - Nome:", trecho.nome);
   console.log("Validação de trecho - Origem:", trecho.origem);
   console.log("Validação de trecho - Destino:", trecho.destino);
   console.log("Validação de trecho - Aeronave:", trecho.aeronave);
+  console.log("Validação de trecho - Estilo Voo:", trecho.estilo_voo);
 
   if (mensagem === "") {
     valida = true;
@@ -429,6 +436,60 @@ app.post("/buscarVoo", async (req, res) => {
   }
 });
 
+app.post("/obterTrechoListado", async (req, res) => {
+  let cr: CustomResponse = {
+    status: "ERROR",
+    message: "",
+    payload: undefined,
+  };
+
+  const trecho: Trecho = req.body as Trecho;
+
+  try {
+    let connection;
+    try {
+      connection = await oraConnAttribs();
+
+      const cmdBuscarTrecho = `
+        SELECT * FROM TRECHOS WHERE CODIGO = :1`;
+
+      const dados = [
+        trecho.codigo,
+      ];
+
+      const result = (await connection.execute(cmdBuscarTrecho, dados, { outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: true })) as oracledb.Result<any>;
+
+      if (result.rows && result.rows.length > 0) {
+        cr.status = "SUCCESS";
+        cr.message = "Trecho encontrado.";
+        cr.payload = result.rows;
+      } else {
+        cr.message = "Nenhum trecho encontrado.";
+      }
+    } catch (e) {
+      if (e instanceof Error) {
+        cr.message = e.message;
+        console.error(e.message);
+      } else {
+        cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
+      }
+    } finally {
+      if (connection) {
+        try {
+          await connection.close();
+        } catch (closeError) {
+          console.error("Error closing Oracle connection:", closeError);
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Outer error:", error);
+    cr.message = "Erro ao processar a solicitação.";
+  } finally {
+    return res.send(cr);
+  }
+});
+
 app.post("/incluirAeronave", async (req, res) => {
 
   let cr: CustomResponse = {
@@ -528,14 +589,15 @@ app.post("/incluirTrecho", async (req, res) => {
         connection = await oraConnAttribs();
 
         const cmdInsertAero = `INSERT INTO TRECHOS
-        (CODIGO, NOME, ORIGEM, DESTINO, AERONAVE)
+        (CODIGO, NOME, ORIGEM, DESTINO, AERONAVE, ESTILO_VOO)
         VALUES
-        (TRECHOS_SEQ.NEXTVAL, :1, :2, :3, :4)`;
+        (TRECHOS_SEQ.NEXTVAL, :1, :2, :3, :4, :5)`;
         const dados = [
           trecho.nome,
           trecho.origem,
           trecho.destino,
           trecho.aeronave,
+          trecho.estilo_voo,
         ];
 
         const result = await connection.execute(cmdInsertAero, dados, {autoCommit: true,});
@@ -912,7 +974,7 @@ app.post("/alterarTrecho", async (req, res) => {
   let [valida, mensagem] = trechoValido(trecho);
   if (!valida) {
     cr.message = mensagem;
-    return res.status(400).send(cr); // Return a 400 Bad Request status for validation errors
+    return res.status(400).send(cr);
   }
 
   let connection;
@@ -923,7 +985,8 @@ app.post("/alterarTrecho", async (req, res) => {
       SET NOME = :nome,
           ORIGEM = :origem,
           DESTINO = :destino,
-          AERONAVE = :aeronave
+          AERONAVE = :aeronave,
+          ESTILO_VOO = :estilo_voo
       WHERE CODIGO = :codigo`;
 
     const dados = {
@@ -931,6 +994,7 @@ app.post("/alterarTrecho", async (req, res) => {
       origem: trecho.origem,
       destino: trecho.destino,
       aeronave: trecho.aeronave,
+      estilo_voo: trecho.estilo_voo,
       codigo: trecho.codigo,
     };
 

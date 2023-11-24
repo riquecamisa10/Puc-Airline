@@ -36,6 +36,7 @@ function preencherTabela(trecho) {
                 <td>${trecho.origem}</td>
                 <td>${trecho.destino}</td>
                 <td>${trecho.aeronave}</td>
+                <td>${trecho.estilo_voo}</td>
                 </tr>`;
             tbody.innerHTML += linha;
             count++;

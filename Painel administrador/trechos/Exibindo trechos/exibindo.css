@@ -118,6 +118,11 @@ th{
 
 .canto2{
     border-radius: 0px 15px 0px 0px;
+    min-width: 140px;
+}
+
+.nome{
+    min-width: 300px;
 }
 
 tr:nth-child(odd){

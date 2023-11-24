@@ -1,25 +1,18 @@
-function preencheuAeronave() {
-    let resultado = false;
-    const aeronave = document.getElementById("aeronave").value;
-    if (aeronave.trim().length > 0) {
-        resultado = true;
-    }
-    return resultado;
+function fetchObterTrecho(body) {
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    };
+    
+    return fetch('http://localhost:3000/ObterTrechoListado', requestOptions)
+    .then(response => response.json())
 }
 
-function preencheuAeroportoPartida() {
+function preencheuTrecho() {
     let resultado = false;
-    const aeroportoPartida = document.getElementById("aeroportoPartida").value;
-    if (aeroportoPartida.trim().length > 0) {
-        resultado = true;
-    }
-    return resultado;
-}
-
-function preencheuAeroportoDestino() {
-    let resultado = false;
-    const aeroportoDestino = document.getElementById("aeroportoDestino").value;
-    if (aeroportoDestino.trim().length > 0) {
+    const trecho = document.getElementById("trecho").value;
+    if (trecho.trim().length > 0) {
         resultado = true;
     }
     return resultado;
@@ -79,6 +72,42 @@ function preencheuHoraChegada(){
     return resultado;
 }
 
+function preencheuDataVolta(){
+    let resultado = false;
+    const dataVolta = document.getElementById("dataVolta").value;
+    if(dataVolta.length > 0){
+        resultado = true;
+    }
+    return resultado;
+}
+
+function preencheuHoraVolta(){
+    let resultado = false;
+    const horaVolta = document.getElementById("horaVolta").value;
+    if(horaVolta.length > 0){
+        resultado = true;
+    }
+    return resultado;
+}
+
+function preencheuDataChegada2(){
+    let resultado = false;
+    const dataChegada2 = document.getElementById("dataChegada2").value;
+    if(dataChegada2.trim().length != 0){
+        resultado = true;
+    }
+    return resultado;
+}
+
+function preencheuHoraChegada2(){
+    let resultado = false;
+    const horaChegada2 = document.getElementById("horaChegada2").value;
+    if(horaChegada2.trim().length != 0){
+        resultado = true;
+    }
+    return resultado;
+}
+
 function showStatusMessage(msg, error) {
     var pStatus = document.getElementById("status");
     
@@ -103,18 +132,8 @@ function fetchInserir(body) {
 
 function inserirVoo() {
 
-    if (!preencheuAeronave()) {
+    if (!preencheuTrecho()) {
         showStatusMessage("Preencha corretamente a aeronave", true);
-        return;
-    }
-
-    if (!preencheuAeroportoPartida()) {
-        showStatusMessage("Preencha corretamente o aeroporto de partida", true);
-        return;
-    }
-
-    if (!preencheuAeroportoDestino()) {
-        showStatusMessage("Preencha corretamente o aeroporto de destino", true);
         return;
     }
 
@@ -148,28 +167,67 @@ function inserirVoo() {
         return;
     }
 
-    const aeronave = document.getElementById("aeronave").value;
-    const aeroportoPartida = document.getElementById("aeroportoPartida").value;
-    const aeroportoDestino = document.getElementById("aeroportoDestino").value;
+    if(!preencheuDataVolta()){
+        showStatusMessage("Preencha corretamente a data de volta do voo", true);
+        return;
+    }
+
+    if(!preencheuHoraVolta()){
+        showStatusMessage("Preencha corretamente a hora de volta do voo", true);
+        return;
+    }
+
+    if(!preencheuDataChegada2()){
+        showStatusMessage("Preencha corretamente a data de chegada do voo de volta", true);
+        return;
+    }
+
+    if(!preencheuHoraChegada2()){
+        showStatusMessage("Preencha corretamente a hora de chegada do voo de volta", true);
+        return;
+    }
+
+    const trecho = document.getElementById("trecho").value;
     const escalas = document.getElementById("escalas").value;
     const valor = document.getElementById("valor").value;
     const dataSaida = document.getElementById("dataSaida").value;
     const horaSaida = document.getElementById("horaSaida").value;
     const dataChegada = document.getElementById("dataChegada").value;
     const horaChegada = document.getElementById("horaChegada").value;
+    const dataVolta = document.getElementById("dataVolta").value;
+    const horaVolta = document.getElementById("horaVolta").value;
+    const dataChegada2 = document.getElementById("dataChegada2").value;
+    const horaChegada2 = document.getElementById("horaChegada2").value;
   
     const voo = {
-      aeronave,
-      aeroportoPartida,
-      aeroportoDestino,
+      trecho,
       escalas,
       valor,
       dataSaida,
       horaSaida,
       dataChegada,
       horaChegada,
+      dataVolta,
+      horaVolta,
+      dataChegada2,
+      horaChegada2,
     };
     console.log("Voo object:", voo);
+
+    fetchObterTrecho({ trecho })
+    .then(trechoInfo => {
+      const estiloVoo = trechoInfo.payload[0].ESTILO_VOO.toLowerCase();
+
+      const dataVoltaGroup = document.querySelector(".form-group[data-volta]");
+      const dataChegada2Group = document.querySelector(".form-group[data-chegada2]");
+
+      if (estiloVoo === "ida") {
+        dataVoltaGroup.style.display = "none";
+        dataChegada2Group.style.display = "none";
+      } else {
+        dataVoltaGroup.style.display = "block";
+        dataChegada2Group.style.display = "block";
+    }
 
     fetchInserir(voo)
     .then(resultado => {
@@ -184,7 +242,7 @@ function inserirVoo() {
         showStatusMessage("Erro técnico ao cadastrar... Contate o suporte.", true);
         console.log("Falha grave ao cadastrar.");
     });
-}
+})
 
 var menuItems = document.querySelectorAll('.menu .list-item.parent');
 
@@ -227,4 +285,4 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
         });
     });
-});
+})};

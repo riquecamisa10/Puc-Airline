@@ -1,13 +1,3 @@
-function codigoValido(){
-    let resultado = false;
-    const strCodigo = document.getElementById("codigo").value;
-    const codigo = parseInt(strCodigo);
-    if (codigo > 0){
-    resultado = true;
-    }
-    return resultado; 
-}
-
 function preencheuNome() {
     let resultado = false;
     const nomeInformado = document.getElementById("nome").value;
@@ -44,6 +34,17 @@ function preencheuAeronave(){
     return resultado;
 }
 
+function getSelectedOption() {
+    var radios = document.getElementsByName('tipoPassagem');
+
+    for (var i = 0; i < radios.length; i++) {
+        if (radios[i].checked) {
+            return radios[i].id;
+        }
+    }
+    return null;
+}
+
 function showStatusMessage(msg, error) {
     var pStatus = document.getElementById("status");
     
@@ -77,23 +78,18 @@ function fetchAlterar(body) {
 
 window.Trecho = function(){
 
-    if (!codigoValido()) {
-        showStatusMessage("Preencha corretamente o codigo", true);
-        return;
-    }
-
     if (!preencheuNome()) {
-        showStatusMessage("Preencha corretamente o nome", true);
+        showStatusMessage("Preencha o nome", true);
         return;
     }
 
     if (!preencheuOrigem()) {
-        showStatusMessage("Preencha corretamente a cidade de origem", true);
+        showStatusMessage("Preencha a origem", true);
         return;
     }
 
     if(!preencheuDestino()){
-        showStatusMessage("Preencha corretamente a cidade de destino", true);
+        showStatusMessage("Preencha corretamente a cidade de destino do voo", true);
         return;
     }
 
@@ -107,6 +103,7 @@ window.Trecho = function(){
     const origem = document.getElementById("origem").value;
     const destino = document.getElementById("destino").value;
     const aeronave = document.getElementById("aeronave").value;
+    const estilo_voo = getSelectedOption();
 
     fetchAlterar({
         codigo: codigo,
@@ -114,6 +111,7 @@ window.Trecho = function(){
         origem: origem,
         destino: destino,
         aeronave: aeronave,
+        estilo_voo: estilo_voo,
     })
     .then(resultado => {
         if (resultado.status === "SUCCESS") {

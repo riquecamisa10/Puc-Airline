@@ -29,6 +29,19 @@ body {
     background:url(wall2.jpg) 10px center / cover;
 }
 
+.conteudo label:not(.input),
+.conteudo input[type="radio"],
+.conteudo input[type="checkbox"] {
+    align-self: center;
+}
+
+.conteudo input[type="radio"],
+.conteudo input[type="checkbox"] {
+    transform: scale(1.5);
+    margin-right: 8px;
+    margin-left: 8px;
+}
+
 .menu {
     position: fixed;
     left: 0;

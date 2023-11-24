@@ -34,6 +34,17 @@ function preencheuAeronave(){
     return resultado;
 }
 
+function getSelectedOption() {
+    var radios = document.getElementsByName('tipoPassagem');
+
+    for (var i = 0; i < radios.length; i++) {
+        if (radios[i].checked) {
+            return radios[i].id;
+        }
+    }
+    return null;
+}
+
 function showStatusMessage(msg, error) {
     var pStatus = document.getElementById("status");
     
@@ -82,13 +93,16 @@ function inserirTrecho() {
     const origem = document.getElementById("origem").value;
     const destino = document.getElementById("destino").value;
     const aeronave = document.getElementById("aeronave").value;
+    const estilo_voo = getSelectedOption();
 
     fetchInserir({
         nome: nome,
         origem: origem,
         destino: destino,
         aeronave: aeronave,
+        estilo_voo: estilo_voo,
     })
+    
     .then(resultado => {
         if (resultado.status === "SUCCESS") {
             showStatusMessage("Trecho cadastrada...", false);

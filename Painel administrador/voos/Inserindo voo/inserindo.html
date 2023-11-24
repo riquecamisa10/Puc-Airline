@@ -59,18 +59,8 @@
             <h1>Inserir Voo</h1>
 
             <p>
-              <label for="aeronave">Aeronave:</label><br/>
-              <input type="text" id="aeronave" name="aeronave">
-            </p>
-
-            <p>
-              <label for="aeroportoPartida">Aeroporto de Partida:</label><br/>
-              <input type="text" id="aeroportoPartida" name="aeroportoPartida"/>
-            </p>
-
-            <p>
-              <label for="aeroportoDestino">Aeroporto de Destino:</label><br/>
-              <input type="text" id="aeroportoDestino" name="cidaeroportoDestinoadeOrigem">
+              <label for="trecho">Trecho:</label><br/>
+              <input type="text" id="trecho" name="trecho" onchange="verificarTipoTrecho()">
             </p>
 
             <p>
@@ -93,6 +83,18 @@
               <label for="dataChegada">Data de chegada:</label><br/>
               <input type="date" class="data" id="dataChegada" min="2023-11-14" max="2030-12-31">
               <input type="time" class="hora" id="horaChegada">
+            </p>
+
+            <p class="form-group" data-volta>
+              <label for="dataVolta" class="align-right">Data de volta:</label><br/>
+              <input type="date" class="data" id="dataVolta" min="2023-11-14" max="2030-12-31">
+              <input type="time" class="hora" id="horaVolta">
+            </p>
+            
+            <p class="form-group" data-chegada2>
+              <label for="dataChegada2">Data de chegada:</label><br/>
+              <input type="date" class="data" id="dataChegada2" min="2023-11-14" max="2030-12-31">
+              <input type="time" class="hora" id="horaChegada2">
             </p>
 
             <p id="status" class="statusError"></p>

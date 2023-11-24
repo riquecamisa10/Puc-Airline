@@ -50,56 +50,62 @@
         </div>
       </div>
 
-        <main>
+      <main>
 
-            <div class="conteudo">
+        <div class="conteudo">
 
-                <form>
+          <form>
 
-                    <h1>Inserir Trecho</h1>
+            <h1>Inserir Trecho</h1>
 
-                    <p>
-                        <label for="nome">Nome:</label><br/>
-                        <input type="text" id="nome" name="nome"/>
-                    </p>
+            <p>
+                <label for="nome">Nome:</label><br/>
+                <input type="text" id="nome" name="nome"/>
+            </p>
 
-                    <p>
-                        <label for="origem">Origem:</label><br/>
-                        <input type="number" id="origem" name="origem"/>
-                    </p>
+            <p>
+                <label for="origem">Origem:</label><br/>
+                <input type="number" id="origem" name="origem"/>
+            </p>
 
-                    <p>
-                        <label for="destino">Destino:</label><br/>
-                        <input type="number" id="destino" name="destino"/>
-                    </p>
+            <p>
+                <label for="destino">Destino:</label><br/>
+                <input type="number" id="destino" name="destino"/>
+            </p>
 
-                    <p>
-                        <label for="aeronave">Aeronave:</label><br/>
-                        <input type="number" id="aeronave" name="totalAssentos"/>
-                    </p>
+            <p>
+                <label for="aeronave">Aeronave:</label><br/>
+                <input type="number" id="aeronave" name="totalAssentos"/>
+            </p>
 
-                    <p id="status" class="statusError"></p>
+            <p>
+              <label for="tipoPassagem">Tipo da Passagem:</label>
+              <label><input type="radio" id="Somente Ida" name="tipoPassagem" onchange="getSelectedValue()" checked>Somente Ida</label>
+              <label><input type="radio" id="Ida e Volta" name="tipoPassagem" onchange="getSelectedValue()">Ida e Volta</label>
+            </p>            
 
-                    <p class="botao">
-                        <button 
-                            type="button" 
-                            onclick="inserirTrecho();"
-                            id="btnCadastrar"
-                            name="btnCadastrar">Cadastrar</button>
-                        <button type="reset">Limpar</button>
-                        <a href="../index.html"></a>
-                    </p>
-                    
-                </form>
+            <p id="status" class="statusError"></p>
 
-            </div>
+            <p class="botao">
+                <button 
+                    type="button" 
+                    onclick="inserirTrecho();"
+                    id="btnCadastrar"
+                    name="btnCadastrar">Cadastrar</button>
+                <button type="reset">Limpar</button>
+                <a href="../index.html"></a>
+            </p>
+              
+          </form>
 
-        </main>
+        </div>
 
-        <script src="inserindo.js"></script>
+      </main>
 
-        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+      <script src="inserindo.js"></script>
+
+      <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+      <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
     </body>
 </html>
