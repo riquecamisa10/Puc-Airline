@@ -158,16 +158,6 @@ function rowsToAssentos(oracleRows: unknown[] | undefined) : Array<Assento> {
       assento = {
         ida: registro.DATA_IDA,
         destino: registro.CIDADE_DESTINO,
-        //codigo: registro.CODIGO,
-        //escalas: registro.ESCALAS,
-        //origem: registro.ORIGEM,
-        //horaPartida: registro.HORA_PARTIDA,
-        //dataPartida: registro.DATA_PARTIDA,
-        //destino: registro.DESTINO,
-        //horaChegada: registro.HORA_CHEGADA,
-        //dataChegada: registro.DATA_CHEGADA,
-        //valor: registro.VALOR,
-        //assento: registro.ASSENTO,
       } as Assento;
 
       assentos.push(assento);
@@ -196,7 +186,7 @@ function aeronaveValida(aero: Aeronave) {
     mensagem = "Total de assentos não informado.";
   }
 
-  if ((aero.qtdeAssentos !== undefined) && (aero.qtdeAssentos < 100 || aero.qtdeAssentos > 1000)) {
+  if ((aero.qtdeAssentos !== undefined) && (aero.qtdeAssentos < 100 || aero.qtdeAssentos > 526)) {
     mensagem = "Total de assentos é inválido.";
   }
 

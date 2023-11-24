@@ -40,7 +40,7 @@ function totalAssentosValido() {
     let resultado = false;
     const strAssentos = document.getElementById("totalAssentos").value;
     const assentos = parseInt(strAssentos);
-    if (!isNaN(assentos) && assentos > 0) {
+    if (!isNaN(assentos) && assentos > 100 && assentos <= 525) {
         resultado = true;
     }
     return resultado;
@@ -90,7 +90,7 @@ function inserirAeronave() {
     }
 
     if (!totalAssentosValido()) {
-        showStatusMessage("Preencha corretamente o total de assentos", true);
+        showStatusMessage("O número de assentos deve ser entre 100 e 525", true);
         return;
     }
 
