@@ -66,15 +66,17 @@ function rowsToVoos(oracleRows) {
         oracleRows.forEach((registro) => {
             voo = {
                 codigo: registro.CODIGO,
-                aeronave: registro.AERONAVE,
-                aeroportoPartida: registro.AEROPORTO_SAIDA,
-                aeroportoDestino: registro.AEROPORTO_DESTINO,
+                trecho: registro.TRECHO,
                 escalas: registro.ESCALAS,
                 valor: registro.VALOR_PASSAGEM,
                 dataSaida: registro.DATA_SAIDA,
                 horaSaida: registro.HORA_SAIDA,
                 dataChegada: registro.DATA_CHEGADA,
                 horaChegada: registro.HORA_CHEGADA,
+                dataVolta: registro.DATA_VOLTA,
+                horaVolta: registro.HORA_VOLTA,
+                dataChegada2: registro.DATA_CHEGADA2,
+                horaChegada2: registro.HORA_CHEGADA2,
             };
             voos.push(voo);
         });
@@ -208,16 +210,8 @@ function trechoValido(trecho) {
 function vooValido(voo) {
     let valida = true;
     let mensagens = [];
-    if (voo.aeronave === undefined) {
-        mensagens.push("Aeronave não informada.");
-        valida = false;
-    }
-    if (voo.aeroportoPartida === undefined) {
-        mensagens.push("Aeroporto de saída não fornecido.");
-        valida = false;
-    }
-    if (voo.aeroportoDestino === undefined) {
-        mensagens.push("Aeroporto de destino não fornecido.");
+    if (voo.trecho === undefined) {
+        mensagens.push("Trecho não informada.");
         valida = false;
     }
     if (voo.escalas === undefined) {
@@ -244,15 +238,33 @@ function vooValido(voo) {
         mensagens.push("Hora de chegada não informada.");
         valida = false;
     }
-    console.log("Validação de voo - Aeronave:", voo.aeronave);
-    console.log("Validação de voo - Aeroporto de Saida:", voo.aeroportoPartida);
-    console.log("Validação de voo - Aeroporto de Destino:", voo.aeroportoDestino);
+    if (voo.dataVolta === undefined) {
+        mensagens.push("Data de volta não informada.");
+        valida = false;
+    }
+    if (voo.horaVolta === undefined) {
+        mensagens.push("Hora de volta não informada.");
+        valida = false;
+    }
+    if (voo.dataChegada2 === undefined) {
+        mensagens.push("Data de chegada da volta do voo não informada.");
+        valida = false;
+    }
+    if (voo.horaChegada2 === undefined) {
+        mensagens.push("Hora de chegada da volta do voo não informada.");
+        valida = false;
+    }
+    console.log("Validação de voo - Aeronave:", voo.trecho);
     console.log("Validação de voo - Escalas:", voo.escalas);
     console.log("Validação de voo - Valor da Passagem:", voo.valor);
     console.log("Validação de voo - Data de Saida:", voo.dataSaida);
     console.log("Validação de voo - Hora de Saida:", voo.horaSaida);
     console.log("Validação de voo - Data de Chegada:", voo.dataChegada);
     console.log("Validação de voo - Hora de Chegada:", voo.horaChegada);
+    console.log("Validação de voo - Data de Chegada:", voo.dataVolta);
+    console.log("Validação de voo - Hora de Chegada:", voo.horaVolta);
+    console.log("Validação de voo - Data de Chegada:", voo.dataChegada2);
+    console.log("Validação de voo - Hora de Chegada:", voo.horaChegada2);
     if (mensagens.length > 0) {
         console.log("Erro de validação:", mensagens);
     }
@@ -363,12 +375,14 @@ app.post("/buscarVoo", async (req, res) => {
     }
 });
 app.post("/obterTrechoListado", async (req, res) => {
+    console.log('Corpo da requisição:', req.body);
     let cr = {
         status: "ERROR",
         message: "",
         payload: undefined,
     };
     const trecho = req.body;
+    const codigoTrecho = trecho.codigo;
     try {
         let connection;
         try {
@@ -378,6 +392,7 @@ app.post("/obterTrechoListado", async (req, res) => {
             const dados = [
                 trecho.codigo,
             ];
+            console.log('Consulta SQL:', cmdBuscarTrecho, ' com dados:', dados);
             const result = (await connection.execute(cmdBuscarTrecho, dados, { outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: true }));
             if (result.rows && result.rows.length > 0) {
                 cr.status = "SUCCESS";
@@ -556,7 +571,7 @@ app.post("/incluirVoo", async (req, res) => {
     };
     const voo = req.body;
     try {
-        console.log("Received Voo:", voo); // Log received data
+        console.log("Received Voo:", voo);
         let [valida, mensagem] = vooValido(voo);
         if (!valida) {
             cr.message = mensagem;
@@ -567,19 +582,21 @@ app.post("/incluirVoo", async (req, res) => {
             try {
                 connection = await oraConnAttribs();
                 const cmdInsertVoo = `INSERT INTO VOOS
-          (CODIGO, AERONAVE, AEROPORTO_SAIDA, AEROPORTO_DESTINO, ESCALAS, VALOR_PASSAGEM, DATA_SAIDA, HORA_SAIDA, DATA_CHEGADA, HORA_CHEGADA)
+          (CODIGO, TRECHO, ESCALAS, VALOR_PASSAGEM, DATA_SAIDA, HORA_SAIDA, DATA_CHEGADA, HORA_CHEGADA, DATA_VOLTA, HORA_VOLTA, DATA_CHEGADA2, HORA_CHEGADA2)
           VALUES
-          (VOOS_SEQ.NEXTVAL, :1, :2, :3, :4, :5, :6, :7, :8, :9)`;
+          (VOOS_SEQ.NEXTVAL, :1, :2, :3, :4, :5, :6, :7, :8, :9, :10, :11)`;
                 const dados = [
-                    voo.aeronave,
-                    voo.aeroportoPartida,
-                    voo.aeroportoDestino,
+                    voo.trecho,
                     voo.escalas,
                     voo.valor,
                     voo.dataSaida,
                     voo.horaSaida,
                     voo.dataChegada,
                     voo.horaChegada,
+                    voo.dataVolta,
+                    voo.horaVolta,
+                    voo.dataChegada2,
+                    voo.horaChegada2,
                 ];
                 const result = await connection.execute(cmdInsertVoo, dados, { autoCommit: true });
                 if (result.rowsAffected === 1) {
@@ -908,6 +925,7 @@ app.post("/alterarTrecho", async (req, res) => {
     }
 });
 app.post("/alterarVoo", async (req, res) => {
+    console.log("Recebendo solicitação para /alterarVoo");
     let cr = {
         status: "ERROR",
         message: "",
@@ -917,34 +935,38 @@ app.post("/alterarVoo", async (req, res) => {
     let [valida, mensagem] = vooValido(voo);
     if (!valida) {
         cr.message = mensagem;
-        return res.status(400).send(cr); // Return a 400 Bad Request status for validation errors
+        return res.status(400).send(cr);
     }
     let connection;
     try {
         connection = await oraConnAttribs();
         const cmdUpdateVoo = `UPDATE VOOS
-    SET AERONAVE = :aeronave,
-        AEROPORTO_SAIDA = :aeroporto_saida,
-        AEROPORTO_DESTINO = :aeroporto_destino,
+    SET TRECHO = :trecho,
         ESCALAS = :escalas,
-        VALOR_PASSAGEM = :valor_passagem,
-        DATA_SAIDA = :data_saida,
-        HORA_SAIDA = :hora_saida,
-        DATA_CHEGADA = :data_chegada,
-        HORA_CHEGADA = :hora_chegada
+        VALOR_PASSAGEM = :valor,
+        DATA_SAIDA = :dataSaida,
+        HORA_SAIDA = :horaSaida,
+        DATA_CHEGADA = :dataChegada,
+        HORA_CHEGADA = :horaChegada,
+        DATA_VOLTA = :dataVolta,
+        HORA_VOLTA = :horaVolta,
+        DATA_CHEGADA2 = :dataChegada2,
+        HORA_CHEGADA2 = :horaChegada2
     WHERE CODIGO = :codigo`;
-        const dados = {
-            aeronave: voo.aeronave,
-            aeroporto_saida: voo.aeroportoPartida,
-            aeroporto_destino: voo.aeroportoDestino,
-            escalas: voo.escalas,
-            valor_passagem: voo.valor,
-            data_saida: voo.dataSaida,
-            hora_saida: voo.horaSaida,
-            data_chegada: voo.dataChegada,
-            hora_chegada: voo.horaChegada,
-            codigo: voo.codigo,
-        };
+        const dados = [
+            voo.trecho,
+            voo.escalas,
+            voo.valor,
+            voo.dataSaida,
+            voo.horaSaida,
+            voo.dataChegada,
+            voo.horaChegada,
+            voo.dataVolta,
+            voo.horaVolta,
+            voo.dataChegada2,
+            voo.horaChegada2,
+            voo.codigo,
+        ];
         const result = await connection.execute(cmdUpdateVoo, dados, { autoCommit: true });
         if (result.rowsAffected === 1) {
             cr.status = "SUCCESS";
@@ -952,13 +974,13 @@ app.post("/alterarVoo", async (req, res) => {
             return res.send(cr);
         }
         else {
-            cr.message = "Nenhuma aeronave foi alterada. Verifique o código fornecido.";
+            cr.message = "Nenhum voo foi alterado. Verifique o código fornecido.";
             return res.status(404).send(cr); // Return a 404 Not Found status if no rows were affected
         }
     }
     catch (e) {
-        cr.message = `Erro ao alterar aeronave: ${e.message}`;
-        console.error(`Erro ao alterar aeronave: ${e.message}`);
+        cr.message = `Erro ao alterar voo: ${e.message}`;
+        console.error(`Erro ao alterar voo: ${e.message}`);
         return res.status(500).send(cr); // Return a 500 Internal Server Error status for other errors
     }
     finally {
