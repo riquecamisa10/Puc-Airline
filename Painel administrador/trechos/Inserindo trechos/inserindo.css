@@ -27,19 +27,15 @@ body {
     height: 100vh;
     margin: 0;
     background:url(wall2.jpg) 10px center / cover;
-}
-
-.conteudo label:not(.input),
-.conteudo input[type="radio"],
-.conteudo input[type="checkbox"] {
-    align-self: center;
+    touch-action: manipulation;
 }
 
 .conteudo input[type="radio"],
 .conteudo input[type="checkbox"] {
     transform: scale(1.5);
-    margin-right: 8px;
-    margin-left: 8px;
+    margin-right: -9px;
+    margin-left: 18px;
+    max-width: -128px;
 }
 
 .menu {
@@ -176,7 +172,7 @@ main {
 .conteudo label {
     font-size: 25px;
     text-align: right;
-    width: 33%;
+    width: 230px;
     white-space: nowrap; 
 }
 
@@ -206,6 +202,12 @@ main {
 .conteudo button {
     height: 35px;
     width: 32%;
+}
+
+.conteudo p label input{
+    position: relative;
+    left: 30px;
+    margin: 5px;
 }
 
 form h1{

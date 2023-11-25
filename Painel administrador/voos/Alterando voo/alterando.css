@@ -47,16 +47,6 @@ body {
     font-size: 20px;
 }
 
-.conteudo {
-    max-width: 700px;
-    width: 100%;
-    border: 2px solid black;
-    padding: 30px 0px 30px 0px;
-    backdrop-filter: blur(18px);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    padding: 50px;
-}
-
 .menu:hover {
     width: 220px;
 }
@@ -153,6 +143,16 @@ main {
     height: 98vh; 
 }
 
+.conteudo {
+    max-width: 700px;
+    width: 100%;
+    border: 2px solid black;
+    padding: 30px 0px 30px 0px;
+    backdrop-filter: blur(18px);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 50px;
+}
+
 .conteudo select {
     width: 290px;
     height: 30px;
@@ -170,7 +170,7 @@ main {
 }
 
 .conteudo input {
-    width: 240px;
+    width: 250px;
     padding: 8px;
 }
 
@@ -184,7 +184,6 @@ main {
 
 .form-group label {
     text-align: left; 
-    width: 45%; 
 }
 
 .conteudo button {

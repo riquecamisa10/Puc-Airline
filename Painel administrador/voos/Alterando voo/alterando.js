@@ -1,3 +1,77 @@
+function fetchObterTrecho(body) {
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    };
+    
+    return fetch('http://localhost:3000/obterTrechoListado', requestOptions)
+        .then(response => response.json())
+        .catch(error => {
+            console.error('Erro na requisição fetchObterTrecho:', error);
+            throw error;
+        });
+}
+
+function verificarTipoTrecho() {
+    const trecho = document.getElementById('trecho').value;
+
+    if (trecho.trim().length > 0) {
+        fetchObterTrecho({ codigo: parseInt(trecho) })
+            .then((data) => {
+                console.log('Resposta do servidor:', data);
+
+                if (data.status === 'SUCCESS' && data.payload && data.payload.length > 0) {
+                    const estiloVoo = data.payload[0].ESTILO_VOO;
+
+                    if (estiloVoo) {
+                        const estiloVooLowerCase = estiloVoo.toLowerCase();
+
+                        const dataVoltaGroup = document.querySelector(".form-group[data-volta]");
+                        const dataChegada2Group = document.querySelector(".form-group[data-chegada2]");
+
+                        if (estiloVooLowerCase === "somente ida") {
+                            dataVoltaGroup.style.display = "none";
+                            dataChegada2Group.style.display = "none";
+
+                            preencher(document.getElementById('dataVolta'));
+                            preencher(document.getElementById('horaVolta'));
+                            preencher(document.getElementById('dataChegada2'));
+                            preencher(document.getElementById('horaChegada2'));
+                        } else {
+                            dataVoltaGroup.style.display = "flex";
+                            dataChegada2Group.style.display = "flex";
+                        }
+                    } else {
+                        console.error('Estilo de voo não está presente ou é nulo.');
+                    }
+                } else {
+                    console.error('Erro ao obter informações do trecho:', data.message);
+                }
+            })
+            .catch((error) => {
+                console.error('Erro ao obter informações do trecho:', error);
+            });
+    }
+}
+
+function preencherComValorValido(elemento, valor) {
+    if (elemento) {
+        elemento.value = valor;
+    }
+}
+
+function preencher(elemento) {
+    if (elemento) {
+        
+        if (elemento.type === 'date') {
+            preencherComValorValido(elemento, '1970-01-01');  
+        } else if (elemento.type === 'time') {
+            preencherComValorValido(elemento, '00:00');  
+        }
+    }
+}
+
 function codigoValido(){
     let resultado = false;
     const strCodigo = document.getElementById("codigo").value;
@@ -8,28 +82,10 @@ function codigoValido(){
     return resultado; 
 }
 
-function preencheuAeronave() {
+function preencheuTrecho() {
     let resultado = false;
-    const aeronave = document.getElementById("aeronave").value;
-    if (aeronave.trim().length > 0) {
-        resultado = true;
-    }
-    return resultado;
-}
-
-function preencheuAeroportoPartida() {
-    let resultado = false;
-    const aeroportoPartida = document.getElementById("aeroportoPartida").value;
-    if (aeroportoPartida.trim().length > 0) {
-        resultado = true;
-    }
-    return resultado;
-}
-
-function preencheuAeroportoDestino() {
-    let resultado = false;
-    const aeroportoDestino = document.getElementById("aeroportoDestino").value;
-    if (aeroportoDestino.trim().length > 0) {
+    const trecho = document.getElementById("trecho").value;
+    if (trecho.trim().length > 0) {
         resultado = true;
     }
     return resultado;
@@ -89,6 +145,42 @@ function preencheuHoraChegada(){
     return resultado;
 }
 
+function preencheuDataVolta(){
+    let resultado = false;
+    const dataVolta = document.getElementById("dataVolta").value;
+    if(dataVolta.length > 0){
+        resultado = true;
+    }
+    return resultado;
+}
+
+function preencheuHoraVolta(){
+    let resultado = false;
+    const horaVolta = document.getElementById("horaVolta").value;
+    if(horaVolta.length > 0){
+        resultado = true;
+    }
+    return resultado;
+}
+
+function preencheuDataChegada2(){
+    let resultado = false;
+    const dataChegada2 = document.getElementById("dataChegada2").value;
+    if(dataChegada2.trim().length != 0){
+        resultado = true;
+    }
+    return resultado;
+}
+
+function preencheuHoraChegada2(){
+    let resultado = false;
+    const horaChegada2 = document.getElementById("horaChegada2").value;
+    if(horaChegada2.trim().length != 0){
+        resultado = true;
+    }
+    return resultado;
+}
+
 function showStatusMessage(msg, error) {
     var pStatus = document.getElementById("status");
     
@@ -123,22 +215,11 @@ function fetchAlterar(body) {
 window.Alterar = function(){
 
     if(!codigoValido()){
-        showStatusMessage("Codigo inexistente", true);
-        return;
+        showStatusMessage("Preencha corretamente o codigo", true);
     }
 
-    if (!preencheuAeronave()) {
-        showStatusMessage("Preencha corretamente a aeronave", true);
-        return;
-    }
-
-    if (!preencheuAeroportoPartida()) {
-        showStatusMessage("Preencha corretamente o aeroporto de partida", true);
-        return;
-    }
-
-    if (!preencheuAeroportoDestino()) {
-        showStatusMessage("Preencha corretamente o aeroporto de destino", true);
+    if (!preencheuTrecho()) {
+        showStatusMessage("Preencha corretamente o trecho", true);
         return;
     }
 
@@ -172,41 +253,67 @@ window.Alterar = function(){
         return;
     }
 
+    if(!preencheuDataVolta()){
+        showStatusMessage("Preencha corretamente a data de volta do voo", true);
+        return;
+    }
+
+    if(!preencheuHoraVolta()){
+        showStatusMessage("Preencha corretamente a hora de volta do voo", true);
+        return;
+    }
+
+    if(!preencheuDataChegada2()){
+        showStatusMessage("Preencha corretamente a data de chegada do voo de volta", true);
+        return;
+    }
+
+    if(!preencheuHoraChegada2()){
+        showStatusMessage("Preencha corretamente a hora de chegada do voo de volta", true);
+        return;
+    }
+
     const codigo = document.getElementById("codigo").value;
-    const aeronave = document.getElementById("aeronave").value;
-    const aeroportoPartida = document.getElementById("aeroportoPartida").value;
-    const aeroportoDestino = document.getElementById("aeroportoDestino").value;
+    const trecho = document.getElementById("trecho").value;
     const escalas = document.getElementById("escalas").value;
     const valor = document.getElementById("valor").value;
     const dataSaida = document.getElementById("dataSaida").value;
     const horaSaida = document.getElementById("horaSaida").value;
     const dataChegada = document.getElementById("dataChegada").value;
     const horaChegada = document.getElementById("horaChegada").value;
+    const dataVolta = document.getElementById("dataVolta").value;
+    const horaVolta = document.getElementById("horaVolta").value;
+    const dataChegada2 = document.getElementById("dataChegada2").value;
+    const horaChegada2 = document.getElementById("horaChegada2").value;
 
     console.log(JSON.stringify({
         codigo: codigo,
-        aeronave: aeronave,
-        aeroportoPartida: aeroportoPartida,
-        aeroportoDestino: aeroportoDestino,
+        trecho: trecho,
         escalas: escalas,
         valor: valor,
         dataSaida: dataSaida,
         horaSaida: horaSaida,
         dataChegada: dataChegada,
         horaChegada: horaChegada,
+        dataVolta: dataVolta,
+        horaVolta: horaVolta,
+        dataChegada2: dataChegada2,
+        horaChegada2: horaChegada2,
     }));    
 
     fetchAlterar({
         codigo: codigo,
-        aeronave: aeronave,
-        aeroportoPartida: aeroportoPartida,
-        aeroportoDestino: aeroportoDestino,
+        trecho: trecho,
         escalas: escalas,
         valor: valor,
         dataSaida: dataSaida,
         horaSaida: horaSaida,
         dataChegada: dataChegada,
         horaChegada: horaChegada,
+        dataVolta: dataVolta,
+        horaVolta: horaVolta,
+        dataChegada2: dataChegada2,
+        horaChegada2: horaChegada2,
     })
     .then(resultado => {
         if (resultado.status === "SUCCESS") {
@@ -221,7 +328,7 @@ window.Alterar = function(){
         showStatusMessage(`Erro durante a chamada da API: ${error.message}`, true);
         console.error("Erro durante a chamada da API:", error);
     });    
-}
+};
 
 var menuItems = document.querySelectorAll('.menu .list-item.parent');
 
@@ -264,4 +371,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
         });
     });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const trechoInput = document.getElementById('trecho');
+
+    trechoInput.addEventListener('change', verificarTipoTrecho);
 });

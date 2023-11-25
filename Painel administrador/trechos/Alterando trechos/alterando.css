@@ -148,8 +148,16 @@ body {
 main {
     display: flex;
     justify-content: center;
-    align-items: center; /* Adiciona alinhamento vertical */
-    height: 98vh; /* Faz com que a main ocupe 100% da altura da viewport */
+    align-items: center; 
+    height: 98vh; 
+}
+
+.conteudo input[type="radio"],
+.conteudo input[type="checkbox"] {
+    transform: scale(1.5);
+    margin-right: -43px;
+    margin-left: 47px;
+    max-width: -128px;
 }
 
 .conteudo select {
@@ -163,7 +171,7 @@ main {
 .conteudo label {
     font-size: 25px;
     text-align: right;
-    width: 33%;
+    width: 230px;
     white-space: nowrap; 
 }
 

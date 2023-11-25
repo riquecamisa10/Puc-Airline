@@ -5,8 +5,71 @@ function fetchObterTrecho(body) {
         body: JSON.stringify(body)
     };
     
-    return fetch('http://localhost:3000/ObterTrechoListado', requestOptions)
-    .then(response => response.json())
+    return fetch('http://localhost:3000/obterTrechoListado', requestOptions)
+        .then(response => response.json())
+        .catch(error => {
+            console.error('Erro na requisição fetchObterTrecho:', error);
+            throw error;
+        });
+}
+
+function verificarTipoTrecho() {
+    const trecho = document.getElementById('trecho').value;
+
+    if (trecho.trim().length > 0) {
+        fetchObterTrecho({ codigo: parseInt(trecho) })
+            .then((data) => {
+                console.log('Resposta do servidor:', data);
+
+                if (data.status === 'SUCCESS' && data.payload && data.payload.length > 0) {
+                    const estiloVoo = data.payload[0].ESTILO_VOO;
+
+                    if (estiloVoo) {
+                        const estiloVooLowerCase = estiloVoo.toLowerCase();
+
+                        const dataVoltaGroup = document.querySelector(".form-group[data-volta]");
+                        const dataChegada2Group = document.querySelector(".form-group[data-chegada2]");
+
+                        if (estiloVooLowerCase === "somente ida") {
+                            dataVoltaGroup.style.display = "none";
+                            dataChegada2Group.style.display = "none";
+
+                            preencher(document.getElementById('dataVolta'));
+                            preencher(document.getElementById('horaVolta'));
+                            preencher(document.getElementById('dataChegada2'));
+                            preencher(document.getElementById('horaChegada2'));
+                        } else {
+                            dataVoltaGroup.style.display = "flex";
+                            dataChegada2Group.style.display = "flex";
+                        }
+                    } else {
+                        console.error('Estilo de voo não está presente ou é nulo.');
+                    }
+                } else {
+                    console.error('Erro ao obter informações do trecho:', data.message);
+                }
+            })
+            .catch((error) => {
+                console.error('Erro ao obter informações do trecho:', error);
+            });
+    }
+}
+
+function preencherComValorValido(elemento, valor) {
+    if (elemento) {
+        elemento.value = valor;
+    }
+}
+
+function preencher(elemento) {
+    if (elemento) {
+        
+        if (elemento.type === 'date') {
+            preencherComValorValido(elemento, '1970-01-01');  
+        } else if (elemento.type === 'time') {
+            preencherComValorValido(elemento, '00:00');  
+        }
+    }
 }
 
 function preencheuTrecho() {
@@ -133,7 +196,7 @@ function fetchInserir(body) {
 function inserirVoo() {
 
     if (!preencheuTrecho()) {
-        showStatusMessage("Preencha corretamente a aeronave", true);
+        showStatusMessage("Preencha corretamente o trecho", true);
         return;
     }
 
@@ -214,21 +277,6 @@ function inserirVoo() {
     };
     console.log("Voo object:", voo);
 
-    fetchObterTrecho({ trecho })
-    .then(trechoInfo => {
-      const estiloVoo = trechoInfo.payload[0].ESTILO_VOO.toLowerCase();
-
-      const dataVoltaGroup = document.querySelector(".form-group[data-volta]");
-      const dataChegada2Group = document.querySelector(".form-group[data-chegada2]");
-
-      if (estiloVoo === "ida") {
-        dataVoltaGroup.style.display = "none";
-        dataChegada2Group.style.display = "none";
-      } else {
-        dataVoltaGroup.style.display = "block";
-        dataChegada2Group.style.display = "block";
-    }
-
     fetchInserir(voo)
     .then(resultado => {
         if (resultado.status === "SUCCESS") {
@@ -241,8 +289,8 @@ function inserirVoo() {
     .catch(() => {
         showStatusMessage("Erro técnico ao cadastrar... Contate o suporte.", true);
         console.log("Falha grave ao cadastrar.");
-    });
-})
+    })
+};
 
 var menuItems = document.querySelectorAll('.menu .list-item.parent');
 
@@ -285,4 +333,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
         });
     });
-})};
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const trechoInput = document.getElementById('trecho');
+
+    trechoInput.addEventListener('change', verificarTipoTrecho);
+});

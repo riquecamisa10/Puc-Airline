@@ -69,21 +69,22 @@
   </div>
 
   <main>
-
     <div class="cabecalho">
       <table id="tblAlunos" cellpadding="5" cellspacing="5">
         <thead>
           <tr>
             <th id="thCodigo" class="canto1">Codigo</th>
-            <th id="thAeronave">Aeronave</th>
-            <th id="thAeroportoPartida">Aeroporto de Partida</th>
-            <th id="thAeroportoDestino">Aeroporto de Destino</th>
-            <th id="thAssentos">Valor da Passagem</th>
-            <th id="thEscalas">Escalas</th>
+            <th id="thAeronave">Trecho</th>
+            <th id="thAssentos">Escalas</th>
+            <th id="thEscalas">Valor da Passagem</th>
             <th id="thDataSaida">Data de Saida</th>
             <th id="thHoraSaida">Hora de Saida</th>
             <th id="thDataChegada">Data de Chegada</th>
-            <th id="thHoraChegada" class="canto2">Hora de Chegada</th>
+            <th id="thHoraChegada">Hora de Chegada</th>
+            <th id="thDataChegada">Data de Volta</th>
+            <th id="thHoraChegada">Hora de Volta</th>
+            <th id="thDataChegada2">Data de Chegada</th>
+            <th id="thHoraChegada2" class="canto2">Hora de Chegada</th>
           </tr>
         </thead>
         <tbody id="tblAlunosDados"></tbody>
@@ -95,13 +96,12 @@
         Carregar Dados
       </button>
     </p>
-
   </main>
 
-</body>
+  <script src="exibindo.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
-<script src="exibindo.js"></script>
-<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
 
 </html>
