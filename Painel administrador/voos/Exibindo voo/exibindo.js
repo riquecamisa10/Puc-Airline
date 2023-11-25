@@ -24,30 +24,15 @@ function verificarTipoTrecho() {
                 if (data.status === 'SUCCESS' && data.payload && data.payload.length > 0) {
                     const estiloVoo = data.payload[0].ESTILO_VOO;
 
-                    const dataVoltaInput = document.getElementById("dataVolta");
-                    const horaVoltaInput = document.getElementById("horaVolta");
-                    const dataChegada2Input = document.getElementById("dataChegada2");
-                    const horaChegada2Input = document.getElementById("horaChegada2");
-
-                    // Limpar os campos relacionados à volta
-                    preencherComValorValido(dataVoltaInput, '');
-                    preencherComValorValido(horaVoltaInput, '');
-                    preencherComValorValido(dataChegada2Input, '');
-                    preencherComValorValido(horaChegada2Input, '');
-
                     const dataVoltaGroup = document.querySelector(".form-group[data-volta]");
                     const dataChegada2Group = document.querySelector(".form-group[data-chegada2]");
 
                     if (estiloVoo) {
                         const estiloVooLowerCase = estiloVoo.toLowerCase();
 
-                        if (estiloVooLowerCase === "somente ida") {
-                            dataVoltaGroup.style.display = "none";
-                            dataChegada2Group.style.display = "none";
-                        } else {
-                            dataVoltaGroup.style.display = "flex";
-                            dataChegada2Group.style.display = "flex";
-                        }
+                        // Ocultar ou exibir os campos relacionados à volta
+                        dataVoltaGroup.style.display = (estiloVooLowerCase === "somente ida") ? "none" : "flex";
+                        dataChegada2Group.style.display = (estiloVooLowerCase === "somente ida") ? "none" : "flex";
                     } else {
                         console.error('Estilo de voo não está presente ou é nulo.');
                     }
@@ -97,23 +82,16 @@ function preencherTabela(voos) {
 
     if (voos) {
         tbody.innerHTML = voos.map((voo, index) => {
-            let estilo = index % 2 === 0 ? "linhaPar" : "linhaImpar";
+            const estilo = index % 2 === 0 ? "linhaPar" : "linhaImpar";
+            const estiloVooLowerCase = voo.estiloVoo ? voo.estiloVoo.toLowerCase() : '';
 
-            let estiloVooLowerCase = voo.estiloVoo ? voo.estiloVoo.toLowerCase() : '';
+            // Atribuir os valores dos campos relacionados à volta
+            const dataVolta = (estiloVooLowerCase !== "somente ida") ? voo.dataVolta || '' : '';
+            const horaVolta = (estiloVooLowerCase !== "somente ida") ? voo.horaVolta || '' : '';
+            const dataChegada2 = (estiloVooLowerCase !== "somente ida") ? voo.dataChegada2 || '' : '';
+            const horaChegada2 = (estiloVooLowerCase !== "somente ida") ? voo.horaChegada2 || '' : '';
 
-        let dataVolta = voo.dataVolta || '';
-        let horaVolta = voo.horaVolta || '';
-        let dataChegada2 = voo.dataChegada2 || '';
-        let horaChegada2 = voo.horaChegada2 || '';
-
-        if (estiloVooLowerCase === "somente ida") {
-            dataVolta = '';
-            horaVolta = '';
-            dataChegada2 = '';
-            horaChegada2 = '';
-        }
-
-        return `
+            return `
             <tr class="${estilo}">
             <td>${voo.codigo}</td>
             <td>${voo.trecho}</td>
@@ -127,11 +105,9 @@ function preencherTabela(voos) {
             <td>${horaVolta !== '' ? horaVolta : '&nbsp;'}</td>
             <td>${dataChegada2 !== '' ? dataChegada2 : '&nbsp;'}</td>
             <td>${horaChegada2 !== '' ? horaChegada2 : '&nbsp;'}</td>
-            </tr>`;
-
-        }).join('');
-    }
-}
+        </tr>`;
+    }).join('');
+}}
 
 var menuItems = document.querySelectorAll('.menu .list-item.parent');
 

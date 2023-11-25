@@ -164,10 +164,12 @@ main{
     margin-top: 25px;
     color: red;
     font-size: 25px;
+    text-align: center;
 }
 
 .statusSuccess{
     margin-top: 25px;
     color: greenyellow;
     font-size: 25px;
+    text-align: center;
 }

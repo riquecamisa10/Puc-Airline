@@ -13,8 +13,8 @@
             <form>
                 <div>
                     <label for="tipoPassagem">Tipo da Passagem:</label>
-                    <input type="radio" id="idaRadio" name="tipoPassagem" onclick="mostrarVolta()" checked>Somente Ida</input>
-                    <input type="radio" id="voltaRadio" name="tipoPassagem" onclick="mostrarVolta()">Ida e Volta</input>
+                    <input type="radio" id="idaRadio" name="tipoPassagem" onclick="mostrarVolta(); limparCamposVolta();" checked>Somente Ida</input>
+                    <input type="radio" id="voltaRadio" name="tipoPassagem" onclick="mostrarVolta(); limparCamposVolta();">Ida e Volta</input>
                 </div>
     
                 <div>
@@ -44,27 +44,55 @@
                 </p>
             </form>
 
-            <div class="cabecalho">
-
-                <table id="tblAlunos" cellpadding="5" cellspacing="5">
+            <div class="cabecalho tabelaIda">
+                <table id="tabelaIda" cellpadding="5" cellspacing="5" class="tblAlunos">
 
                     <thead>
 
                         <tr>
                             <th id="thVoo" class="canto1">Voo</th>
                             <th id="thEscalas">Escalas</th>
-                            <th id="thCidadePartida" style="min-width: 200px;">Cidade de Partida</th>
-                            <th id="thHoraPartida" style="min-width: 140px;">Hora de Partida</th>
+                            <th id="thCidadePartida" style="min-width: 300px;">Aeroporto de Partida</th>
+                            <th id="thCidadeDestino" style="min-width: 300px;">Aeroporto de Destino</th>
                             <th id="thDataPartida">Data de Partida</th>
-                            <th id="thCidadeDestino" style="min-width: 200px;">Cidade de Destino</th>
-                            <th id="thHoraChegada" style="min-width: 140px;">Hora de Chegada</th>
+                            <th id="thHoraPartida" style="min-width: 140px;">Hora de Partida</th>
                             <th id="thDataChegada">Data de Chegada</th>
+                            <th id="thHoraChegada" style="min-width: 140px;">Hora de Chegada</th>
                             <th id="thValor" class="canto2">Valor</th>
                         </tr>
 
                     </thead>
 
-                  <tbody id="tblAlunosDados"></tbody>
+                  <tbody id="tabelaIdaBody"></tbody>
+
+                </table>
+
+            </div>
+
+            <div class="cabecalho tabelaVolta">
+                <table id="tabelaVolta" cellpadding="5" cellspacing="5" class="tblAlunos">
+
+                    <thead>
+
+                        <tr>
+                            <th id="thVoo" class="canto1" style="max-width: 90px;">Voo</th>
+                            <th id="thEscalas" style="max-width: 90px;">Escalas</th>
+                            <th id="thCidadePartida" style="min-width: 220px;">Aeroporto de Partida</th>
+                            <th id="thCidadeDestino" style="min-width: 220px;">Aeroporto de Destino</th>
+                            <th id="thDataPartida" style="min-width: 125px;">Data de Partida</th>
+                            <th id="thHoraPartida" style="min-width: 125px;">Hora de Partida</th>
+                            <th id="thDataChegada" style="min-width: 125px;">Data de Chegada</th>
+                            <th id="thHoraChegada" style="min-width: 125px;">Hora de Chegada</th>
+                            <th id="thDataVolta" style="min-width: 125px;">Data de Volta</th>
+                            <th id="thHoraVolta" style="min-width: 125px;">Hora de Volta</th>
+                            <th id="thDataChegada2" style="min-width: 125px;">Data de Chegada</th>
+                            <th id="thHoraChegada2" style="min-width: 125px;">Hora de Chegada</th>
+                            <th id="thValor" class="canto2">Valor</th>
+                        </tr>
+
+                    </thead>
+
+                  <tbody id="tabelaVoltaBody"></tbody>
 
                 </table>
 

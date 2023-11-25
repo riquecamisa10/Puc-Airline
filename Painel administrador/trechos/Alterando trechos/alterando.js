@@ -45,15 +45,29 @@ function getSelectedOption() {
     return null;
 }
 
-function showStatusMessage(msg, error) {
-    var pStatus = document.getElementById("status");
-    
-    if (error === true) {
-        pStatus.className = "statusError";
+function showStatusMessage(message, isError) {
+    const statusElement = document.getElementById('status');
+
+    statusElement.textContent = message;
+
+    if (isError) {
+        statusElement.classList.add('statusError');
+        statusElement.classList.remove('statusSuccess'); 
     } else {
-        pStatus.className = "statusSuccess";
+        statusElement.classList.add('statusSuccess');
+        statusElement.classList.remove('statusError'); 
     }
-    pStatus.textContent = msg;
+
+    statusElement.style.display = 'block';
+
+    setTimeout(() => {
+        hideStatusMessage();
+    }, 3000);
+}
+
+function hideStatusMessage() {
+    const statusElement = document.getElementById('status');
+    statusElement.style.display = 'none';
 }
 
 function fetchAlterar(body) {

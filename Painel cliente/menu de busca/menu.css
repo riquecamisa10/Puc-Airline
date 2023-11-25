@@ -125,8 +125,12 @@ tbody tr:hover{
     color: #151d1d;
 }
 
-#tblAlunos {
-    width: 60%;
+#tabelaIda, #tabelaVolta {
+    display: none;
+}
+
+.tblAlunos {
+    width: 1500px;
     margin: 20px auto;
     z-index: 2;
     border-collapse: collapse;

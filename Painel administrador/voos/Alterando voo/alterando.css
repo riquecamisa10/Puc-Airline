@@ -11,6 +11,7 @@
     display: flex;
     justify-content: center;
     max-width: 540px;
+    text-align: center;
 }
 
 .statusSuccess{
@@ -19,6 +20,7 @@
    margin-top: 30px;
    display: flex;
    justify-content: center;
+   text-align: center;
 }
 
 body {
@@ -274,11 +276,13 @@ button{
     .statusError{
         color:red;
         font-size: 18px;
+        text-align: center;
     }
     
     .statusSuccess{
        color: greenyellow;
        font-size: 18px;
+       text-align: center;
     }
 
     .menu:hover{

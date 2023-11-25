@@ -8,15 +8,29 @@ function selecionouCodigo(){
     return resultado; 
 }
 
-function showStatusMessage(msg, error){
-    var pStatus = document.getElementById("status");
+function showStatusMessage(message, isError) {
+    const statusElement = document.getElementById('status');
 
-    if (error === true){
-        pStatus.className = "statusError";
-    }else{
-        pStatus.className = "statusSuccess";
+    statusElement.textContent = message;
+
+    if (isError) {
+        statusElement.classList.add('statusError');
+        statusElement.classList.remove('statusSuccess'); 
+    } else {
+        statusElement.classList.add('statusSuccess');
+        statusElement.classList.remove('statusError'); 
     }
-    pStatus.textContent = msg;
+
+    statusElement.style.display = 'block';
+
+    setTimeout(() => {
+        hideStatusMessage();
+    }, 3000);
+}
+
+function hideStatusMessage() {
+    const statusElement = document.getElementById('status');
+    statusElement.style.display = 'none';
 }
 
 function fetchExcluir(body) {
@@ -44,8 +58,9 @@ function excluirVoo(){
     })
     .then(resultado => {
         if(resultado.status === "SUCCESS"){
-        showStatusMessage("Voo excluido", false);
-        }else{
+            showStatusMessage("Voo excluido", false);
+        }
+        else{
         showStatusMessage("Erro ao excluir Voo...: " + message, true);
         console.log(resultado.message);
         }

@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-var totalAssentos = 525;
+var totalAssentos = 500;
 
 var assentosOcupados = [10, 20, 30];
 

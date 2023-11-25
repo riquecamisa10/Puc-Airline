@@ -65,11 +65,29 @@ function preencheuReferencia(){
     return resultado;
 }
 
-function showStatusMessage(msg, error){
-    var pStatus = document.getElementById("status");
+function showStatusMessage(message, isError) {
+    const statusElement = document.getElementById('status');
 
-    pStatus.className = error ? "statusError" : "statusSuccess";
-    pStatus.textContent = msg;
+    statusElement.textContent = message;
+
+    if (isError) {
+        statusElement.classList.add('statusError');
+        statusElement.classList.remove('statusSuccess'); 
+    } else {
+        statusElement.classList.add('statusSuccess');
+        statusElement.classList.remove('statusError'); 
+    }
+
+    statusElement.style.display = 'block';
+
+    setTimeout(() => {
+        hideStatusMessage();
+    }, 3000);
+}
+
+function hideStatusMessage() {
+    const statusElement = document.getElementById('status');
+    statusElement.style.display = 'none';
 }
 
 function fetchAlterar(body) {

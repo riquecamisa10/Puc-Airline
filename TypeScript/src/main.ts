@@ -68,6 +68,7 @@ type Aeroporto = {
 
 type Assento = {
   ida?: string,
+  volta?: string,
   destino?: string,
 }
 
@@ -163,6 +164,7 @@ function rowsToAssentos(oracleRows: unknown[] | undefined) : Array<Assento> {
     oracleRows.forEach((registro: any) => {
       assento = {
         ida: registro.DATA_IDA,
+        volta: registro.DATA_VOLTA,
         destino: registro.CIDADE_DESTINO,
       } as Assento;
 
@@ -301,22 +303,22 @@ function vooValido(voo: Voo) {
     valida = false;
   }
 
-  if (voo.dataVolta === undefined) {
+  if (voo.dataVolta === undefined && voo.dataVolta === "") {
     mensagens.push("Data de volta não informada.");
     valida = false;
   }
 
-  if (voo.horaVolta === undefined){
+  if (voo.horaVolta === undefined && voo.horaVolta === ""){
     mensagens.push("Hora de volta não informada.");
     valida = false;
   }
 
-  if (voo.dataChegada2 === undefined) {
+  if (voo.dataChegada2 === undefined && voo.dataChegada2 === "") {
     mensagens.push("Data de chegada da volta do voo não informada.");
     valida = false;
   }
 
-  if (voo.horaChegada2 === undefined){
+  if (voo.horaChegada2 === undefined && voo.horaChegada2 === ""){
     mensagens.push("Hora de chegada da volta do voo não informada.");
     valida = false;
   }
@@ -385,13 +387,15 @@ app.post("/buscarVoo", async (req, res) => {
 
   let error: any;
 
-  try {
-    let connection;
-    try {
-      connection = await oraConnAttribs();
+  if(assento.volta === undefined){
 
-      const cmdBuscarVoo = `
-      SELECT
+    try {
+      let connection;
+      try {
+        connection = await oraConnAttribs();
+  
+        const cmdBuscarVoo = `
+        SELECT
           V.CODIGO AS Codigo_Voo,
           V.ESCALAS,
           SAIDA.NOME AS Aeroporto_Saida,
@@ -404,52 +408,135 @@ app.post("/buscarVoo", async (req, res) => {
         FROM
             VOOS V
         JOIN
-            AEROPORTOS SAIDA ON V.AEROPORTO_SAIDA = SAIDA.CODIGO
+            TRECHOS T ON V.TRECHO = T.CODIGO
         JOIN
-            AEROPORTOS DESTINO ON V.AEROPORTO_DESTINO = DESTINO.CODIGO
+            AEROPORTOS SAIDA ON T.ORIGEM = SAIDA.CODIGO
+        JOIN
+            AEROPORTOS DESTINO ON T.DESTINO = DESTINO.CODIGO
         WHERE
             DESTINO.CIDADE = :1
             AND V.DATA_SAIDA = :2`;
-    
-      const dados = [
+  
+        const dados = [
           assento.destino,
           assento.ida,
-      ];
+        ];
+        
+        console.log("Voo de Ida encontrado");
+        const result = (await connection.execute(cmdBuscarVoo, dados, { outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: true })) as oracledb.Result<any>;
+        console.log(result);
 
-      const result = (await connection.execute(cmdBuscarVoo, dados, { outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: true })) as oracledb.Result<any>;
-
-      if (result.rows && result.rows.length > 0) {
-          cr.status = "SUCCESS";
-          cr.message = "Voos encontrados.";
-          cr.payload = result.rows;
-      } else {
-          cr.message = "Nenhum voo encontrado para a cidade de destino e data de saída fornecidas.";
-      }      
-    } catch (e) {
-      if (e instanceof Error) {
-          cr.message = e.message;
-          console.log(e.message);
-      } else {
-          cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
-      }
-      error = e;
-    } finally {
-      if (connection) {
-        try {
-          await connection.close();
-        } catch (closeError) {
-          console.error("Error closing Oracle connection:", closeError);
-          error = closeError;
+        if (result.rows && result.rows.length > 0) {
+            cr.status = "SUCCESS";
+            cr.message = "Voos encontrados.";
+            cr.payload = result.rows;
+        } else {
+            cr.message = "Nenhum voo encontrado para a cidade de destino e data de saída fornecidas.";
+        }      
+      } catch (e) {
+        if (e instanceof Error) {
+            cr.message = e.message;
+            console.log(e.message);
+        } else {
+            cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
+        }
+        error = e;
+      } finally {
+        if (connection) {
+          try {
+            await connection.close();
+          } catch (closeError) {
+            console.error("Error closing Oracle connection:", closeError);
+            error = closeError;
+          }
         }
       }
+    } catch (e) {}
+    if (error) {
+      console.error("Outer error:", error);
+      cr.message = "Erro ao processar a solicitação.";
+    } else {
+      return res.send(cr);
     }
-  } catch (e) {}
-  if (error) {
-    console.error("Outer error:", error);
-    cr.message = "Erro ao processar a solicitação.";
-  } else {
-    return res.send(cr);
   }
+  else{
+    try {
+      let connection;
+      try {
+        connection = await oraConnAttribs();
+  
+        const cmdBuscarVoo = `
+        SELECT
+          V.CODIGO AS Codigo_Voo,
+          V.ESCALAS,
+          SAIDA.NOME AS Aeroporto_Saida,
+          V.HORA_SAIDA,
+          V.DATA_SAIDA,
+          DESTINO.NOME AS Aeroporto_Destino,
+          V.HORA_CHEGADA,
+          V.DATA_CHEGADA,
+          V.VALOR_PASSAGEM,
+          V.DATA_VOLTA,
+          V.HORA_VOLTA,
+          V.DATA_CHEGADA2,
+          V.HORA_CHEGADA2
+        FROM
+            VOOS V
+        JOIN
+            TRECHOS T ON V.TRECHO = T.CODIGO
+        JOIN
+            AEROPORTOS SAIDA ON T.ORIGEM = SAIDA.CODIGO
+        JOIN
+            AEROPORTOS DESTINO ON T.DESTINO = DESTINO.CODIGO
+        WHERE
+            DESTINO.CIDADE = :1
+            AND V.DATA_SAIDA = :2
+            AND V.DATA_CHEGADA2 = :3`;
+  
+        const dados = [
+          assento.destino,
+          assento.ida,
+          assento.volta,
+        ];
+  
+        console.log("Voo de Ida encontrado");
+        const result = (await connection.execute(cmdBuscarVoo, dados, { outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: true })) as oracledb.Result<any>;
+        console.log(result);
+  
+        if (result.rows && result.rows.length > 0) {
+            cr.status = "SUCCESS";
+            cr.message = "Voos encontrados.";
+            cr.payload = result.rows;
+        } else {
+            cr.message = "Nenhum voo encontrado para a cidade de destino e data de saída fornecidas.";
+        }      
+      } catch (e) {
+        if (e instanceof Error) {
+            cr.message = e.message;
+            console.log(e.message);
+        } else {
+            cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
+        }
+        error = e;
+      } finally {
+        if (connection) {
+          try {
+            await connection.close();
+          } catch (closeError) {
+            console.error("Error closing Oracle connection:", closeError);
+            error = closeError;
+          }
+        }
+      }
+    } catch (e) {}
+    if (error) {
+      console.error("Outer error:", error);
+      cr.message = "Erro ao processar a solicitação.";
+    } else {
+      return res.send(cr);
+    }
+  }
+
 });
 
 app.post("/obterTrechoListado", async (req, res) => {
@@ -702,7 +789,7 @@ app.post("/incluirVoo", async (req, res) => {
           cr.status = "SUCCESS";
           cr.message = "Voo inserido.";
         }
-      } catch (e: any) { // Add ': any' to specify that 'e' can be of any type
+      } catch (e: any) {
         console.error("Error during database operation:", e);
         cr.message = "Erro ao conectar ao Oracle. Detalhes: " + (e.message || e.toString());
       } finally {

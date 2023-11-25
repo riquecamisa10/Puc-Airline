@@ -55,23 +55,6 @@ function verificarTipoTrecho() {
     }
 }
 
-function preencherComValorValido(elemento, valor) {
-    if (elemento) {
-        elemento.value = valor;
-    }
-}
-
-function preencher(elemento) {
-    if (elemento) {
-        
-        if (elemento.type === 'date') {
-            preencherComValorValido(elemento, '1970-01-01');  
-        } else if (elemento.type === 'time') {
-            preencherComValorValido(elemento, '00:00');  
-        }
-    }
-}
-
 function preencheuTrecho() {
     let resultado = false;
     const trecho = document.getElementById("trecho").value;
@@ -171,15 +154,29 @@ function preencheuHoraChegada2(){
     return resultado;
 }
 
-function showStatusMessage(msg, error) {
-    var pStatus = document.getElementById("status");
-    
-    if (error === true) {
-        pStatus.className = "statusError";
+function showStatusMessage(message, isError) {
+    const statusElement = document.getElementById('status');
+
+    statusElement.textContent = message;
+
+    if (isError) {
+        statusElement.classList.add('statusError');
+        statusElement.classList.remove('statusSuccess'); 
     } else {
-        pStatus.className = "statusSuccess";
+        statusElement.classList.add('statusSuccess');
+        statusElement.classList.remove('statusError'); 
     }
-    pStatus.textContent = msg;
+
+    statusElement.style.display = 'block';
+
+    setTimeout(() => {
+        hideStatusMessage();
+    }, 3000);
+}
+
+function hideStatusMessage() {
+    const statusElement = document.getElementById('status');
+    statusElement.style.display = 'none';
 }
 
 function fetchInserir(body) {
@@ -193,7 +190,7 @@ function fetchInserir(body) {
     .then(response => response.json())
 }
 
-function inserirVoo() {
+function inserirVoo(estiloVooLowerCase) {
 
     if (!preencheuTrecho()) {
         showStatusMessage("Preencha corretamente o trecho", true);
@@ -230,24 +227,27 @@ function inserirVoo() {
         return;
     }
 
-    if(!preencheuDataVolta()){
-        showStatusMessage("Preencha corretamente a data de volta do voo", true);
-        return;
-    }
+    if(estiloVooLowerCase == "Ida e Volta"){
 
-    if(!preencheuHoraVolta()){
-        showStatusMessage("Preencha corretamente a hora de volta do voo", true);
-        return;
-    }
-
-    if(!preencheuDataChegada2()){
-        showStatusMessage("Preencha corretamente a data de chegada do voo de volta", true);
-        return;
-    }
-
-    if(!preencheuHoraChegada2()){
-        showStatusMessage("Preencha corretamente a hora de chegada do voo de volta", true);
-        return;
+        if(!preencheuDataVolta()){
+            showStatusMessage("Preencha corretamente a data de volta do voo", true);
+            return;
+        }
+    
+        if(!preencheuHoraVolta()){
+            showStatusMessage("Preencha corretamente a hora de volta do voo", true);
+            return;
+        }
+    
+        if(!preencheuDataChegada2()){
+            showStatusMessage("Preencha corretamente a data de chegada do voo de volta", true);
+            return;
+        }
+    
+        if(!preencheuHoraChegada2()){
+            showStatusMessage("Preencha corretamente a hora de chegada do voo de volta", true);
+            return;
+        }
     }
 
     const trecho = document.getElementById("trecho").value;
@@ -262,7 +262,7 @@ function inserirVoo() {
     const dataChegada2 = document.getElementById("dataChegada2").value;
     const horaChegada2 = document.getElementById("horaChegada2").value;
   
-    const voo = {
+    const vooIda = {
       trecho,
       escalas,
       valor,
@@ -270,26 +270,55 @@ function inserirVoo() {
       horaSaida,
       dataChegada,
       horaChegada,
-      dataVolta,
-      horaVolta,
-      dataChegada2,
-      horaChegada2,
     };
-    console.log("Voo object:", voo);
+    console.log("Voo Ida object:", vooIda);
 
-    fetchInserir(voo)
-    .then(resultado => {
-        if (resultado.status === "SUCCESS") {
-            showStatusMessage("Voo cadastrado...", false);
-        } else {
-            showStatusMessage("Erro ao cadastrar Voo: " + resultado.message, true);
-            console.log(resultado.message);
-        }
-    })
-    .catch(() => {
-        showStatusMessage("Erro técnico ao cadastrar... Contate o suporte.", true);
-        console.log("Falha grave ao cadastrar.");
-    })
+    const vooVolta = {
+        trecho,
+        escalas,
+        valor,
+        dataSaida,
+        horaSaida,
+        dataChegada,
+        horaChegada,
+        dataVolta,
+        horaVolta,
+        dataChegada2,
+        horaChegada2,
+    };
+    console.log("Voo Volta object:", vooVolta);
+
+    if(estiloVooLowerCase === "somente ida"){
+        fetchInserir(vooIda)
+        .then(resultado => {
+            if (resultado.status === "SUCCESS") {
+                showStatusMessage("Voo cadastrado...", false);
+            } else {
+                showStatusMessage("Erro ao cadastrar Voo: " + resultado.message, true);
+                console.log(resultado.message);
+            }
+        })
+        .catch(() => {
+            showStatusMessage("Erro técnico ao cadastrar... Contate o suporte.", true);
+            console.log("Falha grave ao cadastrar.");
+        });
+    }
+    else{
+        fetchInserir(vooVolta)
+        .then(resultado => {
+            if (resultado.status === "SUCCESS") {
+                showStatusMessage("Voo cadastrado...", false);
+            } else {
+                showStatusMessage("Erro ao cadastrar Voo: " + resultado.message, true);
+                console.log(resultado.message);
+            }
+        })
+        .catch(() => {
+            showStatusMessage("Erro técnico ao cadastrar... Contate o suporte.", true);
+            console.log("Falha grave ao cadastrar.");
+        })
+    }
+
 };
 
 var menuItems = document.querySelectorAll('.menu .list-item.parent');

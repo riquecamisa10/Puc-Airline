@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log('exibindo.js foi carregado');
 });
 
-
 function formatarDataParaOracle(data) {
     const partes = data.split('-');
     return `${partes[0]}-${partes[1]}-${partes[2]}`;
@@ -51,6 +50,11 @@ function preencheuDataIda(){
     return resultado;
 }
 
+function preencheuDataVolta(){
+    const volta = document.getElementById("volta").value;
+    return volta.trim().length !== 0;
+}
+
 function preencheuDestino(){
     let resultado = false;
     const cidadeDestino = document.getElementById("destino").value;
@@ -67,8 +71,20 @@ function showStatusMessage(msg, error){
     pStatus.textContent = msg;
 }
 
+function limparCamposVolta() {
+    const voltaInput = document.getElementById("volta");
+    voltaInput.value = ""; 
+}
+
 function comprarAssento() {
     if (!preencheuDataIda()) {
+        showStatusMessage("Preencha corretamente a data de ida do voo", true);
+        return;
+    }
+
+    var voltaRadio = document.getElementById("voltaRadio");
+
+    if (voltaRadio.checked == true && !preencheuDataVolta()) {
         showStatusMessage("Preencha corretamente a data de ida do voo", true);
         return;
     }
@@ -79,32 +95,46 @@ function comprarAssento() {
     }
 
     const ida = document.getElementById("ida").value;
+    const volta = document.getElementById("volta").value;
     const destino = document.getElementById("destino").value;
 
     const assento = {
-        ida,
+        ida: formatarDataParaOracle(ida),
+        volta: volta ? formatarDataParaOracle(volta) : undefined,
         destino,
     };
 
-    console.log("Assento object:", assento);
+    console.log(volta);
+
+    const tabelaIda = document.getElementById("tabelaIda");
+    const tabelaVolta = document.getElementById("tabelaVolta");
 
     fetchListar(assento)
-    .then(resultado => {
-        if (resultado.status === "ERROR") {
-            showStatusMessage(resultado.message, true);
-            console.log(resultado.message);
-        } else if (resultado.status === "SUCCESS") {
-            preencherTabela(resultado.payload);
-            showStatusMessage("Voos encontrados.", false);
-        } else {
-            showStatusMessage("Resultado inesperado: " + resultado, true);
-            console.log("Resultado inesperado:", resultado);
-        }        
-    })
-    .catch(error => {
-        showStatusMessage("Erro técnico ao buscar voos... Contate o suporte.", true);
-        console.log("Falha grave ao buscar voos:", error);
-    });
+        .then(resultado => {
+            if (resultado.status === "ERROR") {
+                showStatusMessage(resultado.message, true);
+                console.log(resultado.message);
+            } else if (resultado.status === "SUCCESS") {
+                if (volta === undefined || volta === "") {
+                    preencherTabelaIdaBody(resultado.payload);
+                    showStatusMessage("Voos encontrados.", false);
+                    tabelaIda.style.display = "table";
+                    tabelaVolta.style.display = "none";  // Oculta tabela de volta
+                } else {
+                    preencherTabelaVoltaBody(resultado.payload);
+                    showStatusMessage("Voos encontrados.", false);
+                    tabelaVolta.style.display = "table";
+                    tabelaIda.style.display = "none";  // Oculta tabela de ida
+                }                
+            } else {
+                showStatusMessage("Resultado inesperado: " + resultado, true);
+                console.log("Resultado inesperado:", resultado);
+            }        
+        })
+        .catch(error => {
+            showStatusMessage("Erro técnico ao buscar voos... Contate o suporte.", true);
+            console.log("Falha grave ao buscar voos:", error);
+        });
 }
 
 function fetchListar(assento) {
@@ -127,10 +157,10 @@ function fetchListar(assento) {
         });
 }
 
-function preencherTabela(assento) {
-    console.log('Função preencherTabela() foi chamada');
+function preencherTabelaIdaBody(assento) {
+    const tbody = document.getElementById("tabelaIdaBody");
+    console.log('Função preencherTabelaIda() foi chamada');
     console.log(assento);
-    const tbody = document.getElementById("tblAlunosDados");
     let count = 0;
 
     tbody.innerHTML = '';
@@ -138,16 +168,51 @@ function preencherTabela(assento) {
     if (assento) {
         assento.forEach((assento) => {
             let estilo = (count % 2 === 0) ? "linhaPar" : "linhaImpar";
+
             let linha = `
                 <tr class="${estilo}">
                 <td>${assento.CODIGO_VOO}</td>
                 <td>${assento.ESCALAS}</td>
                 <td>${assento.AEROPORTO_SAIDA}</td>
-                <td>${assento.HORA_SAIDA}</td>
-                <td>${assento.DATA_SAIDA}</td>
                 <td>${assento.AEROPORTO_DESTINO}</td>
-                <td>${assento.HORA_CHEGADA}</td>
+                <td>${assento.DATA_SAIDA}</td>
+                <td>${assento.HORA_SAIDA}</td>
                 <td>${assento.DATA_CHEGADA}</td>
+                <td>${assento.HORA_CHEGADA}</td>
+                <td>${assento.VALOR_PASSAGEM}</td>
+                </tr>`;
+            tbody.innerHTML += linha;
+            count++;
+        });
+    }
+}
+
+function preencherTabelaVoltaBody(assento) {
+    const tbody = document.getElementById("tabelaVoltaBody");
+    console.log('Função preencherTabelaVolta() foi chamada');
+    console.log(assento);
+    let count = 0;
+
+    tbody.innerHTML = '';
+
+    if (assento) {
+        assento.forEach((assento) => {
+            let estilo = (count % 2 === 0) ? "linhaPar" : "linhaImpar";
+
+            let linha = `
+                <tr class="${estilo}">
+                <td>${assento.CODIGO_VOO}</td>
+                <td>${assento.ESCALAS}</td>
+                <td>${assento.AEROPORTO_SAIDA}</td>
+                <td>${assento.AEROPORTO_DESTINO}</td>
+                <td>${assento.DATA_SAIDA}</td>
+                <td>${assento.HORA_SAIDA}</td>
+                <td>${assento.DATA_CHEGADA}</td>
+                <td>${assento.HORA_CHEGADA}</td>
+                <td>${assento.DATA_VOLTA}</td>
+                <td>${assento.HORA_VOLTA}</td>
+                <td>${assento.DATA_CHEGADA2}</td>
+                <td>${assento.HORA_CHEGADA2}</td>
                 <td>${assento.VALOR_PASSAGEM}</td>
                 </tr>`;
             tbody.innerHTML += linha;

@@ -55,23 +55,6 @@ function verificarTipoTrecho() {
     }
 }
 
-function preencherComValorValido(elemento, valor) {
-    if (elemento) {
-        elemento.value = valor;
-    }
-}
-
-function preencher(elemento) {
-    if (elemento) {
-        
-        if (elemento.type === 'date') {
-            preencherComValorValido(elemento, '1970-01-01');  
-        } else if (elemento.type === 'time') {
-            preencherComValorValido(elemento, '00:00');  
-        }
-    }
-}
-
 function codigoValido(){
     let resultado = false;
     const strCodigo = document.getElementById("codigo").value;
@@ -181,15 +164,29 @@ function preencheuHoraChegada2(){
     return resultado;
 }
 
-function showStatusMessage(msg, error) {
-    var pStatus = document.getElementById("status");
-    
-    if (error === true) {
-        pStatus.className = "statusError";
+function showStatusMessage(message, isError) {
+    const statusElement = document.getElementById('status');
+
+    statusElement.textContent = message;
+
+    if (isError) {
+        statusElement.classList.add('statusError');
+        statusElement.classList.remove('statusSuccess'); 
     } else {
-        pStatus.className = "statusSuccess";
+        statusElement.classList.add('statusSuccess');
+        statusElement.classList.remove('statusError'); 
     }
-    pStatus.textContent = msg;
+
+    statusElement.style.display = 'block';
+
+    setTimeout(() => {
+        hideStatusMessage();
+    }, 3000);
+}
+
+function hideStatusMessage() {
+    const statusElement = document.getElementById('status');
+    statusElement.style.display = 'none';
 }
 
 function fetchAlterar(body) {
@@ -212,7 +209,7 @@ function fetchAlterar(body) {
         });
 }
 
-window.Alterar = function(){
+window.Alterar = function(estiloVooLowerCase){
 
     if(!codigoValido()){
         showStatusMessage("Preencha corretamente o codigo", true);
@@ -253,24 +250,27 @@ window.Alterar = function(){
         return;
     }
 
-    if(!preencheuDataVolta()){
-        showStatusMessage("Preencha corretamente a data de volta do voo", true);
-        return;
-    }
+    if(estiloVooLowerCase == "Ida e Volta"){
 
-    if(!preencheuHoraVolta()){
-        showStatusMessage("Preencha corretamente a hora de volta do voo", true);
-        return;
-    }
-
-    if(!preencheuDataChegada2()){
-        showStatusMessage("Preencha corretamente a data de chegada do voo de volta", true);
-        return;
-    }
-
-    if(!preencheuHoraChegada2()){
-        showStatusMessage("Preencha corretamente a hora de chegada do voo de volta", true);
-        return;
+        if(!preencheuDataVolta()){
+            showStatusMessage("Preencha corretamente a data de volta do voo", true);
+            return;
+        }
+    
+        if(!preencheuHoraVolta()){
+            showStatusMessage("Preencha corretamente a hora de volta do voo", true);
+            return;
+        }
+    
+        if(!preencheuDataChegada2()){
+            showStatusMessage("Preencha corretamente a data de chegada do voo de volta", true);
+            return;
+        }
+    
+        if(!preencheuHoraChegada2()){
+            showStatusMessage("Preencha corretamente a hora de chegada do voo de volta", true);
+            return;
+        }
     }
 
     const codigo = document.getElementById("codigo").value;
@@ -286,48 +286,88 @@ window.Alterar = function(){
     const dataChegada2 = document.getElementById("dataChegada2").value;
     const horaChegada2 = document.getElementById("horaChegada2").value;
 
-    console.log(JSON.stringify({
-        codigo: codigo,
-        trecho: trecho,
-        escalas: escalas,
-        valor: valor,
-        dataSaida: dataSaida,
-        horaSaida: horaSaida,
-        dataChegada: dataChegada,
-        horaChegada: horaChegada,
-        dataVolta: dataVolta,
-        horaVolta: horaVolta,
-        dataChegada2: dataChegada2,
-        horaChegada2: horaChegada2,
-    }));    
+    if(estiloVooLowerCase == "Ida e Volta"){
 
-    fetchAlterar({
-        codigo: codigo,
-        trecho: trecho,
-        escalas: escalas,
-        valor: valor,
-        dataSaida: dataSaida,
-        horaSaida: horaSaida,
-        dataChegada: dataChegada,
-        horaChegada: horaChegada,
-        dataVolta: dataVolta,
-        horaVolta: horaVolta,
-        dataChegada2: dataChegada2,
-        horaChegada2: horaChegada2,
-    })
-    .then(resultado => {
-        if (resultado.status === "SUCCESS") {
-            showStatusMessage("Aeronave alterada. ", false);
-            fetchAlterar();
-        } else {
-            showStatusMessage(`Erro ao alterar aeronave: ${resultado.message}`, true);
-            console.log(resultado.message);
-        }
-    })
-    .catch(error => {
-        showStatusMessage(`Erro durante a chamada da API: ${error.message}`, true);
-        console.error("Erro durante a chamada da API:", error);
-    });    
+        console.log(JSON.stringify({
+            codigo: codigo,
+            trecho: trecho,
+            escalas: escalas,
+            valor: valor,
+            dataSaida: dataSaida,
+            horaSaida: horaSaida,
+            dataChegada: dataChegada,
+            horaChegada: horaChegada,
+        }));    
+    
+        fetchAlterar({
+            codigo: codigo,
+            trecho: trecho,
+            escalas: escalas,
+            valor: valor,
+            dataSaida: dataSaida,
+            horaSaida: horaSaida,
+            dataChegada: dataChegada,
+            horaChegada: horaChegada,
+        })
+        .then(resultado => {
+            if (resultado.status === "SUCCESS") {
+                showStatusMessage("Aeronave alterada. ", false);
+                fetchAlterar();
+            } else {
+                showStatusMessage(`Erro ao alterar aeronave: ${resultado.message}`, true);
+                console.log(resultado.message);
+            }
+        })
+        .catch(error => {
+            showStatusMessage(`Erro durante a chamada da API: ${error.message}`, true);
+            console.error("Erro durante a chamada da API:", error);
+        });
+    }
+    else{
+
+        console.log(JSON.stringify({
+            codigo: codigo,
+            trecho: trecho,
+            escalas: escalas,
+            valor: valor,
+            dataSaida: dataSaida,
+            horaSaida: horaSaida,
+            dataChegada: dataChegada,
+            horaChegada: horaChegada,
+            dataVolta: dataVolta,
+            horaVolta: horaVolta,
+            dataChegada2: dataChegada2,
+            horaChegada2: horaChegada2,
+        }));    
+
+        fetchAlterar({
+            codigo: codigo,
+            trecho: trecho,
+            escalas: escalas,
+            valor: valor,
+            dataSaida: dataSaida,
+            horaSaida: horaSaida,
+            dataChegada: dataChegada,
+            horaChegada: horaChegada,
+            dataVolta: dataVolta,
+            horaVolta: horaVolta,
+            dataChegada2: dataChegada2,
+            horaChegada2: horaChegada2,
+        })
+        .then(resultado => {
+            if (resultado.status === "SUCCESS") {
+                showStatusMessage("Aeronave alterada. ", false);
+                fetchAlterar();
+            } else {
+                showStatusMessage(`Erro ao alterar aeronave: ${resultado.message}`, true);
+                console.log(resultado.message);
+            }
+        })
+        .catch(error => {
+            showStatusMessage(`Erro durante a chamada da API: ${error.message}`, true);
+            console.error("Erro durante a chamada da API:", error);
+        }); 
+    }  
 };
 
 var menuItems = document.querySelectorAll('.menu .list-item.parent');
