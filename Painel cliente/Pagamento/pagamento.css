@@ -4,6 +4,111 @@
     box-sizing: border-box;
 }
 
+.box{
+    width: 450px;
+    height: 72%;
+    background: rgba(0, 0, 0, 0.76);
+    padding: 40px;
+    text-align: center;
+    margin: auto;
+    margin-top: 26%;
+    color: white;
+    border-radius: 20px;
+    position: relative;
+    z-index: 1;
+}
+.box h1{
+    margin-top: 4%;
+    font-size: 40px;
+    letter-spacing: 4px;
+    font-weight: 100;
+}
+.box p{
+    text-align: justify;
+    font-size: 20px;
+}
+.icone-home {
+    font-size: 40px;
+    position: relative;
+    top: -1%; 
+    left: 50%;
+    transform: translateX(-50%);
+}
+.img{
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    margin-top: 8%;
+}
+ul {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 95%; 
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    z-index: 2; 
+}
+.box li{
+    display: inline-block;
+    margin: 12px;
+    list-style: none;
+}
+.box li a{
+    color: white;
+    text-decoration: none;
+    font-size: 60px;
+}
+
+.menu {
+    position: fixed;
+    top: 0;
+    width: 40%;
+    background-color: rgba(26, 24, 24, 0.884);
+    padding: 30px;
+    display: flex;
+    justify-content: space-around;
+    color: #fff;
+    font-size: 30px;
+    border-radius: 0px 0px 20px 20px;
+    border-color: #000000;
+    border: #000000;
+}
+
+.menu i:hover::before{
+    content: attr(title);
+    display: block;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 4px;
+    font-size: 14px;
+}
+.menu i{
+    position: relative;
+    cursor: pointer;
+    z-index: 1;
+}
+.home{
+    cursor: pointer;
+    z-index: 1;
+}
+.busca{
+    cursor: pointer;
+    z-index: 1;
+}
+.assentos{
+    cursor: pointer;
+    z-index: 1;
+}
+.engrenagem{
+    cursor: pointer;
+    z-index: 1;
+}
 #cartaoForm, #pixForm, #boletoForm {
     display: none;
 }
@@ -13,6 +118,7 @@ body{
     justify-content: center;
     align-items: center;
     height: 100vh;
+    background:url(wall2.jpg) 10px center / cover;
 }
 
 main{
@@ -25,6 +131,7 @@ main{
     max-width: 1100px;
     padding: 20px;
     margin: 30px 0px 30px 0px;
+    backdrop-filter: blur(18px);
 }
 
 .conteudo{

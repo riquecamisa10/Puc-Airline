@@ -14,8 +14,8 @@ body {
     border-radius: 200px 200px 200px 200px; /* Ajustando o border-radius para dar a forma de avião */
     position: relative;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-    top: 50px;
-
+    position: relative;
+    top: 30px;
 }
 /* Estilo para a representação visual dos assentos no avião */
 .airplane {
@@ -66,14 +66,13 @@ body {
     background-color: #5cb85c;
     color: white;
 }
-
 .menu {
     position: fixed;
     top: 0;
-    left: 23%;
-    width: 50%;
+    left: 28%;
+    width: 40%;
     background-color: rgba(26, 24, 24, 0.884);
-    padding: 40px;
+    padding: 30px;
     display: flex;
     justify-content: space-around;
     color: #fff;
@@ -82,9 +81,40 @@ body {
     border-color: #000000;
     border: #000000;
 }
+
+.menu i:hover::before{
+    content: attr(title);
+    display: block;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 4px;
+    font-size: 14px;
+}
+.menu i{
+    position: relative;
+    cursor: pointer;
+    z-index: 1;
+}
+.home{
+    cursor: pointer;
+    z-index: 1;
+}
+.busca{
+    cursor: pointer;
+    z-index: 1;
+}
+.assentos{
+    cursor: pointer;
+    z-index: 1;
+}
 .engrenagem{
     cursor: pointer;
-    font-size: 32px;
+    z-index: 1;
 }
 .logo{
     font-size: 32px;
