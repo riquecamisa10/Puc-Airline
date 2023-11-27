@@ -66,11 +66,16 @@ type Aeroporto = {
   pais?: number,
 }
 
-type Assento = {
+type Busca = {
   ida?: string,
   volta?: string,
   destino?: string,
 }
+
+type Assento = {
+  codigo?: number,
+  assento?: number,
+} 
 
 function rowsToAeronaves(oracleRows: unknown[] | undefined) : Array<Aeronave> {
   let aeronaves: Array<Aeronave> = [];
@@ -155,23 +160,6 @@ function rowsToAeroportos(oracleRows: unknown[] | undefined) : Array<Aeroporto> 
     })
   }
   return aeroportos;
-};
-
-function rowsToAssentos(oracleRows: unknown[] | undefined) : Array<Assento> {
-  let assentos: Array<Assento> = [];
-  let assento;
-  if (oracleRows !== undefined){
-    oracleRows.forEach((registro: any) => {
-      assento = {
-        ida: registro.DATA_IDA,
-        volta: registro.DATA_VOLTA,
-        destino: registro.CIDADE_DESTINO,
-      } as Assento;
-
-      assentos.push(assento);
-    })
-  }
-  return assentos;
 };
 
 function aeronaveValida(aero: Aeronave) {
@@ -376,6 +364,145 @@ function aeroportoValido(aeroporto: Aeroporto) {
   return [valida, mensagem] as const;
 }
 
+app.post("/comprarAssentos", async (req, res) => {
+
+  console.log('Corpo da requisição:', req.body);
+  console.log("Função comprarAssento sendo chamada");
+  
+  let cr: CustomResponse = {
+    status: "ERROR",
+    message: "",
+    payload: undefined,
+  };
+
+  const assentos: Assento[] = req.body as Assento[];
+
+  try {
+    let connection;
+    try {
+      connection = await oraConnAttribs();
+
+      const cmdInsertAssento = `INSERT INTO ASSENTOS_OCUPADOS (CODIGO, CODIGO_VOO, NUMERO_ASSENTO) 
+      VALUES (ASSENTOS_OCUPADOS_SEQ.NEXTVAL, :1, :2)`;
+
+      for (let i = 0; i < assentos.length; i++) {
+        const dados = [
+            assentos[i].codigo,
+            assentos[i].assento,
+        ];
+    
+        try {
+            const result = await connection.execute(cmdInsertAssento, dados);
+            await connection.commit();
+    
+            console.log("Resultado da inserção:", result);
+    
+            if (result.rowsAffected && result.rowsAffected === 1) {
+                cr.status = "SUCCESS";
+                cr.message = "Assento comprado com sucesso.";
+                cr.payload = result.rows;
+            } else {
+                cr.message = "Erro ao comprar assento. Nenhuma linha afetada.";
+            }
+        } catch (insertError) {
+            console.error("Erro durante a inserção:", insertError);
+            cr.message = "Erro ao comprar assento.";
+        }
+      }    
+    } catch (e) {
+      if (e instanceof Error) {
+        cr.message = e.message;
+        console.error(e.message);
+      } else {
+        cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
+      }
+    } finally {
+      if (connection) {
+        try {
+          await connection.close();
+        } catch (closeError) {
+          console.error("Error closing Oracle connection:", closeError);
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Outer error:", error);
+    cr.message = "Erro ao processar a solicitação.";
+  } finally {
+    return res.send(cr);
+  }
+});
+
+app.post("/preencherMapaAssentos", async (req, res) => {
+  console.log('Corpo da requisição:', req.body);
+
+  const { codigoVoo, outrasInformacoes } = req.body;
+
+  let cr: CustomResponse = {
+    status: "ERROR",
+    message: "",
+    payload: { assentosOcupados: [], totalAssentos: undefined }, 
+  };
+
+  try {
+    let connection;
+    try {
+      connection = await oraConnAttribs();
+
+      const cmdBuscarAssentosOcupados = `SELECT NUMERO_ASSENTO FROM ASSENTOS_OCUPADOS WHERE CODIGO_VOO = :1`;
+      const resultAssentos = await connection.execute(cmdBuscarAssentosOcupados, [codigoVoo], { outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: true });
+
+      const cmdBuscarTotalAssentos = `
+        SELECT TOTAL_ASSENTOS
+        FROM AERONAVES
+        WHERE CODIGO IN (
+          SELECT AERONAVE
+          FROM TRECHOS
+          WHERE CODIGO IN (
+            SELECT TRECHO
+            FROM VOOS
+            WHERE CODIGO = :1
+          )
+        )`;
+
+      const resultTotalAssentos = await connection.execute(cmdBuscarTotalAssentos, [codigoVoo], { outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: true });
+
+      interface TotalAssentosRow {
+        TOTAL_ASSENTOS?: number;
+      }
+      
+      const totalAssentosRow: TotalAssentosRow = resultTotalAssentos.rows?.[0] || {};
+      cr.payload = {
+        assentosOcupados: resultAssentos.rows || [],
+        totalAssentos: totalAssentosRow.TOTAL_ASSENTOS || undefined,
+      };      
+
+      cr.status = "SUCCESS";
+      cr.message = "Assentos ocupados encontrados.";
+    } catch (e) {
+      if (e instanceof Error) {
+        cr.message = e.message;
+        console.error(e.message);
+      } else {
+        cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
+      }
+    } finally {
+      if (connection) {
+        try {
+          await connection.close();
+        } catch (closeError) {
+          console.error("Error closing Oracle connection:", closeError);
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Outer error:", error);
+    cr.message = "Erro ao processar a solicitação.";
+  } finally {
+    return res.send(cr);
+  }
+});
+
 app.post("/buscarVoo", async (req, res) => {
   let cr: CustomResponse = {
     status: "ERROR",
@@ -383,11 +510,11 @@ app.post("/buscarVoo", async (req, res) => {
     payload: undefined,
   };
 
-  const assento: Assento = req.body as Assento;
+  const busca: Busca = req.body as Busca;
 
   let error: any;
 
-  if(assento.volta === undefined){
+  if(busca.volta === undefined){
 
     try {
       let connection;
@@ -418,13 +545,13 @@ app.post("/buscarVoo", async (req, res) => {
             AND V.DATA_SAIDA = :2`;
   
         const dados = [
-          assento.destino,
-          assento.ida,
+          busca.destino,
+          busca.ida,
         ];
         
         console.log("Voo de Ida encontrado");
         const result = (await connection.execute(cmdBuscarVoo, dados, { outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: true })) as oracledb.Result<any>;
-        console.log(result);
+        //console.log(result);
 
         if (result.rows && result.rows.length > 0) {
             cr.status = "SUCCESS";
@@ -494,9 +621,9 @@ app.post("/buscarVoo", async (req, res) => {
             AND V.DATA_CHEGADA2 = :3`;
   
         const dados = [
-          assento.destino,
-          assento.ida,
-          assento.volta,
+          busca.destino,
+          busca.ida,
+          busca.volta,
         ];
   
         console.log("Voo de Ida encontrado");
@@ -548,7 +675,6 @@ app.post("/obterTrechoListado", async (req, res) => {
   };
 
   const trecho: Trecho = req.body as Trecho;
-  const codigoTrecho = trecho.codigo;
 
   try {
     let connection;

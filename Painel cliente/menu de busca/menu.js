@@ -169,6 +169,8 @@ function preencherTabelaIdaBody(assento) {
         assento.forEach((assento) => {
             let estilo = (count % 2 === 0) ? "linhaPar" : "linhaImpar";
 
+            let iconeHTML = `<a href="../mapa de assentos/index.html?codigoVoo=${assento.CODIGO_VOO}" class="icon-link"><i class="engrenagem" title="ADM"><ion-icon name="settings-outline"></ion-icon></i></a>`;
+
             let linha = `
                 <tr class="${estilo}">
                 <td>${assento.CODIGO_VOO}</td>
@@ -180,6 +182,7 @@ function preencherTabelaIdaBody(assento) {
                 <td>${assento.DATA_CHEGADA}</td>
                 <td>${assento.HORA_CHEGADA}</td>
                 <td>${assento.VALOR_PASSAGEM}</td>
+                <td>${iconeHTML}</td> 
                 </tr>`;
             tbody.innerHTML += linha;
             count++;
@@ -199,6 +202,8 @@ function preencherTabelaVoltaBody(assento) {
         assento.forEach((assento) => {
             let estilo = (count % 2 === 0) ? "linhaPar" : "linhaImpar";
 
+            let iconeHTML = `<a href="../mapa de assentos/index.html?codigoVoo=${assento.CODIGO_VOO}" class="icon-link"><i class="engrenagem" title="ADM"><ion-icon name="settings-outline"></ion-icon></i></a>`;
+
             let linha = `
                 <tr class="${estilo}">
                 <td>${assento.CODIGO_VOO}</td>
@@ -214,6 +219,7 @@ function preencherTabelaVoltaBody(assento) {
                 <td>${assento.DATA_CHEGADA2}</td>
                 <td>${assento.HORA_CHEGADA2}</td>
                 <td>${assento.VALOR_PASSAGEM}</td>
+                <td>${iconeHTML}</td>
                 </tr>`;
             tbody.innerHTML += linha;
             count++;

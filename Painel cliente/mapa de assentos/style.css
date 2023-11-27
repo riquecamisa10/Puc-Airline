@@ -7,6 +7,19 @@ body {
     margin: 0;
     background: url(img.jpg) center / cover;
 }
+
+.botao{
+    display: flex;
+    justify-content: center;
+    position: relative;
+    top: 60px;
+}
+
+.botao button{
+    height: 40px;
+    font-size: 20px;
+    padding: 5px;
+}
 /* Estilo para o contêiner que representa o ambiente do avião */
 .airplane-container {
     background-color: #000000d2;

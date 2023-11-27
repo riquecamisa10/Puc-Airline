@@ -4,11 +4,26 @@
     box-sizing: border-box;
 }
 
+/* Adicione este estilo ao seu arquivo de estilo CSS ou inline no HTML */
+a.icon-link {
+    text-decoration: none; /* Remove sublinhado padrão do link */
+    color: inherit; /* Mantém a cor padrão do texto */
+}
+
+a.icon-link:hover {
+    color: inherit; /* Mantém a cor padrão do texto durante o hover */
+}
+
+.icon-link i {
+    pointer-events: none; /* Permite que o clique passe através do ícone para o link */
+}
+
 body{
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    background:url(wall2.jpg) 10px center / cover;
 }
 
 main{
@@ -21,6 +36,7 @@ form{
     border: 2px solid black;
     padding: 40px;
     align-items: center;
+    backdrop-filter: blur(22px);
 }
 
 .conteudo {

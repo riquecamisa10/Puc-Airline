@@ -59,7 +59,6 @@ ul {
     text-decoration: none;
     font-size: 60px;
 }
-
 .menu {
     position: fixed;
     top: 0;
@@ -74,7 +73,6 @@ ul {
     border-color: #000000;
     border: #000000;
 }
-
 .menu i:hover::before{
     content: attr(title);
     display: block;
@@ -109,7 +107,7 @@ ul {
     cursor: pointer;
     z-index: 1;
 }
-#cartaoForm, #pixForm, #boletoForm {
+#debitoForm, #creditoForm {
     display: none;
 }
 
