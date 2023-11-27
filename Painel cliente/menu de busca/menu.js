@@ -202,7 +202,7 @@ function preencherTabelaVoltaBody(assento) {
         assento.forEach((assento) => {
             let estilo = (count % 2 === 0) ? "linhaPar" : "linhaImpar";
 
-            let iconeHTML = `<a href="../mapa de assentos/index.html?codigoVoo=${assento.CODIGO_VOO}" class="icon-link"><i class="engrenagem" title="ADM"><ion-icon name="settings-outline"></ion-icon></i></a>`;
+            let iconeHTML = `<a href="../mapa de assentos/assentos.html?codigoVoo=${assento.CODIGO_VOO}" class="icon-link"><i class="engrenagem" title="ADM"><ion-icon name="settings-outline"></ion-icon></i></a>`;
 
             let linha = `
                 <tr class="${estilo}">
