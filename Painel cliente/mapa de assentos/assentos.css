@@ -65,6 +65,15 @@ body {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
+.seat.special-seat {
+    /* Adicione estilos específicos para o assento 150 aqui */
+    background-color: red; /* Por exemplo, mude a cor de fundo para vermelho */
+    cursor: not-allowed;
+    pointer-events: none;
+    transition: none;
+}
+
+
 .espaco {
     height: 50px; /* Ajuste a largura conforme necessário */
 }

@@ -1,3 +1,39 @@
+function preencherMapaAssentos(assentosOcupados, totalAssentos) {
+  var assentosPorFileira = 40;
+  var airplane = document.querySelector('.airplane-container');
+
+  airplane.innerHTML = '';
+
+  for (var i = 1; i <= totalAssentos; i++) {
+    if (i % assentosPorFileira == 1) {
+      var fileira = document.createElement('div');
+      fileira.className = 'airplane';
+      airplane.appendChild(fileira);
+    }
+
+    var seat = document.createElement('div');
+    seat.className = 'seat';
+
+    // Verifique se o número do assento está na lista de assentos ocupados
+    if (assentosOcupados.includes(i)) {
+      seat.classList.add('occupied');
+    }
+
+    seat.textContent = i;
+    fileira.appendChild(seat);
+  }
+
+  var seats = document.querySelectorAll('.seat');
+
+  seats.forEach(function (seat) {
+    seat.addEventListener('click', function () {
+      // Remova ou adicione a classe 'selected' conforme necessário
+      seat.classList.toggle('selected');
+    });
+  });
+}
+
+
 document.addEventListener('DOMContentLoaded', function () {
 
   var urlParams = new URLSearchParams(window.location.search);
@@ -6,41 +42,6 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!codigoVoo) {
     console.error('Nenhum código de voo fornecido!');
     return;
-  }
-
-  function preencherMapaAssentos(assentosOcupados, totalAssentos) {
-    var assentosPorFileira = 40;
-    var airplane = document.querySelector('.airplane-container');
-  
-    airplane.innerHTML = '';
-  
-    for (var i = 1; i <= totalAssentos; i++) {
-      if (i % assentosPorFileira == 1) {
-        var fileira = document.createElement('div');
-        fileira.className = 'airplane';
-        airplane.appendChild(fileira);
-      }
-  
-      var seat = document.createElement('div');
-      seat.className = 'seat';
-  
-      // Verifique se o número do assento está na lista de assentos ocupados
-      if (assentosOcupados.includes(i)) {
-        seat.className += ' occupied';
-      }
-  
-      seat.textContent = i;
-      fileira.appendChild(seat);
-    }
-  
-    var seats = document.querySelectorAll('.seat');
-  
-    seats.forEach(function (seat) {
-      seat.addEventListener('click', function () {
-        // Remova ou adicione a classe 'selected' conforme necessário
-        seat.classList.toggle('selected');
-      });
-    });
   }
 
   function fetchPreencherMapaAssentos(body) {
