@@ -433,7 +433,7 @@ app.post("/comprarAssentos", async (req, res) => {
   }
 });
 
-app.post("/preencherMapaAssentos", async (req, res) => {
+app.post("/buscarAssentosOcupados", async (req, res) => {
   console.log('Corpo da requisição:', req.body);
 
   const { codigoVoo, outrasInformacoes } = req.body;
@@ -441,7 +441,7 @@ app.post("/preencherMapaAssentos", async (req, res) => {
   let cr: CustomResponse = {
     status: "ERROR",
     message: "",
-    payload: { assentosOcupados: [], totalAssentos: undefined }, 
+    payload: { assentosOcupados: [] },
   };
 
   try {
@@ -451,6 +451,52 @@ app.post("/preencherMapaAssentos", async (req, res) => {
 
       const cmdBuscarAssentosOcupados = `SELECT NUMERO_ASSENTO FROM ASSENTOS_OCUPADOS WHERE CODIGO_VOO = :1`;
       const resultAssentos = await connection.execute(cmdBuscarAssentosOcupados, [codigoVoo], { outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: true });
+
+      cr.payload = {
+        assentosOcupados: resultAssentos.rows || [],
+      };
+
+      cr.status = "SUCCESS";
+      cr.message = "Assentos ocupados encontrados.";
+    } catch (e) {
+      if (e instanceof Error) {
+        cr.message = e.message;
+        console.error(e.message);
+      } else {
+        cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
+      }
+    } finally {
+      if (connection) {
+        try {
+          await connection.close();
+        } catch (closeError) {
+          console.error("Error closing Oracle connection:", closeError);
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Outer error:", error);
+    cr.message = "Erro ao processar a solicitação.";
+  } finally {
+    return res.send(cr);
+  }
+});
+
+app.post("/buscarTotalAssentos", async (req, res) => {
+  console.log('Corpo da requisição:', req.body);
+
+  const { codigoVoo, outrasInformacoes } = req.body;
+
+  let cr: CustomResponse = {
+    status: "ERROR",
+    message: "",
+    payload: { totalAssentos: undefined },
+  };
+
+  try {
+    let connection;
+    try {
+      connection = await oraConnAttribs();
 
       const cmdBuscarTotalAssentos = `
         SELECT TOTAL_ASSENTOS
@@ -470,15 +516,14 @@ app.post("/preencherMapaAssentos", async (req, res) => {
       interface TotalAssentosRow {
         TOTAL_ASSENTOS?: number;
       }
-      
+
       const totalAssentosRow: TotalAssentosRow = resultTotalAssentos.rows?.[0] || {};
       cr.payload = {
-        assentosOcupados: resultAssentos.rows || [],
         totalAssentos: totalAssentosRow.TOTAL_ASSENTOS || undefined,
-      };      
+      };
 
       cr.status = "SUCCESS";
-      cr.message = "Assentos ocupados encontrados.";
+      cr.message = "Total de assentos encontrados.";
     } catch (e) {
       if (e instanceof Error) {
         cr.message = e.message;

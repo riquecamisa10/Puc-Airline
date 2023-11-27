@@ -349,14 +349,13 @@ app.post("/comprarAssentos", async (req, res) => {
         return res.send(cr);
     }
 });
-app.post("/preencherMapaAssentos", async (req, res) => {
-    var _a;
+app.post("/buscarAssentosOcupados", async (req, res) => {
     console.log('Corpo da requisição:', req.body);
     const { codigoVoo, outrasInformacoes } = req.body;
     let cr = {
         status: "ERROR",
         message: "",
-        payload: { assentosOcupados: [], totalAssentos: undefined },
+        payload: { assentosOcupados: [] },
     };
     try {
         let connection;
@@ -364,6 +363,53 @@ app.post("/preencherMapaAssentos", async (req, res) => {
             connection = await oraConnAttribs();
             const cmdBuscarAssentosOcupados = `SELECT NUMERO_ASSENTO FROM ASSENTOS_OCUPADOS WHERE CODIGO_VOO = :1`;
             const resultAssentos = await connection.execute(cmdBuscarAssentosOcupados, [codigoVoo], { outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: true });
+            cr.payload = {
+                assentosOcupados: resultAssentos.rows || [],
+            };
+            cr.status = "SUCCESS";
+            cr.message = "Assentos ocupados encontrados.";
+        }
+        catch (e) {
+            if (e instanceof Error) {
+                cr.message = e.message;
+                console.error(e.message);
+            }
+            else {
+                cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
+            }
+        }
+        finally {
+            if (connection) {
+                try {
+                    await connection.close();
+                }
+                catch (closeError) {
+                    console.error("Error closing Oracle connection:", closeError);
+                }
+            }
+        }
+    }
+    catch (error) {
+        console.error("Outer error:", error);
+        cr.message = "Erro ao processar a solicitação.";
+    }
+    finally {
+        return res.send(cr);
+    }
+});
+app.post("/buscarTotalAssentos", async (req, res) => {
+    var _a;
+    console.log('Corpo da requisição:', req.body);
+    const { codigoVoo, outrasInformacoes } = req.body;
+    let cr = {
+        status: "ERROR",
+        message: "",
+        payload: { totalAssentos: undefined },
+    };
+    try {
+        let connection;
+        try {
+            connection = await oraConnAttribs();
             const cmdBuscarTotalAssentos = `
         SELECT TOTAL_ASSENTOS
         FROM AERONAVES
@@ -379,11 +425,10 @@ app.post("/preencherMapaAssentos", async (req, res) => {
             const resultTotalAssentos = await connection.execute(cmdBuscarTotalAssentos, [codigoVoo], { outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: true });
             const totalAssentosRow = ((_a = resultTotalAssentos.rows) === null || _a === void 0 ? void 0 : _a[0]) || {};
             cr.payload = {
-                assentosOcupados: resultAssentos.rows || [],
                 totalAssentos: totalAssentosRow.TOTAL_ASSENTOS || undefined,
             };
             cr.status = "SUCCESS";
-            cr.message = "Assentos ocupados encontrados.";
+            cr.message = "Total de assentos encontrados.";
         }
         catch (e) {
             if (e instanceof Error) {

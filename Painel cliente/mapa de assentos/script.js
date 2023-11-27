@@ -33,8 +33,18 @@ function preencherMapaAssentos(assentosOcupados, totalAssentos) {
   });
 }
 
-
 document.addEventListener('DOMContentLoaded', function () {
+
+  function fetchAssentosOcupados(codigoVoo) {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ codigoVoo }),
+    };
+  
+    return fetch('http://localhost:3000/buscarAssentosOcupados', requestOptions)
+      .then(response => response.json());
+  }
 
   var urlParams = new URLSearchParams(window.location.search);
   var codigoVoo = urlParams.get('codigoVoo');
@@ -44,35 +54,50 @@ document.addEventListener('DOMContentLoaded', function () {
     return;
   }
 
-  function fetchPreencherMapaAssentos(body) {
+  fetchAssentosOcupados(codigoVoo)
+    .then(data => {
+      console.log('Resposta do backend (Assentos Ocupados):', data);
+
+      if (data.status === "SUCCESS") {
+        var assentosOcupados = data.payload.assentosOcupados || [];
+        return assentosOcupados;
+      } else {
+        console.error('Erro ao obter assentos ocupados do backend:', data.message);
+        throw new Error('Erro ao obter assentos ocupados do backend.');
+      }
+    })
+    .then(assentosOcupados => {
+      // Agora, você tem a lista de assentos ocupados. Continue com a lógica para buscar o total de assentos e preencher o mapa.
+      fetchTotalAssentos(codigoVoo, assentosOcupados);
+    })
+    .catch(error => {
+      console.error('Erro ao chamar o backend para obter assentos ocupados:', error);
+    });
+
+  function fetchTotalAssentos(codigoVoo, assentosOcupados) {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
+      body: JSON.stringify({ codigoVoo }),
     };
-    
-    return fetch('http://localhost:3000/preencherMapaAssentos', requestOptions)
-    .then(response => response.json())
-  }
 
-  fetchPreencherMapaAssentos({
-    codigoVoo: codigoVoo,
-  })
-  .then(data => {
-    console.log('Resposta do backend:', data);
-  
-    if (data.status === "SUCCESS") {
-      var assentosOcupados = data.payload.assentosOcupados || [];
-      var totalAssentos = data.payload.totalAssentos || 500;
-  
-      preencherMapaAssentos(assentosOcupados, totalAssentos);
-    } else {
-      console.error('Erro ao obter dados do backend:', data.message);
-    }
-  })
-  .catch(error => {
-    console.error('Erro ao chamar o backend:', error);
-  });  
+    return fetch('http://localhost:3000/buscarTotalAssentos', requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        console.log('Resposta do backend (Total de Assentos):', data);
+
+        if (data.status === "SUCCESS") {
+          var totalAssentos = data.payload.totalAssentos || 500;
+          preencherMapaAssentos(assentosOcupados, totalAssentos);
+        } else {
+          console.error('Erro ao obter total de assentos do backend:', data.message);
+          throw new Error('Erro ao obter total de assentos do backend.');
+        }
+      })
+      .catch(error => {
+        console.error('Erro ao chamar o backend para obter total de assentos:', error);
+      });
+  }   
 
   document.getElementById('btnProximo').addEventListener('click', function () {
     var assentosSelecionados = document.querySelectorAll('.seat.selected');
@@ -90,8 +115,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Codigo para enviar as informações do voo selecionado para o backend
-
   var icons = document.querySelectorAll('.icone-do-voo');
 
   icons.forEach(function (icon) {
@@ -99,25 +122,8 @@ document.addEventListener('DOMContentLoaded', function () {
       var codigoVoo = icon.dataset.codigoVoo;
       var outrasInformacoes = icon.dataset.outrasInformacoes;
   
-      fetchPreencherMapaAssentos({
-        codigoVoo: codigoVoo,
-        outrasInformacoes: outrasInformacoes,
-      })
-      .then(data => {
-        console.log('Resposta do backend:', data);
-      
-        if (data.status === "SUCCESS") {
-          var assentosOcupados = data.payload.assentosOcupados || [];
-          var totalAssentos = data.payload.totalAssentos || 500;
-  
-          preencherMapaAssentos(assentosOcupados, totalAssentos);
-        } else {
-          console.error('Erro ao obter dados do backend:', data.message);
-        }
-      })
-      .catch(error => {
-        console.error('Erro ao chamar o backend:', error);
-      });
+      // Chame diretamente a função fetchTotalAssentos para obter e preencher os assentos
+      fetchTotalAssentos(codigoVoo, outrasInformacoes);
     });
-  });
+  });  
 });
