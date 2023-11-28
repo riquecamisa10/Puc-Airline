@@ -131,6 +131,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
           // Chame diretamente a função fetchTotalAssentos para obter e preencher os assentos
           fetchTotalAssentos(codigoVoo, outrasInformacoes);
-      });
-  });
+      });
+  });
 });

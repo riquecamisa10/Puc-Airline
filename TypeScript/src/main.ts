@@ -365,68 +365,68 @@ function aeroportoValido(aeroporto: Aeroporto) {
 }
 
 app.post("/comprarAssentos", async (req, res) => {
-  console.log("A função foi chamada no backend");
-  const assentos: Assento[] = req.body as Assento[];
+  console.log("Iniciando a função no backend");
+  const assentos: Assento[] = req.body.assentos;
+  console.log("Assentos recebidos:", assentos);
   let connection;
 
   try {
     connection = await oraConnAttribs();
     console.log("Conexão com Oracle estabelecida");
 
-    const cmdInsertAssento = `
-      INSERT INTO INDISPONIVEIS (CODIGO, CODIGO_VOO, NUMERO_ASSENTO) 
-      VALUES (INDISPONIVEIS_SEQ.NEXTVAL, :1, :2)
-      RETURNING CODIGO INTO :3`;
+    for (let i = 0; i < assentos.length; i++) {
+      console.log(`Inserindo assento ${i + 1}/${assentos.length}`);
+      const assento = assentos[i];
 
-      console.log("Iniciando loop de inserção de assentos");
+      const cmdInsertAssento = `
+        INSERT INTO INDISPONIVEIS (CODIGO, CODIGO_VOO, NUMERO_ASSENTO) 
+        VALUES (INDISPONIVEIS_SEQ.NEXTVAL, :codigo, :assento)
+        RETURNING CODIGO INTO :codigo_out`;
 
-      for (let i = 0; i < assentos.length; i++) {
-        console.log(`Inserindo assento ${i + 1}/${assentos.length}`);
-        const dados = [
-          assentos[i].codigo,
-          assentos[i].assento,
-          { type: oracledb.NUMBER, dir: oracledb.BIND_OUT } as oracledb.BindParameter
-        ];
-      
-        try {
-          console.log("Chamando execute");
-          const result = await connection.execute(cmdInsertAssento, dados, { autoCommit: false }) as oracledb.Result<any>;
-          console.log("Resultado do execute:", result);
-      
-          if (result.rowsAffected && result.rowsAffected === 1) {
-            console.log("Assento comprado com sucesso");
-          } else {
-            console.log("Falha ao inserir assento");
-            const errorMessage = result.rows && result.rows[0] && result.rows[0][2]
-              ? `Código do erro: ${result.rows[0][2]}`
-              : "Detalhes do erro indisponíveis.";
-      
-            console.log("Detalhes do erro:", errorMessage);
-      
-            return res.send({
-              status: "ERROR",
-              message: `Erro ao comprar assento. ${errorMessage}`
-            });
-          }
-        } catch (error) {
-          console.error("Erro durante a inserção do assento:", error);
-          return res.send({
+      const dados = {
+        codigo: { val: assento.codigo, type: oracledb.STRING },
+        assento: { val: assento.assento, type: oracledb.NUMBER, dir: oracledb.BIND_INOUT },
+        codigo_out: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT }
+      };
+
+      try {
+        console.log("Chamando execute para o assento:", assento);
+        const result = await connection.execute(cmdInsertAssento, dados, { autoCommit: false }) as oracledb.Result<any>;
+        console.log("Resultado do execute para o assento:", result);
+
+        if (result.rowsAffected && result.rowsAffected === 1) {
+          console.log(`Assento ${i + 1} inserido com sucesso`);
+        } else {
+          console.log(`Erro durante a inserção do assento ${i + 1}. Nenhuma linha afetada.`);
+          res.send({
             status: "ERROR",
-            message: "Erro durante a inserção do assento."
+            message: `Erro durante a inserção do assento ${i + 1}.`
           });
+          return;
         }
-        console.log(`Assento ${i + 1} inserido com sucesso`);
+      } catch (error) {
+        console.error(`Erro durante a inserção do assento ${i + 1}:`, error);
+        res.send({
+          status: "ERROR",
+          message: `Erro durante a inserção do assento ${i + 1}.`
+        });
+        return;
       }
-      
-      console.log("Assentos comprados com sucesso");
-      res.send({
-        status: "SUCCESS",
-        message: "Assentos comprados com sucesso."
-      });
-      
+    }
+
+    // Confirme a transação
+    await connection.commit();
+
+    // Se o loop terminar com sucesso, envie uma resposta de sucesso
+    console.log("Assentos comprados com sucesso");
+    res.send({
+      status: "SUCCESS",
+      message: "Assentos comprados com sucesso."
+    });
+
   } catch (error) {
     console.error("Erro ao conectar ao Oracle:", error);
-    return res.send({
+    res.send({
       status: "ERROR",
       message: "Erro ao conectar ao Oracle. Detalhes do erro indisponíveis."
     });
@@ -485,7 +485,7 @@ app.post("/buscarAssentosOcupados", async (req, res) => {
     cr.message = "Erro ao processar a solicitação.";
   } finally {
     return res.send(cr);
-  }
+  }
 });
 
 app.post("/buscarTotalAssentos", async (req, res) => {
@@ -799,7 +799,7 @@ app.post("/incluirAeronave", async (req, res) => {
       try {
         connection = await oraConnAttribs();
 
-        const cmdInsertAero = `INSERT INTO AERONAVES 
+        const cmdInsertAssento = `INSERT INTO AERONAVES 
         (CODIGO, FABRICANTE, MODELO, ANO_FABRICACAO, TOTAL_ASSENTOS, REFERENCIA)
         VALUES
         (AERONAVES_SEQ.NEXTVAL, :1, :2, :3, :4, :5)`;
@@ -811,7 +811,9 @@ app.post("/incluirAeronave", async (req, res) => {
           aero.referencia,
         ];
 
-        const result = await connection.execute(cmdInsertAero, dados, {autoCommit: true,});
+        console.log("Dados a serem inseridos:", dados);
+        const result = await connection.execute(cmdInsertAssento, dados, { autoCommit: false }) as oracledb.Result<any>;
+        console.log("Resultado do execute:", result);
 
         if (result.rowsAffected === 1) {
           cr.status = "SUCCESS";
