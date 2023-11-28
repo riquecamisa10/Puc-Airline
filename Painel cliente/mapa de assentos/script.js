@@ -1,39 +1,9 @@
-function preencherMapaAssentos(assentosOcupados, totalAssentos) {
-  var assentosPorFileira = 40;
-  var airplane = document.querySelector('.airplane-container');
-
-  airplane.innerHTML = '';
-
-  for (var i = 1; i <= totalAssentos; i++) {
-    if (i % assentosPorFileira == 1) {
-      var fileira = document.createElement('div');
-      fileira.className = 'airplane';
-      airplane.appendChild(fileira);
-    }
-
-    var seat = document.createElement('div');
-    seat.className = 'seat';
-
-    // Verifique se o número do assento está na lista de assentos ocupados
-    if (assentosOcupados.includes(i)) {
-      seat.classList.add('occupied');
-    }
-
-    seat.textContent = i;
-    fileira.appendChild(seat);
-  }
-
-  var seats = document.querySelectorAll('.seat');
-
-  seats.forEach(function (seat) {
-    seat.addEventListener('click', function () {
-      // Remova ou adicione a classe 'selected' conforme necessário
-      seat.classList.toggle('selected');
-    });
-  });
-}
-
 document.addEventListener('DOMContentLoaded', function () {
+
+  function redirecionarParaPagamento(codigoVoo, assentosSelecionados) {
+    var assentosSelecionadosString = encodeURIComponent(JSON.stringify(assentosSelecionados));
+    window.location.href = '../Pagamento/pagamento.html?codigoVoo=' + codigoVoo + '&assentos=' + assentosSelecionadosString;
+  }
 
   function fetchAssentosOcupados(codigoVoo) {
     const requestOptions = {
@@ -41,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ codigoVoo }),
     };
-  
+
     return fetch('http://localhost:3000/buscarAssentosOcupados', requestOptions)
       .then(response => response.json());
   }
@@ -53,6 +23,8 @@ document.addEventListener('DOMContentLoaded', function () {
     console.error('Nenhum código de voo fornecido!');
     return;
   }
+
+  var assentosSelecionados = [];
 
   fetchAssentosOcupados(codigoVoo)
     .then(data => {
@@ -81,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
       body: JSON.stringify({ codigoVoo }),
     };
 
-    return fetch('http://localhost:3000/buscarTotalAssentos', requestOptions)
+    fetch('http://localhost:3000/buscarTotalAssentos', requestOptions)
       .then(response => response.json())
       .then(data => {
         console.log('Resposta do backend (Total de Assentos):', data);
@@ -97,21 +69,56 @@ document.addEventListener('DOMContentLoaded', function () {
       .catch(error => {
         console.error('Erro ao chamar o backend para obter total de assentos:', error);
       });
-  }   
+  }
+
+  function preencherMapaAssentos(assentosOcupados, totalAssentos) {
+    var assentosPorFileira = 40;
+    var airplane = document.querySelector('.airplane-container');
+
+    airplane.innerHTML = '';
+
+    for (var i = 1; i <= totalAssentos; i++) {
+      if (i % assentosPorFileira == 1) {
+        var fileira = document.createElement('div');
+        fileira.className = 'airplane';
+        airplane.appendChild(fileira);
+      }
+
+      var seat = document.createElement('div');
+      seat.className = 'seat';
+
+      // Verifique se o número do assento está na lista de assentos ocupados
+      if (assentosOcupados.includes(i)) {
+        seat.classList.add('occupied');
+      }
+
+      seat.textContent = i;
+      fileira.appendChild(seat);
+
+      // Adiciona o evento de clique diretamente aqui
+      seat.addEventListener('click', function () {
+        var numeroAssento = parseInt(this.textContent, 10);
+        this.classList.toggle('selected');
+
+        // Adiciona ou remove o assento do array de assentosSelecionados
+        if (assentosSelecionados.includes(numeroAssento)) {
+          assentosSelecionados = assentosSelecionados.filter(function (assento) {
+            return assento !== numeroAssento;
+          });
+        } else {
+          assentosSelecionados.push(numeroAssento);
+        }
+      });
+    }
+  }
 
   document.getElementById('btnProximo').addEventListener('click', function () {
-    var assentosSelecionados = document.querySelectorAll('.seat.selected');
     var quantidadeDeAssentos = assentosSelecionados.length;
 
     if (quantidadeDeAssentos > 0) {
-        var numerosAssentosSelecionados = Array.from(assentosSelecionados).map(function (assento) {
-            return parseInt(assento.textContent);
-        });
-
-        var assentosSelecionadosString = encodeURIComponent(JSON.stringify(numerosAssentosSelecionados));
-        window.location.href = '../Pagamento/pagamento.html?codigoVoo=' + codigoVoo + '&assentos=' + assentosSelecionadosString;
+      redirecionarParaPagamento(codigoVoo, assentosSelecionados);
     } else {
-        alert("Por favor, adicione pelo menos um assento antes de prosseguir para o pagamento.");
+      alert("Por favor, adicione pelo menos um assento antes de prosseguir para o pagamento.");
     }
   });
 
@@ -121,9 +128,9 @@ document.addEventListener('DOMContentLoaded', function () {
     icon.addEventListener('click', function () {
       var codigoVoo = icon.dataset.codigoVoo;
       var outrasInformacoes = icon.dataset.outrasInformacoes;
-  
-      // Chame diretamente a função fetchTotalAssentos para obter e preencher os assentos
-      fetchTotalAssentos(codigoVoo, outrasInformacoes);
-    });
-  });  
+
+          // Chame diretamente a função fetchTotalAssentos para obter e preencher os assentos
+          fetchTotalAssentos(codigoVoo, outrasInformacoes);
+      });
+  });
 });

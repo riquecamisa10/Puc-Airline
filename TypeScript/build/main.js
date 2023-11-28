@@ -283,70 +283,70 @@ function aeroportoValido(aeroporto) {
     return [valida, mensagem];
 }
 app.post("/comprarAssentos", async (req, res) => {
-    console.log('Corpo da requisição:', req.body);
-    console.log("Função comprarAssento sendo chamada");
-    let cr = {
-        status: "ERROR",
-        message: "",
-        payload: undefined,
-    };
+    console.log("A função foi chamada no backend");
     const assentos = req.body;
+    let connection;
     try {
-        let connection;
-        try {
-            connection = await oraConnAttribs();
-            const cmdInsertAssento = `INSERT INTO ASSENTOS_OCUPADOS (CODIGO, CODIGO_VOO, NUMERO_ASSENTO) 
-      VALUES (ASSENTOS_OCUPADOS_SEQ.NEXTVAL, :1, :2)`;
-            for (let i = 0; i < assentos.length; i++) {
-                const dados = [
-                    assentos[i].codigo,
-                    assentos[i].assento,
-                ];
-                try {
-                    const result = await connection.execute(cmdInsertAssento, dados);
-                    await connection.commit();
-                    console.log("Resultado da inserção:", result);
-                    if (result.rowsAffected && result.rowsAffected === 1) {
-                        cr.status = "SUCCESS";
-                        cr.message = "Assento comprado com sucesso.";
-                        cr.payload = result.rows;
-                    }
-                    else {
-                        cr.message = "Erro ao comprar assento. Nenhuma linha afetada.";
-                    }
+        connection = await oraConnAttribs();
+        console.log("Conexão com Oracle estabelecida");
+        const cmdInsertAssento = `
+      INSERT INTO INDISPONIVEIS (CODIGO, CODIGO_VOO, NUMERO_ASSENTO) 
+      VALUES (INDISPONIVEIS_SEQ.NEXTVAL, :1, :2)
+      RETURNING CODIGO INTO :3`;
+        console.log("Iniciando loop de inserção de assentos");
+        for (let i = 0; i < assentos.length; i++) {
+            console.log(`Inserindo assento ${i + 1}/${assentos.length}`);
+            const dados = [
+                assentos[i].codigo,
+                assentos[i].assento,
+                { type: oracledb.NUMBER, dir: oracledb.BIND_OUT }
+            ];
+            try {
+                console.log("Chamando execute");
+                const result = await connection.execute(cmdInsertAssento, dados, { autoCommit: false });
+                console.log("Resultado do execute:", result);
+                if (result.rowsAffected && result.rowsAffected === 1) {
+                    console.log("Assento comprado com sucesso");
                 }
-                catch (insertError) {
-                    console.error("Erro durante a inserção:", insertError);
-                    cr.message = "Erro ao comprar assento.";
+                else {
+                    console.log("Falha ao inserir assento");
+                    const errorMessage = result.rows && result.rows[0] && result.rows[0][2]
+                        ? `Código do erro: ${result.rows[0][2]}`
+                        : "Detalhes do erro indisponíveis.";
+                    console.log("Detalhes do erro:", errorMessage);
+                    return res.send({
+                        status: "ERROR",
+                        message: `Erro ao comprar assento. ${errorMessage}`
+                    });
                 }
             }
+            catch (error) {
+                console.error("Erro durante a inserção do assento:", error);
+                return res.send({
+                    status: "ERROR",
+                    message: "Erro durante a inserção do assento."
+                });
+            }
+            console.log(`Assento ${i + 1} inserido com sucesso`);
         }
-        catch (e) {
-            if (e instanceof Error) {
-                cr.message = e.message;
-                console.error(e.message);
-            }
-            else {
-                cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
-            }
-        }
-        finally {
-            if (connection) {
-                try {
-                    await connection.close();
-                }
-                catch (closeError) {
-                    console.error("Error closing Oracle connection:", closeError);
-                }
-            }
-        }
+        console.log("Assentos comprados com sucesso");
+        res.send({
+            status: "SUCCESS",
+            message: "Assentos comprados com sucesso."
+        });
     }
     catch (error) {
-        console.error("Outer error:", error);
-        cr.message = "Erro ao processar a solicitação.";
+        console.error("Erro ao conectar ao Oracle:", error);
+        return res.send({
+            status: "ERROR",
+            message: "Erro ao conectar ao Oracle. Detalhes do erro indisponíveis."
+        });
     }
     finally {
-        return res.send(cr);
+        if (connection) {
+            console.log("Fechando conexão com Oracle");
+            await connection.close();
+        }
     }
 });
 app.post("/buscarAssentosOcupados", async (req, res) => {
@@ -361,7 +361,7 @@ app.post("/buscarAssentosOcupados", async (req, res) => {
         let connection;
         try {
             connection = await oraConnAttribs();
-            const cmdBuscarAssentosOcupados = `SELECT NUMERO_ASSENTO FROM ASSENTOS_OCUPADOS WHERE CODIGO_VOO = :1`;
+            const cmdBuscarAssentosOcupados = `SELECT NUMERO_ASSENTO FROM INDISPONIVEIS WHERE CODIGO_VOO = :1`;
             const resultAssentos = await connection.execute(cmdBuscarAssentosOcupados, [codigoVoo], { outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: true });
             cr.payload = {
                 assentosOcupados: resultAssentos.rows || [],
