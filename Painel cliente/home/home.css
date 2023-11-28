@@ -15,6 +15,10 @@ html, body {
     align-items: center;
 }
 
+.menu a.link-branco {
+    color: white;
+}
+
 .box{
     width: 450px;
     height: 72%;

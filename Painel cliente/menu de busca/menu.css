@@ -4,18 +4,17 @@
     box-sizing: border-box;
 }
 
-/* Adicione este estilo ao seu arquivo de estilo CSS ou inline no HTML */
 a.icon-link {
-    text-decoration: none; /* Remove sublinhado padrão do link */
-    color: inherit; /* Mantém a cor padrão do texto */
+    text-decoration: none;
+    color: inherit; 
 }
 
 a.icon-link:hover {
-    color: inherit; /* Mantém a cor padrão do texto durante o hover */
+    color: inherit; 
 }
 
 .icon-link i {
-    pointer-events: none; /* Permite que o clique passe através do ícone para o link */
+    pointer-events: none; 
 }
 
 body{
@@ -28,6 +27,61 @@ body{
 
 main{
     display: flex;
+}
+
+.menu a.link-branco {
+    color: white;
+}
+
+.menu {
+    position: fixed;
+    top: 0;
+    left: 30%;
+    width: 40%;
+    background-color: rgba(26, 24, 24, 0.884);
+    padding: 30px;
+    display: flex;
+    justify-content: space-around;
+    color: #fff;
+    font-size: 30px;
+    border-radius: 0px 0px 20px 20px;
+    border-color: #000000;
+    border: #000000;
+}
+
+.menu i:hover::before{
+    content: attr(title);
+    display: block;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 4px;
+    font-size: 14px;
+}
+.menu i{
+    position: relative;
+    cursor: pointer;
+    z-index: 1;
+}
+.home{
+    cursor: pointer;
+    z-index: 1;
+}
+.busca{
+    cursor: pointer;
+    z-index: 1;
+}
+.assentos{
+    cursor: pointer;
+    z-index: 1;
+}
+.engrenagem{
+    cursor: pointer;
+    z-index: 1;
 }
 
 form{
@@ -122,9 +176,6 @@ form{
     margin-top: 15px;
 }
 
-/* ESTILO DA TABELA */
-
-
 tbody tr:hover{
     background-color: rgb(120, 172, 250);
 }
@@ -176,6 +227,7 @@ th{
 
 .canto2{
     border-radius: 0px 15px 0px 0px;
+    color: #000000;
 }
 
 td{

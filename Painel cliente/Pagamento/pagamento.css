@@ -4,6 +4,9 @@
     box-sizing: border-box;
 }
 
+.menu a.link-branco {
+    color: white;
+}
 .box{
     width: 450px;
     height: 72%;
@@ -207,6 +210,7 @@ hr{
     background-color: black; 
     width: 100%;
 }
+
 /* Estilo Cartão de Credito */
 
 .cartao label{
@@ -254,33 +258,4 @@ hr{
 .cartao div p{
     margin-top: 25px;
     font-size: 22px;
-}
-
-/* Estilo Pix */
-
-.pix div{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.pix p{
-    font-size: 21px;
-    margin: 20px 0px 30px 0px;
-}
-
-.pix a{
-    margin-top: 30px;
-}
-
-/* Estilo Boleto */
-
-.boleto div{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.boleto a{
-    margin-top: 10px;
 }

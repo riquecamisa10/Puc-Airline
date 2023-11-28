@@ -105,7 +105,7 @@ body {
 main {
     display: flex;
     justify-content: center;
-    align-items: center; /* Adiciona alinhamento vertical */
+    align-items: center; 
     height: 100vh;
 }
 

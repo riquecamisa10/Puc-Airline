@@ -10,11 +10,11 @@ function codigoValido(){
 
 function anoValido() {
     let resultado = false;
-    const strAno = document.getElementById("anoFab").value; // Retrieve the value from the input field
-    const anoValue = parseInt(strAno); // Parse the value to an integer
+    const strAno = document.getElementById("anoFab").value; 
+    const anoValue = parseInt(strAno); 
     
-    console.log("Valor de strAno: " + strAno); // Use the correct variable name
-    console.log("Valor de anoValue: " + anoValue); // Use the correct variable name
+    console.log("Valor de strAno: " + strAno); 
+    console.log("Valor de anoValue: " + anoValue); 
 
     if (!isNaN(anoValue) && anoValue >= 1990 && anoValue <= 2026) {
         resultado = true;
@@ -39,8 +39,7 @@ function selecionouFabricante(){
     let resultado = false; 
     var listaFabricantes = document.getElementById("comboFabricantes").value;
     var valorSelecionado = listaFabricantes.value;
-    // se quiséssemos obter o TEXTO selecionado. 
-    // var text = listaFabricantes.options[listaFabricantes.selectedIndex].text;
+
     if (valorSelecionado !== "0"){
         resultado = true;
     }

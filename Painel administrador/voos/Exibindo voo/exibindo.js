@@ -30,7 +30,6 @@ function verificarTipoTrecho() {
                     if (estiloVoo) {
                         const estiloVooLowerCase = estiloVoo.toLowerCase();
 
-                        // Ocultar ou exibir os campos relacionados à volta
                         dataVoltaGroup.style.display = (estiloVooLowerCase === "somente ida") ? "none" : "flex";
                         dataChegada2Group.style.display = (estiloVooLowerCase === "somente ida") ? "none" : "flex";
                     } else {
@@ -85,7 +84,6 @@ function preencherTabela(voos) {
             const estilo = index % 2 === 0 ? "linhaPar" : "linhaImpar";
             const estiloVooLowerCase = voo.estiloVoo ? voo.estiloVoo.toLowerCase() : '';
 
-            // Atribuir os valores dos campos relacionados à volta
             const dataVolta = (estiloVooLowerCase !== "somente ida") ? voo.dataVolta || '' : '';
             const horaVolta = (estiloVooLowerCase !== "somente ida") ? voo.horaVolta || '' : '';
             const dataChegada2 = (estiloVooLowerCase !== "somente ida") ? voo.dataChegada2 || '' : '';

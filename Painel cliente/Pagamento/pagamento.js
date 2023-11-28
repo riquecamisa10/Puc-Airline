@@ -103,21 +103,18 @@ async function alocarAssento(body) {
     };
 
     try {
-        // Execute a requisição para a rota /comprarAssentos
         const response = await fetch('http://localhost:3000/comprarAssentos', requestOptions);
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        // Analise a resposta do backend
         const result = await response.json();
 
         console.log('Resposta do backend:', result);
 
         if (result.status === 'SUCCESS') {
             console.log("Assentos comprados com sucesso!");
-            // Adicione logs para verificar se a função showStatusMessage é chamada e com os parâmetros corretos
             showStatusMessage("Assentos comprados com sucesso!", false);
         } else {
             console.error("Erro ao comprar assentos. Resposta do backend:", result);
@@ -180,7 +177,6 @@ async function verificar() {
         return;
     }
 
-    // Agora você pode usar 'codigoVoo' e 'assentosSelecionados' conforme necessário.
     console.log("Dados antes de enviar a solicitação:", {
         codigoVoo: codigoVoo,
         assentos: assentosSelecionados,
@@ -189,11 +185,8 @@ async function verificar() {
     try {
         await comprarAssento(codigoVoo, assentosSelecionados);
         console.log("Assentos comprados com sucesso!");
-        // Remova esta linha para evitar a mensagem contraditória
-        // showStatusMessage("Assentos comprados com sucesso!", false);
     } catch (error) {
         console.error("Erro ao comprar assentos:", error);
-        // Ajuste esta parte para exibir a mensagem de erro correta
         showStatusMessage("Erro ao comprar assentos!", true);
     }
 }
@@ -212,17 +205,14 @@ document.addEventListener("DOMContentLoaded", async function () {
             return;
         }
 
-        // Agora você pode usar 'codigoVoo' e 'assentosSelecionados' conforme necessário.
         console.log("Dados recuperados da URL:", { codigoVoo, assentosSelecionados });
 
         mostrarFormulario();
 
         document.getElementById("btnPagar").addEventListener("click", async function () {
-            // Adicione logs para verificar o estado das variáveis antes de chamar verificar
             console.log("codigoVoo antes de chamar verificar:", codigoVoo);
             console.log("assentosSelecionados antes de chamar verificar:", assentosSelecionados);
 
-            // Chame a função verificar passando o códigoVoo e assentosSelecionados
             await verificar();
         });
     } catch (error) {

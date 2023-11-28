@@ -150,8 +150,8 @@ body {
 main {
     display: flex;
     justify-content: center;
-    align-items: center; /* Adiciona alinhamento vertical */
-    height: 98vh; /* Faz com que a main ocupe 100% da altura da viewport */
+    align-items: center; 
+    height: 98vh; 
 }
 
 .conteudo select {

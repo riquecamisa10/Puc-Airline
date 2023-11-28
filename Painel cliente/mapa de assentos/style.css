@@ -5,7 +5,11 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background: url(img.jpg) center / cover;
+    background: url(wall2.jpg) center / cover;
+}
+
+.menu a.link-branco {
+    color: white;
 }
 
 .botao{
@@ -20,34 +24,33 @@ body {
     font-size: 20px;
     padding: 5px;
 }
-/* Estilo para o contêiner que representa o ambiente do avião */
+
 .airplane-container {
-    background-color: #000000d2;
+    background-color: #000000ee;
     padding: 120px;
-    border-radius: 200px 200px 200px 200px; /* Ajustando o border-radius para dar a forma de avião */
+    border-radius: 200px 200px 200px 200px; 
     position: relative;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     position: relative;
     top: 30px;
 }
-/* Estilo para a representação visual dos assentos no avião */
+
 .airplane {
     display: flex;
     flex-direction: row;
     align-items: center;
     perspective: 1000px;
-    margin-left: -20px; /* Adicionando um recuo à esquerda para evitar colisões */
+    margin-left: -20px; 
 }
 .airplane-container h1 {
     position: absolute;
     top: 8%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: #d1cdcd; /* Cor do texto */
-    font-size: 40px; /* Tamanho da fonte */
+    color: #d1cdcd; 
+    font-size: 40px; 
 }
 
-/* Estilo para cada assento no avião */
 .seat {
     width: 30px;
     min-width: 30px;
@@ -60,25 +63,35 @@ body {
     border: 1px solid #ccc;
     color: #c2bdbd;
     cursor: pointer;
-    transition: transform 0.3s, background-color 0.3s, color 0.3s;
     border-radius: 6px;
+    transition: transform 0.3s, background-color 0.3s, color 0.3s;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .seat.special-seat {
-    /* Adicione estilos específicos para o assento 150 aqui */
-    background-color: red; /* Por exemplo, mude a cor de fundo para vermelho */
+    background-color: red;
     cursor: not-allowed;
     pointer-events: none;
     transition: none;
 }
 
-
 .espaco {
-    height: 50px; /* Ajuste a largura conforme necessário */
+    height: 50px; 
 }
 
-.seat.occupied {
+.seat-occupied {
+    width: 30px;
+    min-width: 32px;
+    min-height: 32px;
+    height: 30px;
+    margin: 4px;
+    text-align: center;
+    line-height: 30px;
+    font-size: 14px;
+    border-radius: 6px;
+    transition: transform 0.3s, background-color 0.3s, color 0.3s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
     background-color: #ff6161;
     cursor: not-allowed;
     pointer-events: none; 

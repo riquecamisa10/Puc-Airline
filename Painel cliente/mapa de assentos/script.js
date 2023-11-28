@@ -85,28 +85,28 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       var seat = document.createElement('div');
-      seat.className = 'seat';
 
-      // Verifique se o número do assento está na lista de assentos ocupados
-      if (assentosOcupados.includes(i)) {
-        seat.classList.add('occupied');
+      if (assentosOcupados.some(assento => assento.NUMERO_ASSENTO === i)) {
+        seat.className = 'seat-occupied';
+      } else {
+        seat.className = 'seat';
       }
 
       seat.textContent = i;
       fileira.appendChild(seat);
 
-      // Adiciona o evento de clique diretamente aqui
       seat.addEventListener('click', function () {
         var numeroAssento = parseInt(this.textContent, 10);
-        this.classList.toggle('selected');
+        if (!this.classList.contains('seat-occupied')) {
+          this.classList.toggle('selected');
 
-        // Adiciona ou remove o assento do array de assentosSelecionados
-        if (assentosSelecionados.includes(numeroAssento)) {
-          assentosSelecionados = assentosSelecionados.filter(function (assento) {
-            return assento !== numeroAssento;
-          });
-        } else {
-          assentosSelecionados.push(numeroAssento);
+          if (assentosSelecionados.includes(numeroAssento)) {
+            assentosSelecionados = assentosSelecionados.filter(function (assento) {
+              return assento !== numeroAssento;
+            });
+          } else {
+            assentosSelecionados.push(numeroAssento);
+          }
         }
       });
     }
@@ -129,7 +129,6 @@ document.addEventListener('DOMContentLoaded', function () {
       var codigoVoo = icon.dataset.codigoVoo;
       var outrasInformacoes = icon.dataset.outrasInformacoes;
 
-          // Chame diretamente a função fetchTotalAssentos para obter e preencher os assentos
           fetchTotalAssentos(codigoVoo, outrasInformacoes);
       });
   });

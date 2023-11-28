@@ -1,3 +1,11 @@
+*{
+    text-decoration: none;
+}
+
+.navbar a.link-branco {
+    color: white;
+}
+
 .box{
     width: 450px;
     height: 72%;
@@ -105,8 +113,6 @@ ul {
     z-index: 1;
 }
 
-/* -------------------------------------------- */
-
 .content{
     width: 450px;
     height: 60%;
@@ -163,6 +169,7 @@ body {
     justify-content: center;
     gap: 30px;
     font-size: 20px;
+    color: white;
 }
 
 .conteudo {
