@@ -715,7 +715,7 @@ app.post("/buscarVoo", async (req, res) => {
 
 });
 
-app.post("/obterTrechoListado", async (req, res) => {
+app.post("/obterTrechoListado", async (req, res) => { 
   console.log('Corpo da requisição:', req.body);
   let cr: CustomResponse = {
     status: "ERROR",
@@ -801,6 +801,7 @@ app.post("/incluirAeronave", async (req, res) => {
         (CODIGO, FABRICANTE, MODELO, ANO_FABRICACAO, TOTAL_ASSENTOS, REFERENCIA)
         VALUES
         (AERONAVES_SEQ.NEXTVAL, :1, :2, :3, :4, :5)`;
+
         const dados = [
           aero.marca,
           aero.modelo,

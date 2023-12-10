@@ -327,9 +327,7 @@ app.post("/comprarAssentos", async (req, res) => {
                 return;
             }
         }
-        // Confirme a transação
         await connection.commit();
-        // Se o loop terminar com sucesso, envie uma resposta de sucesso
         console.log("Assentos comprados com sucesso");
         res.send({
             status: "SUCCESS",
@@ -1069,7 +1067,7 @@ app.post("/alterarAeronave", async (req, res) => {
     let [valida, mensagem] = aeronaveValida(aero);
     if (!valida) {
         cr.message = mensagem;
-        return res.status(400).send(cr); // Return a 400 Bad Request status for validation errors
+        return res.status(400).send(cr);
     }
     let connection;
     try {
@@ -1097,13 +1095,13 @@ app.post("/alterarAeronave", async (req, res) => {
         }
         else {
             cr.message = "Nenhuma aeronave foi alterada. Verifique o código fornecido.";
-            return res.status(404).send(cr); // Return a 404 Not Found status if no rows were affected
+            return res.status(404).send(cr);
         }
     }
     catch (e) {
         cr.message = `Erro ao alterar aeronave: ${e.message}`;
         console.error(`Erro ao alterar aeronave: ${e.message}`);
-        return res.status(500).send(cr); // Return a 500 Internal Server Error status for other errors
+        return res.status(500).send(cr);
     }
     finally {
         if (connection) {
@@ -1154,13 +1152,13 @@ app.post("/alterarTrecho", async (req, res) => {
         }
         else {
             cr.message = "Nenhuma aeronave foi alterada. Verifique o código fornecido.";
-            return res.status(404).send(cr); // Return a 404 Not Found status if no rows were affected
+            return res.status(404).send(cr);
         }
     }
     catch (e) {
         cr.message = `Erro ao alterar aeronave: ${e.message}`;
         console.error(`Erro ao alterar aeronave: ${e.message}`);
-        return res.status(500).send(cr); // Return a 500 Internal Server Error status for other errors
+        return res.status(500).send(cr);
     }
     finally {
         if (connection) {
@@ -1224,13 +1222,13 @@ app.post("/alterarVoo", async (req, res) => {
         }
         else {
             cr.message = "Nenhum voo foi alterado. Verifique o código fornecido.";
-            return res.status(404).send(cr); // Return a 404 Not Found status if no rows were affected
+            return res.status(404).send(cr);
         }
     }
     catch (e) {
         cr.message = `Erro ao alterar voo: ${e.message}`;
         console.error(`Erro ao alterar voo: ${e.message}`);
-        return res.status(500).send(cr); // Return a 500 Internal Server Error status for other errors
+        return res.status(500).send(cr);
     }
     finally {
         if (connection) {
@@ -1253,7 +1251,7 @@ app.post("/alterarAeroporto", async (req, res) => {
     let [valida, mensagem] = aeroportoValido(aeroporto);
     if (!valida) {
         cr.message = mensagem;
-        return res.status(400).send(cr); // Return a 400 Bad Request status for validation errors
+        return res.status(400).send(cr);
     }
     let connection;
     try {
@@ -1279,13 +1277,13 @@ app.post("/alterarAeroporto", async (req, res) => {
         }
         else {
             cr.message = "Nenhum aeroporto foi alterada. Verifique o código fornecido.";
-            return res.status(404).send(cr); // Return a 404 Not Found status if no rows were affected
+            return res.status(404).send(cr);
         }
     }
     catch (e) {
         cr.message = `Erro ao alterar aeroporto: ${e.message}`;
         console.error(`Erro ao alterar aeroporto: ${e.message}`);
-        return res.status(500).send(cr); // Return a 500 Internal Server Error status for other errors
+        return res.status(500).send(cr);
     }
     finally {
         if (connection) {

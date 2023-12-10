@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     })
     .then(assentosOcupados => {
-      // Agora, você tem a lista de assentos ocupados. Continue com a lógica para buscar o total de assentos e preencher o mapa.
       fetchTotalAssentos(codigoVoo, assentosOcupados);
     })
     .catch(error => {
