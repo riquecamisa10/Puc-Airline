@@ -55,6 +55,15 @@ function preencheuDataVolta(){
     return volta.trim().length !== 0;
 }
 
+function preencheuPartida(){
+    let resultado = false;
+    const cidadePartida = document.getElementById("partida").value;
+    if(cidadePartida.trim().length != 0){
+        resultado = true;
+    }
+    return resultado;
+}
+
 function preencheuDestino(){
     let resultado = false;
     const cidadeDestino = document.getElementById("destino").value;
@@ -89,6 +98,11 @@ function comprarAssento() {
         return;
     }
 
+    if (!preencheuPartida()) {
+        showStatusMessage("Preencha corretamente a cidade de partida", true);
+        return;
+    }
+
     if (!preencheuDestino()) {
         showStatusMessage("Preencha corretamente a cidade de destino", true);
         return;
@@ -96,11 +110,13 @@ function comprarAssento() {
 
     const ida = document.getElementById("ida").value;
     const volta = document.getElementById("volta").value;
+    const partida = document.getElementById("partida").value;
     const destino = document.getElementById("destino").value;
 
     const assento = {
         ida: formatarDataParaOracle(ida),
         volta: volta ? formatarDataParaOracle(volta) : undefined,
+        partida,
         destino,
     };
 
@@ -119,12 +135,12 @@ function comprarAssento() {
                     preencherTabelaIdaBody(resultado.payload);
                     showStatusMessage("Voos encontrados.", false);
                     tabelaIda.style.display = "table";
-                    tabelaVolta.style.display = "none";  // Oculta tabela de volta
+                    tabelaVolta.style.display = "none";  
                 } else {
                     preencherTabelaVoltaBody(resultado.payload);
                     showStatusMessage("Voos encontrados.", false);
                     tabelaVolta.style.display = "table";
-                    tabelaIda.style.display = "none";  // Oculta tabela de ida
+                    tabelaIda.style.display = "none";  
                 }                
             } else {
                 showStatusMessage("Resultado inesperado: " + resultado, true);
