@@ -241,7 +241,7 @@ button{
     .conteudo{
 
         width: 500px;
-        padding: 20px 0px 20px 0px;
+        padding: 20px 30px 20px 30px;
     }
 
     .conteudo h1{
@@ -259,7 +259,7 @@ button{
     }
     
     .conteudo input{
-        width: 40%;
+        width: 400;
         height: 11px;
         padding: 6px;
         display: flex;
@@ -289,10 +289,4 @@ button{
        font-size: 18px;
        text-align: center;
     }
-
-    .menu:hover{
-
-        padding-left: 16px;
-    }
-
 }

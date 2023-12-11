@@ -234,19 +234,12 @@ button{
 @media screen and (max-width: 1366px) {
     
     .conteudo{
-
         width: 500px;
-        padding: 20px 0px 20px 0px;
+        padding: 20px 30px 20px 30px;
     }
 
     .conteudo h1{
         font-size: 35px;
-    }
-    
-    .conteudo select{
-        width: 78%;
-        height: 22px;
-        font-size: 17px;
     }
     
     .conteudo label{
@@ -254,7 +247,7 @@ button{
     }
     
     .conteudo input{
-        width: 40%;
+        width: 400;
         height: 11px;
         padding: 6px;
         display: flex;
@@ -284,10 +277,4 @@ button{
        font-size: 18px;
        text-align: center;
     }
-
-    .menu:hover{
-
-        padding-left: 16px;
-    }
-
 }

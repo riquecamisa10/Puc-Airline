@@ -279,10 +279,4 @@ button{
        color: greenyellow;
        font-size: 18px;
     }
-
-    .menu:hover{
-
-        padding-left: 16px;
-    }
-
 }

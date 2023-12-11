@@ -147,6 +147,7 @@ body {
 .menu ul li.active {
     background: #4c5353;
 }
+
 main {
     display: flex;
     justify-content: center;
@@ -159,7 +160,6 @@ main {
     transform: scale(1.5);
     margin-right: -43px;
     margin-left: 47px;
-    max-width: -128px;
 }
 
 .conteudo select {
@@ -241,9 +241,8 @@ button{
 @media screen and (max-width: 1366px) {
     
     .conteudo{
-
         width: 500px;
-        padding: 20px 0px 20px 0px;
+        padding: 20px 30px 20px 30px;
     }
 
     .conteudo h1{
@@ -256,12 +255,15 @@ button{
         font-size: 17px;
     }
     
-    .conteudo label{
+    .conteudo label {
         font-size: 20px;
+        text-align: right;
+        width: 166px;
+        white-space: nowrap;
     }
     
     .conteudo input{
-        width: 40%;
+        width: 275px;
         height: 11px;
         padding: 6px;
         display: flex;
@@ -275,10 +277,6 @@ button{
     form p{
         margin-top: 18px;
     }
-    
-    button{
-        margin: 12px;
-    }
 
     .statusError{
         color:red;
@@ -290,9 +288,11 @@ button{
        font-size: 18px;
     }
 
-    .menu:hover{
-
-        padding-left: 16px;
+    .conteudo input[type="radio"],
+    .conteudo input[type="checkbox"] {
+        transform: scale(1.5);
+        margin-left: -90px;
+        top: 17px;
+        position: relative;
     }
-
 }

@@ -31,6 +31,16 @@ body {
     background:url(wall2.jpg) 10px center / cover;
 }
 
+.conteudo {
+    max-width: 700px;
+    width: 100%;
+    border: 2px solid black;
+    padding: 30px 0px 30px 0px;
+    backdrop-filter: blur(18px);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 50px;
+}
+
 .menu {
     position: fixed;
     left: 0;
@@ -46,16 +56,6 @@ body {
     justify-content: center;
     gap: 30px;
     font-size: 20px;
-}
-
-.conteudo {
-    max-width: 700px;
-    width: 100%;
-    border: 2px solid black;
-    padding: 30px 0px 30px 0px;
-    backdrop-filter: blur(18px);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    padding: 50px;
 }
 
 .menu:hover {
@@ -100,6 +100,51 @@ body {
 
 .menu .list-item .submenu {
     display: none;
+}
+
+.menu ul {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+.menu ul li {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.menu ul li a {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    text-decoration: none;
+    color: #fafafa;
+    width: 100%;
+    padding: 10px 0;
+}
+
+.menu ul li a .title {
+    display: none;
+    padding-left: 20px;
+    height: 60px;
+    line-height: 60px;
+    white-space: nowrap;
+}
+
+.menu:hover ul li a .title {
+    display: block;
+}
+
+.menu ul li.active {
+    background: #4c5353;
 }
 
 main {
@@ -196,9 +241,8 @@ button{
 @media screen and (max-width: 1366px) {
     
     .conteudo{
-
         width: 500px;
-        padding: 20px 0px 20px 0px;
+        padding: 20px 30px 20px 30px;
     }
 
     .conteudo h1{
@@ -206,7 +250,7 @@ button{
     }
     
     .conteudo select{
-        width: 78%;
+        width: 216px;
         height: 22px;
         font-size: 17px;
     }
@@ -243,11 +287,6 @@ button{
     .statusSuccess{
        color: greenyellow;
        font-size: 18px;
-    }
-
-    .menu:hover{
-
-        padding-left: 16px;
     }
 
 }

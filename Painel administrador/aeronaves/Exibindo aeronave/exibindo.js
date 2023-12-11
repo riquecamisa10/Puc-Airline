@@ -34,6 +34,7 @@ function preencherTabela(voos) {
                 <td>${voo.codigo}</td>
                 <td>${voo.fabricante}</td>
                 <td>${voo.modelo}</td>
+                <td>${voo.referencia}</td>
                 <td>${voo.anoFabricacao}</td>
                 <td>${voo.totalAssentos}</td>
                 </tr>`;

@@ -125,3 +125,49 @@ ul {
     cursor: pointer;
     z-index: 1;
 }
+
+@media screen and (max-width: 1366px){
+
+    .box {
+        width: 450px;
+        height: 425px;
+        background: rgba(0, 0, 0, 0.76);
+        padding: 40px;
+        text-align: center;
+        margin: auto;
+        margin-top: 22%;
+        color: white;
+        border-radius: 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .box h1 {
+        margin-top: 4%;
+        font-size: 30px;
+        letter-spacing: 4px;
+        font-weight: 100;
+    }
+
+    .box p {
+        text-align: justify;
+        font-size: 16px;
+    }
+
+    .img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        margin-top: -1%;
+    }
+
+    ul {
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        top: 93%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+    }
+}

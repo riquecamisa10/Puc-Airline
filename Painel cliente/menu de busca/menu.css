@@ -34,7 +34,7 @@ main{
 }
 
 .menu {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 30%;
     width: 40%;
@@ -238,4 +238,45 @@ td{
 
 tr:nth-child(odd){
     background-color:#e0e0e0;
+}
+
+@media screen and (max-width: 1366px){
+
+    .conteudo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 17%;
+    }
+
+    .tblAlunos {
+        width: 1300px;
+        margin: 20px auto;
+        z-index: 2;
+        border-collapse: collapse;
+        border-spacing: 0;
+        border-radius: 12px 12px 14px 14px;
+        box-shadow: 0 4px 12px rgba(32, 32, 32, .3);
+        background: #fafafa;
+        text-align: center;
+        max-height: 70vh;
+    }
+    
+    th{
+        background: #a4b4b4;;
+        color:#fafafa;
+        text-transform:uppercase;
+        font-weight: bold;
+        font-family: 'Dela Gothic One';
+        font-size: 15px;
+        border-bottom: 1px solid black;
+        padding: 10px 20px 10px 20px;
+        min-width: 120px !important;
+    }
+
+    td{
+        font-family:'Roboto Condensed', sans-serif;
+        font-size: 15px;
+        padding: 5px;
+    }
 }
