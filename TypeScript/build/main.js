@@ -306,8 +306,7 @@ app.post("/comprarAssentos", async (req, res) => {
             };
             try {
                 console.log("Chamando execute para o assento:", assento);
-                const result = await connection.execute(cmdInsertAssento, dados, { autoCommit: false });
-                console.log("Resultado do execute para o assento:", result);
+                const result = await connection.execute(cmdInsertAssento, dados, { autoCommit: true });
                 if (result.rowsAffected && result.rowsAffected === 1) {
                     console.log(`Assento ${i + 1} inserido com sucesso`);
                 }
@@ -710,7 +709,7 @@ app.post("/incluirAeronave", async (req, res) => {
                     aero.referencia,
                 ];
                 console.log("Dados a serem inseridos:", dados);
-                const result = await connection.execute(cmdInsertAssento, dados, { autoCommit: false });
+                const result = await connection.execute(cmdInsertAssento, dados, { autoCommit: true });
                 console.log("Resultado do execute:", result);
                 if (result.rowsAffected === 1) {
                     cr.status = "SUCCESS";

@@ -396,7 +396,7 @@ app.post("/comprarAssentos", async (req, res) => {
 
       try {
         console.log("Chamando execute para o assento:", assento);
-        const result = await connection.execute(cmdInsertAssento, dados, { autoCommit: false }) as oracledb.Result<any>;
+        const result = await connection.execute(cmdInsertAssento, dados, { autoCommit: true }) as oracledb.Result<any>;
 
         if (result.rowsAffected && result.rowsAffected === 1) {
           console.log(`Assento ${i + 1} inserido com sucesso`);
@@ -818,7 +818,7 @@ app.post("/incluirAeronave", async (req, res) => {
         ];
 
         console.log("Dados a serem inseridos:", dados);
-        const result = await connection.execute(cmdInsertAssento, dados, { autoCommit: false }) as oracledb.Result<any>;
+        const result = await connection.execute(cmdInsertAssento, dados, { autoCommit: true }) as oracledb.Result<any>;
         console.log("Resultado do execute:", result);
 
         if (result.rowsAffected === 1) {
