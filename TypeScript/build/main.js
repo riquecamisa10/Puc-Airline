@@ -121,6 +121,7 @@ function rowsToAeroportos(oracleRows) {
     return aeroportos;
 }
 ;
+// FUNÇÕES DE VALIDAÇÃO
 function aeronaveValida(aero) {
     let valida = false;
     let mensagem = "";
@@ -282,6 +283,7 @@ function aeroportoValido(aeroporto) {
     }
     return [valida, mensagem];
 }
+// FUNÇÕES DO SISTEMA
 app.post("/comprarAssentos", async (req, res) => {
     console.log("Iniciando a função no backend");
     const assentos = req.body.assentos;
@@ -472,15 +474,15 @@ app.post("/buscarVoo", async (req, res) => {
                 connection = await oraConnAttribs();
                 const cmdBuscarVoo = `
         SELECT
-          V.CODIGO AS Codigo_Voo,
-          V.ESCALAS,
-          SAIDA.NOME AS Aeroporto_Saida,
-          V.HORA_SAIDA,
-          V.DATA_SAIDA,
-          DESTINO.NOME AS Aeroporto_Destino,
-          V.HORA_CHEGADA,
-          V.DATA_CHEGADA,
-          V.VALOR_PASSAGEM
+        V.CODIGO AS Codigo_Voo,
+        V.ESCALAS,
+        SAIDA.NOME AS Aeroporto_Saida,
+        V.HORA_SAIDA,
+        V.DATA_SAIDA,
+        DESTINO.NOME AS Aeroporto_Destino,
+        V.HORA_CHEGADA,
+        V.DATA_CHEGADA,
+        V.VALOR_PASSAGEM
         FROM
             VOOS V
         JOIN
@@ -490,15 +492,16 @@ app.post("/buscarVoo", async (req, res) => {
         JOIN
             AEROPORTOS DESTINO ON T.DESTINO = DESTINO.CODIGO
         WHERE
-            DESTINO.CIDADE = :1
-            AND V.DATA_SAIDA = :2`;
+            SAIDA.CIDADE = :1
+            AND DESTINO.CIDADE = :2
+            AND V.DATA_SAIDA = :3`;
                 const dados = [
+                    busca.partida,
                     busca.destino,
                     busca.ida,
                 ];
                 console.log("Voo de Ida encontrado");
                 const result = (await connection.execute(cmdBuscarVoo, dados, { outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: true }));
-                //console.log(result);
                 if (result.rows && result.rows.length > 0) {
                     cr.status = "SUCCESS";
                     cr.message = "Voos encontrados.";
@@ -676,6 +679,7 @@ app.post("/obterTrechoListado", async (req, res) => {
         return res.send(cr);
     }
 });
+// CRUDS
 app.post("/incluirAeronave", async (req, res) => {
     let cr = {
         status: "ERROR",
@@ -744,199 +748,6 @@ app.post("/incluirAeronave", async (req, res) => {
         return res.send(cr);
     }
 });
-app.post("/incluirTrecho", async (req, res) => {
-    let cr = {
-        status: "ERROR",
-        message: "",
-        payload: undefined,
-    };
-    const trecho = req.body;
-    let error;
-    try {
-        let [valida, mensagem] = trechoValido(trecho);
-        if (!valida) {
-            cr.message = mensagem;
-            return res.send(cr);
-        }
-        else {
-            let connection;
-            try {
-                connection = await oraConnAttribs();
-                const cmdInsertAero = `INSERT INTO TRECHOS
-        (CODIGO, NOME, ORIGEM, DESTINO, AERONAVE, ESTILO_VOO)
-        VALUES
-        (TRECHOS_SEQ.NEXTVAL, :1, :2, :3, :4, :5)`;
-                const dados = [
-                    trecho.nome,
-                    trecho.origem,
-                    trecho.destino,
-                    trecho.aeronave,
-                    trecho.estilo_voo,
-                ];
-                const result = await connection.execute(cmdInsertAero, dados, { autoCommit: true, });
-                if (result.rowsAffected === 1) {
-                    cr.status = "SUCCESS";
-                    cr.message = "Trecho inserida.";
-                }
-            }
-            catch (e) {
-                if (e instanceof Error) {
-                    cr.message = e.message;
-                    console.log(e.message);
-                }
-                else {
-                    cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
-                }
-                error = e;
-            }
-            finally {
-                if (connection) {
-                    try {
-                        await connection.close();
-                    }
-                    catch (closeError) {
-                        console.error("Error closing Oracle connection:", closeError);
-                        error = closeError;
-                    }
-                }
-            }
-        }
-    }
-    catch (e) { }
-    if (error) {
-        console.error("Outer error:", error);
-    }
-    else {
-        return res.send(cr);
-    }
-});
-app.post("/incluirVoo", async (req, res) => {
-    let cr = {
-        status: "ERROR",
-        message: "",
-        payload: undefined,
-    };
-    const voo = req.body;
-    try {
-        console.log("Received Voo:", voo);
-        let [valida, mensagem] = vooValido(voo);
-        if (!valida) {
-            cr.message = mensagem;
-            return res.send(cr);
-        }
-        else {
-            let connection;
-            try {
-                connection = await oraConnAttribs();
-                const cmdInsertVoo = `INSERT INTO VOOS
-          (CODIGO, TRECHO, ESCALAS, VALOR_PASSAGEM, DATA_SAIDA, HORA_SAIDA, DATA_CHEGADA, HORA_CHEGADA, DATA_VOLTA, HORA_VOLTA, DATA_CHEGADA2, HORA_CHEGADA2)
-          VALUES
-          (VOOS_SEQ.NEXTVAL, :1, :2, :3, :4, :5, :6, :7, :8, :9, :10, :11)`;
-                const dados = [
-                    voo.trecho,
-                    voo.escalas,
-                    voo.valor,
-                    voo.dataSaida,
-                    voo.horaSaida,
-                    voo.dataChegada,
-                    voo.horaChegada,
-                    voo.dataVolta,
-                    voo.horaVolta,
-                    voo.dataChegada2,
-                    voo.horaChegada2,
-                ];
-                const result = await connection.execute(cmdInsertVoo, dados, { autoCommit: true });
-                if (result.rowsAffected === 1) {
-                    cr.status = "SUCCESS";
-                    cr.message = "Voo inserido.";
-                }
-            }
-            catch (e) {
-                console.error("Error during database operation:", e);
-                cr.message = "Erro ao conectar ao Oracle. Detalhes: " + (e.message || e.toString());
-            }
-            finally {
-                if (connection) {
-                    try {
-                        await connection.close();
-                    }
-                    catch (closeError) {
-                        console.error("Error closing Oracle connection:", closeError);
-                    }
-                }
-            }
-        }
-    }
-    catch (e) {
-        console.error("Outer error:", e);
-    }
-    return res.send(cr);
-});
-app.post("/incluirAeroporto", async (req, res) => {
-    let cr = {
-        status: "ERROR",
-        message: "",
-        payload: undefined,
-    };
-    const aeroporto = req.body;
-    let error;
-    try {
-        let [valida, mensagem] = aeroportoValido(aeroporto);
-        if (!valida) {
-            cr.message = mensagem;
-            return res.send(cr);
-        }
-        else {
-            let connection;
-            try {
-                connection = await oraConnAttribs();
-                const cmdInsertAeroportos = `INSERT INTO AEROPORTOS
-        (CODIGO, NOME, SIGLA, CIDADE, PAIS)
-        VALUES
-        (AEROPORTOS_SEQ.NEXTVAL, :1, :2, :3, :4)`;
-                const dados = [
-                    aeroporto.nome,
-                    aeroporto.sigla,
-                    aeroporto.cidade,
-                    aeroporto.pais,
-                ];
-                const result = await connection.execute(cmdInsertAeroportos, dados, { autoCommit: true, });
-                if (result.rowsAffected === 1) {
-                    cr.status = "SUCCESS";
-                    cr.message = "Aeroporto inserido.";
-                }
-            }
-            catch (e) {
-                if (e instanceof Error) {
-                    cr.message = e.message;
-                    console.log(e.message);
-                }
-                else {
-                    cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
-                }
-                error = e;
-            }
-            finally {
-                if (connection) {
-                    try {
-                        await connection.close();
-                    }
-                    catch (closeError) {
-                        console.error("Error closing Oracle connection:", closeError);
-                        error = closeError;
-                    }
-                }
-            }
-        }
-    }
-    catch (e) { }
-    if (error) {
-        console.error("Outer error:", error);
-    }
-    else {
-        return res.send(cr);
-    }
-});
 app.get("/listarAeronave", async (req, res) => {
     let cr = { status: "ERROR", message: "", payload: undefined };
     let connection;
@@ -948,96 +759,6 @@ app.get("/listarAeronave", async (req, res) => {
         cr.status = "SUCCESS";
         cr.message = "Dados obtidos";
         cr.payload = rowsToAeronaves(resultadoConsulta.rows);
-    }
-    catch (e) {
-        if (e instanceof Error) {
-            cr.message = e.message;
-            console.log(e.message);
-        }
-    }
-    finally {
-        if (connection) {
-            try {
-                await connection.close();
-            }
-            catch (err) {
-                console.error("Error closing Oracle connection:", err);
-            }
-        }
-        res.send(cr);
-    }
-});
-app.get("/listarVoo", async (req, res) => {
-    let cr = { status: "ERROR", message: "", payload: undefined };
-    let connection;
-    try {
-        connection = await oraConnAttribs();
-        let resultadoConsulta = await connection.execute(`SELECT * FROM VOOS`, [], {
-            outFormat: oracledb.OUT_FORMAT_OBJECT
-        });
-        cr.status = "SUCCESS";
-        cr.message = "Dados obtidos";
-        cr.payload = rowsToVoos(resultadoConsulta.rows);
-    }
-    catch (e) {
-        if (e instanceof Error) {
-            cr.message = e.message;
-            console.log(e.message);
-        }
-    }
-    finally {
-        if (connection) {
-            try {
-                await connection.close();
-            }
-            catch (err) {
-                console.error("Error closing Oracle connection:", err);
-            }
-        }
-        res.send(cr);
-    }
-});
-app.get("/listarTrecho", async (req, res) => {
-    let cr = { status: "ERROR", message: "", payload: undefined };
-    let connection;
-    try {
-        connection = await oraConnAttribs();
-        let resultadoConsulta = await connection.execute(`SELECT * FROM TRECHOS`, [], {
-            outFormat: oracledb.OUT_FORMAT_OBJECT
-        });
-        cr.status = "SUCCESS";
-        cr.message = "Dados obtidos";
-        cr.payload = rowsToTrechos(resultadoConsulta.rows);
-    }
-    catch (e) {
-        if (e instanceof Error) {
-            cr.message = e.message;
-            console.log(e.message);
-        }
-    }
-    finally {
-        if (connection) {
-            try {
-                await connection.close();
-            }
-            catch (err) {
-                console.error("Error closing Oracle connection:", err);
-            }
-        }
-        res.send(cr);
-    }
-});
-app.get("/listarAeroporto", async (req, res) => {
-    let cr = { status: "ERROR", message: "", payload: undefined };
-    let connection;
-    try {
-        connection = await oraConnAttribs();
-        let resultadoConsulta = await connection.execute(`SELECT * FROM AEROPORTOS`, [], {
-            outFormat: oracledb.OUT_FORMAT_OBJECT
-        });
-        cr.status = "SUCCESS";
-        cr.message = "Dados obtidos";
-        cr.payload = rowsToAeroportos(resultadoConsulta.rows);
     }
     catch (e) {
         if (e instanceof Error) {
@@ -1114,6 +835,146 @@ app.post("/alterarAeronave", async (req, res) => {
         }
     }
 });
+app.delete("/excluirAeronave", async (req, res) => {
+    const codigo = req.body.codigo;
+    let cr = {
+        status: "ERROR",
+        message: "",
+        payload: undefined,
+    };
+    let connection;
+    try {
+        connection = await oraConnAttribs();
+        const cmdDeleteAero = `DELETE FROM AERONAVES WHERE CODIGO = :1`;
+        const dados = [codigo];
+        const result = await connection.execute(cmdDeleteAero, dados, {
+            autoCommit: true,
+        });
+        if (result.rowsAffected === 1) {
+            cr.status = "SUCCESS";
+            cr.message = "Aeronave excluída.";
+        }
+        else {
+            cr.message = "Aeronave não excluída. Verifique se o código informado está correto.";
+        }
+    }
+    catch (e) {
+        if (e instanceof Error) {
+            cr.message = e.message;
+            console.log(e.message);
+        }
+        else {
+            cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
+        }
+    }
+    finally {
+        if (connection) {
+            try {
+                await connection.close();
+            }
+            catch (e) {
+                console.error("Error closing Oracle connection:", e);
+            }
+        }
+        res.send(cr);
+    }
+});
+app.post("/incluirTrecho", async (req, res) => {
+    let cr = {
+        status: "ERROR",
+        message: "",
+        payload: undefined,
+    };
+    const trecho = req.body;
+    let error;
+    try {
+        let [valida, mensagem] = trechoValido(trecho);
+        if (!valida) {
+            cr.message = mensagem;
+            return res.send(cr);
+        }
+        else {
+            let connection;
+            try {
+                connection = await oraConnAttribs();
+                const cmdInsertAero = `INSERT INTO TRECHOS
+        (CODIGO, NOME, ORIGEM, DESTINO, AERONAVE, ESTILO_VOO)
+        VALUES
+        (TRECHOS_SEQ.NEXTVAL, :1, :2, :3, :4, :5)`;
+                const dados = [
+                    trecho.nome,
+                    trecho.origem,
+                    trecho.destino,
+                    trecho.aeronave,
+                    trecho.estilo_voo,
+                ];
+                const result = await connection.execute(cmdInsertAero, dados, { autoCommit: true, });
+                if (result.rowsAffected === 1) {
+                    cr.status = "SUCCESS";
+                    cr.message = "Trecho inserida.";
+                }
+            }
+            catch (e) {
+                if (e instanceof Error) {
+                    cr.message = e.message;
+                    console.log(e.message);
+                }
+                else {
+                    cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
+                }
+                error = e;
+            }
+            finally {
+                if (connection) {
+                    try {
+                        await connection.close();
+                    }
+                    catch (closeError) {
+                        console.error("Error closing Oracle connection:", closeError);
+                        error = closeError;
+                    }
+                }
+            }
+        }
+    }
+    catch (e) { }
+    if (error) {
+        console.error("Outer error:", error);
+    }
+    else {
+        return res.send(cr);
+    }
+});
+app.get("/listarTrecho", async (req, res) => {
+    let cr = { status: "ERROR", message: "", payload: undefined };
+    let connection;
+    try {
+        connection = await oraConnAttribs();
+        let resultadoConsulta = await connection.execute(`SELECT * FROM TRECHOS`, [], {
+            outFormat: oracledb.OUT_FORMAT_OBJECT
+        });
+        cr.status = "SUCCESS";
+        cr.message = "Dados obtidos";
+        cr.payload = rowsToTrechos(resultadoConsulta.rows);
+    }
+    catch (e) {
+        if (e instanceof Error) {
+            cr.message = e.message;
+            console.log(e.message);
+        }
+    }
+    finally {
+        if (connection) {
+            try {
+                await connection.close();
+            }
+            catch (err) {
+                console.error("Error closing Oracle connection:", err);
+            }
+        }
+        res.send(cr);
+    }
+});
 app.post("/alterarTrecho", async (req, res) => {
     let cr = {
         status: "ERROR",
@@ -1169,6 +1030,207 @@ app.post("/alterarTrecho", async (req, res) => {
                 console.error("Erro ao fechar a conexão:", closeError);
             }
         }
+    }
+});
+app.delete("/excluirTrecho", async (req, res) => {
+    const codigo = req.body.codigo;
+    let cr = {
+        status: "ERROR",
+        message: "",
+        payload: undefined,
+    };
+    let connection;
+    try {
+        connection = await oraConnAttribs();
+        const cmdDeleteAero = `DELETE FROM TRECHOS WHERE CODIGO = :1`;
+        const dados = [codigo];
+        const result = await connection.execute(cmdDeleteAero, dados, {
+            autoCommit: true,
+        });
+        if (result.rowsAffected === 1) {
+            cr.status = "SUCCESS";
+            cr.message = "Trecho excluída.";
+        }
+        else {
+            cr.message = "Trecho não excluída. Verifique se o código informado está correto.";
+        }
+    }
+    catch (e) {
+        if (e instanceof Error) {
+            cr.message = e.message;
+            console.log(e.message);
+        }
+        else {
+            cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
+        }
+    }
+    finally {
+        if (connection) {
+            try {
+                await connection.close();
+            }
+            catch (e) {
+                console.error("Error closing Oracle connection:", e);
+            }
+        }
+        res.send(cr);
+    }
+});
+app.post("/incluirVoo", async (req, res) => {
+    let cr = {
+        status: "ERROR",
+        message: "",
+        payload: undefined,
+    };
+    const voo = req.body;
+    try {
+        console.log("Received Voo:", voo);
+        let [valida, mensagem] = vooValido(voo);
+        if (!valida) {
+            cr.message = mensagem;
+            return res.send(cr);
+        }
+        else {
+            let connection;
+            try {
+                connection = await oraConnAttribs();
+                const cmdInsertVoo = `INSERT INTO VOOS
+          (CODIGO, TRECHO, ESCALAS, VALOR_PASSAGEM, DATA_SAIDA, HORA_SAIDA, DATA_CHEGADA, HORA_CHEGADA, DATA_VOLTA, HORA_VOLTA, DATA_CHEGADA2, HORA_CHEGADA2)
+          VALUES
+          (VOOS_SEQ.NEXTVAL, :1, :2, :3, :4, :5, :6, :7, :8, :9, :10, :11)`;
+                const dados = [
+                    voo.trecho,
+                    voo.escalas,
+                    voo.valor,
+                    voo.dataSaida,
+                    voo.horaSaida,
+                    voo.dataChegada,
+                    voo.horaChegada,
+                    voo.dataVolta,
+                    voo.horaVolta,
+                    voo.dataChegada2,
+                    voo.horaChegada2,
+                ];
+                const result = await connection.execute(cmdInsertVoo, dados, { autoCommit: true });
+                if (result.rowsAffected === 1) {
+                    cr.status = "SUCCESS";
+                    cr.message = "Voo inserido.";
+                }
+            }
+            catch (e) {
+                console.error("Error during database operation:", e);
+                cr.message = "Erro ao conectar ao Oracle. Detalhes: " + (e.message || e.toString());
+            }
+            finally {
+                if (connection) {
+                    try {
+                        await connection.close();
+                    }
+                    catch (closeError) {
+                        console.error("Error closing Oracle connection:", closeError);
+                    }
+                }
+            }
+        }
+    }
+    catch (e) {
+        console.error("Outer error:", e);
+    }
+    return res.send(cr);
+});
+app.get("/listarVoo", async (req, res) => {
+    let cr = { status: "ERROR", message: "", payload: undefined };
+    let connection;
+    try {
+        connection = await oraConnAttribs();
+        let resultadoConsulta = await connection.execute(`SELECT * FROM VOOS`, [], {
+            outFormat: oracledb.OUT_FORMAT_OBJECT
+        });
+        cr.status = "SUCCESS";
+        cr.message = "Dados obtidos";
+        cr.payload = rowsToVoos(resultadoConsulta.rows);
+    }
+    catch (e) {
+        if (e instanceof Error) {
+            cr.message = e.message;
+            console.log(e.message);
+        }
+    }
+    finally {
+        if (connection) {
+            try {
+                await connection.close();
+            }
+            catch (err) {
+                console.error("Error closing Oracle connection:", err);
+            }
+        }
+        res.send(cr);
+    }
+});
+app.post("/incluirAeroporto", async (req, res) => {
+    let cr = {
+        status: "ERROR",
+        message: "",
+        payload: undefined,
+    };
+    const aeroporto = req.body;
+    let error;
+    try {
+        let [valida, mensagem] = aeroportoValido(aeroporto);
+        if (!valida) {
+            cr.message = mensagem;
+            return res.send(cr);
+        }
+        else {
+            let connection;
+            try {
+                connection = await oraConnAttribs();
+                const cmdInsertAeroportos = `INSERT INTO AEROPORTOS
+        (CODIGO, NOME, SIGLA, CIDADE, PAIS)
+        VALUES
+        (AEROPORTOS_SEQ.NEXTVAL, :1, :2, :3, :4)`;
+                const dados = [
+                    aeroporto.nome,
+                    aeroporto.sigla,
+                    aeroporto.cidade,
+                    aeroporto.pais,
+                ];
+                const result = await connection.execute(cmdInsertAeroportos, dados, { autoCommit: true, });
+                if (result.rowsAffected === 1) {
+                    cr.status = "SUCCESS";
+                    cr.message = "Aeroporto inserido.";
+                }
+            }
+            catch (e) {
+                if (e instanceof Error) {
+                    cr.message = e.message;
+                    console.log(e.message);
+                }
+                else {
+                    cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
+                }
+                error = e;
+            }
+            finally {
+                if (connection) {
+                    try {
+                        await connection.close();
+                    }
+                    catch (closeError) {
+                        console.error("Error closing Oracle connection:", closeError);
+                        error = closeError;
+                    }
+                }
+            }
+        }
+    }
+    catch (e) { }
+    if (error) {
+        console.error("Outer error:", error);
+    }
+    else {
+        return res.send(cr);
     }
 });
 app.post("/alterarVoo", async (req, res) => {
@@ -1241,6 +1303,80 @@ app.post("/alterarVoo", async (req, res) => {
         }
     }
 });
+app.delete("/excluirVoo", async (req, res) => {
+    const codigo = req.body.codigo;
+    let cr = {
+        status: "ERROR",
+        message: "",
+        payload: undefined,
+    };
+    let connection;
+    try {
+        connection = await oraConnAttribs();
+        const cmdDeleteVoo = `DELETE FROM VOOS WHERE CODIGO = :1`;
+        const dadosDeleteVoo = [codigo];
+        const result = await connection.execute(cmdDeleteVoo, dadosDeleteVoo, {
+            autoCommit: true,
+        });
+        if (result.rowsAffected === 1) {
+            cr.status = "SUCCESS";
+            cr.message = "Voo excluído.";
+        }
+        else {
+            cr.message = "Voo não excluída. Verifique se o código informado está correto.";
+        }
+    }
+    catch (e) {
+        if (e instanceof Error) {
+            cr.message = e.message;
+            console.log(e.message);
+        }
+        else {
+            cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
+        }
+    }
+    finally {
+        if (connection) {
+            try {
+                await connection.close();
+            }
+            catch (e) {
+                console.error("Error closing Oracle connection:", e);
+            }
+        }
+        res.send(cr);
+    }
+});
+app.get("/listarAeroporto", async (req, res) => {
+    let cr = { status: "ERROR", message: "", payload: undefined };
+    let connection;
+    try {
+        connection = await oraConnAttribs();
+        let resultadoConsulta = await connection.execute(`SELECT * FROM AEROPORTOS`, [], {
+            outFormat: oracledb.OUT_FORMAT_OBJECT
+        });
+        cr.status = "SUCCESS";
+        cr.message = "Dados obtidos";
+        cr.payload = rowsToAeroportos(resultadoConsulta.rows);
+    }
+    catch (e) {
+        if (e instanceof Error) {
+            cr.message = e.message;
+            console.log(e.message);
+        }
+    }
+    finally {
+        if (connection) {
+            try {
+                await connection.close();
+            }
+            catch (err) {
+                console.error("Error closing Oracle connection:", err);
+            }
+        }
+        res.send(cr);
+    }
+});
 app.post("/alterarAeroporto", async (req, res) => {
     let cr = {
         status: "ERROR",
@@ -1294,138 +1430,6 @@ app.post("/alterarAeroporto", async (req, res) => {
                 console.error("Erro ao fechar a conexão:", closeError);
             }
         }
-    }
-});
-app.delete("/excluirAeronave", async (req, res) => {
-    const codigo = req.body.codigo;
-    let cr = {
-        status: "ERROR",
-        message: "",
-        payload: undefined,
-    };
-    let connection;
-    try {
-        connection = await oraConnAttribs();
-        const cmdDeleteAero = `DELETE FROM AERONAVES WHERE CODIGO = :1`;
-        const dados = [codigo];
-        const result = await connection.execute(cmdDeleteAero, dados, {
-            autoCommit: true,
-        });
-        if (result.rowsAffected === 1) {
-            cr.status = "SUCCESS";
-            cr.message = "Aeronave excluída.";
-        }
-        else {
-            cr.message = "Aeronave não excluída. Verifique se o código informado está correto.";
-        }
-    }
-    catch (e) {
-        if (e instanceof Error) {
-            cr.message = e.message;
-            console.log(e.message);
-        }
-        else {
-            cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
-        }
-    }
-    finally {
-        if (connection) {
-            try {
-                await connection.close();
-            }
-            catch (e) {
-                console.error("Error closing Oracle connection:", e);
-            }
-        }
-        res.send(cr);
-    }
-});
-app.delete("/excluirTrecho", async (req, res) => {
-    const codigo = req.body.codigo;
-    let cr = {
-        status: "ERROR",
-        message: "",
-        payload: undefined,
-    };
-    let connection;
-    try {
-        connection = await oraConnAttribs();
-        const cmdDeleteAero = `DELETE FROM TRECHOS WHERE CODIGO = :1`;
-        const dados = [codigo];
-        const result = await connection.execute(cmdDeleteAero, dados, {
-            autoCommit: true,
-        });
-        if (result.rowsAffected === 1) {
-            cr.status = "SUCCESS";
-            cr.message = "Trecho excluída.";
-        }
-        else {
-            cr.message = "Trecho não excluída. Verifique se o código informado está correto.";
-        }
-    }
-    catch (e) {
-        if (e instanceof Error) {
-            cr.message = e.message;
-            console.log(e.message);
-        }
-        else {
-            cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
-        }
-    }
-    finally {
-        if (connection) {
-            try {
-                await connection.close();
-            }
-            catch (e) {
-                console.error("Error closing Oracle connection:", e);
-            }
-        }
-        res.send(cr);
-    }
-});
-app.delete("/excluirVoo", async (req, res) => {
-    const codigo = req.body.codigo;
-    let cr = {
-        status: "ERROR",
-        message: "",
-        payload: undefined,
-    };
-    let connection;
-    try {
-        connection = await oraConnAttribs();
-        const cmdDeleteVoo = `DELETE FROM VOOS WHERE CODIGO = :1`;
-        const dadosDeleteVoo = [codigo];
-        const result = await connection.execute(cmdDeleteVoo, dadosDeleteVoo, {
-            autoCommit: true,
-        });
-        if (result.rowsAffected === 1) {
-            cr.status = "SUCCESS";
-            cr.message = "Voo excluído.";
-        }
-        else {
-            cr.message = "Voo não excluída. Verifique se o código informado está correto.";
-        }
-    }
-    catch (e) {
-        if (e instanceof Error) {
-            cr.message = e.message;
-            console.log(e.message);
-        }
-        else {
-            cr.message = "Erro ao conectar ao Oracle. Sem detalhes";
-        }
-    }
-    finally {
-        if (connection) {
-            try {
-                await connection.close();
-            }
-            catch (e) {
-                console.error("Error closing Oracle connection:", e);
-            }
-        }
-        res.send(cr);
     }
 });
 app.delete("/excluirAeroporto", async (req, res) => {
