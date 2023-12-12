@@ -670,17 +670,19 @@ app.post("/buscarVoo", async (req, res) => {
         JOIN
             AEROPORTOS DESTINO ON T.DESTINO = DESTINO.CODIGO
         WHERE
-            DESTINO.CIDADE = :1
-            AND V.DATA_SAIDA = :2
-            AND V.DATA_CHEGADA2 = :3`;
-  
+            SAIDA.CIDADE = :1
+            AND DESTINO.CIDADE = :2
+            AND V.DATA_SAIDA = :3
+            AND V.DATA_VOLTA = :4`;
+        
         const dados = [
+          busca.partida,
           busca.destino,
           busca.ida,
           busca.volta,
-        ];
+        ];        
   
-        console.log("Voo de Ida encontrado");
+        console.log("Voo de Ida e Volta encontrado");
         const result = (await connection.execute(cmdBuscarVoo, dados, { outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: true })) as oracledb.Result<any>;
         console.log(result);
   
